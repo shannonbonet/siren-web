@@ -7,13 +7,13 @@ import { useCollection } from "react-firebase-hooks/firestore";
 export default function Home() {
 
   //Retrieves firestore collection called 'clients'
-  const [votes, votesLoading, votesError] = useCollection(
-    firebase.firestore().collection("votes"),
+  const [clients, clientLoading, clientError] = useCollection(
+    firebase.firestore().collection("clients"),
     {}
   );
 
-  if (!votesLoading && votes) {
-    votes.docs.map((doc) => console.log(doc.data()));
+  if (!clientLoading && clients) {
+    clients.docs.map((doc) => console.log(doc.data()));
   }
 
   return (
