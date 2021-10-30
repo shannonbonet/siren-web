@@ -2,8 +2,8 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore"
-import IntakeDashboard from './intake-dashboard';
-import Layout from '../components/layout';
+import Dashboard from './dashboard';
+import Layout from '../components/Layout';
 
 export default function Home() {
 
@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <IntakeDashboard/>
+      <Dashboard/>
     </Layout>
   )
 }
