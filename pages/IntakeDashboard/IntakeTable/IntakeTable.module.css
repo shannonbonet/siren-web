@@ -1,0 +1,32 @@
+.section-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 36px;
+    align-items: center;
+    background-color: #CFD3D7;
+    border: 1px solid #0F2536;
+    box-sizing: border-box;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 10px 10px 0px 0px;
+  }
+  
+  .list {
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: fit-content;
+  }
+  
+  #category {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    color: var(--noirish);
+  }
+  
+  #category-text {
+    font-weight: 500;
+    margin-right: 10px;
+    color: var(--noirish);
+  }
