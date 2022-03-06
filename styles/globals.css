@@ -8,7 +8,10 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Myriad Pro", Myriad, "Liberation Sans", "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
+<<<<<<< HEAD
 >>>>>>> b3fd2f21aef24cd04090e4703f444db467fea160
+=======
+>>>>>>> 81b0cfe3755fbd50a0ef3c2c5a46bd30bc74932b
 }
 
 a {
@@ -17,6 +20,7 @@ a {
 }
 
 * {
+<<<<<<< HEAD
 <<<<<<< HEAD
     box-sizing: border-box;
     color: var(--jet);
@@ -37,6 +41,13 @@ a {
 }
 
 :root {
+=======
+  box-sizing: border-box;
+  color: var(--jet);
+}
+
+:root {
+>>>>>>> 81b0cfe3755fbd50a0ef3c2c5a46bd30bc74932b
   --cultured: #F4FBFB;
   --blue-sapphire: #1A6A8D;
   --baby-pink: #F3C8CC;
@@ -45,5 +56,8 @@ a {
   --cardinal: #C92C3C;
   --jet: #2b2b2b; 
   --dim-gray: #6A6A6A; 
+<<<<<<< HEAD
 >>>>>>> b3fd2f21aef24cd04090e4703f444db467fea160
+=======
+>>>>>>> 81b0cfe3755fbd50a0ef3c2c5a46bd30bc74932b
 }

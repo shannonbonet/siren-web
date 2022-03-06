@@ -36,4 +36,8 @@ yarn-error.log*
 .vercel
 
 # github 
+<<<<<<< HEAD
 .github 
+=======
+.github 
+>>>>>>> 81b0cfe3755fbd50a0ef3c2c5a46bd30bc74932b
