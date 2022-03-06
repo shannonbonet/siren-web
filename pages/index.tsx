@@ -4,10 +4,16 @@ import {
 } from './styles';
 import styles from '../styles/Home.module.css'
 import firebase from '../firebase/clientApp'
+<<<<<<< HEAD
 import { useCollection } from "react-firebase-hooks/firestore";
 import IntakeItem from './IntakeDashboard/IntakeItem/IntakeItem';
 import {IntakeTable} from './IntakeDashboard/IntakeTable/IntakeTable';
 
+=======
+import { useCollection } from "react-firebase-hooks/firestore"
+import Dashboard from './dashboard';
+import Layout from '../components/Layout';
+>>>>>>> b3fd2f21aef24cd04090e4703f444db467fea160
 
 export default function Home() {
 
@@ -23,6 +29,7 @@ export default function Home() {
 
 
   return (
+<<<<<<< HEAD
     <PageContainer>
       {/* <Head>
         <title>SIREN Admin</title>
@@ -43,5 +50,10 @@ export default function Home() {
       <IntakeTable/>
     </PageContainer>
 >>>>>>> 1eea7f97e45a6bcf002d0e63915fcbb1d2055b15
+=======
+    <Layout>
+      <Dashboard/>
+    </Layout>
+>>>>>>> b3fd2f21aef24cd04090e4703f444db467fea160
   )
 }
