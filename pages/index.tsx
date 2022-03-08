@@ -28,7 +28,6 @@ export default function Home() {
         <h1 className={styles.title}>
           SIREN Admin
         </h1>
-
       </main>
     </div>
   )
