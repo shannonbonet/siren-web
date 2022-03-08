@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/dist/client/link';
 import { useRouter } from 'next/dist/client/router';
-import { Avatar } from '@mui/material';
 import styles from "../NavBar/NavBar.module.css";
 import { FiExternalLink} from "react-icons/fi";
 import { CgProfile} from "react-icons/cg";
