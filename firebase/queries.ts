@@ -1,3 +1,6 @@
+import { valueToPercent } from '@mui/base';
+import { typography } from '@mui/system';
+import { EventEmitter } from 'stream';
 import {
     Appointment,
     CalendlyLink,
@@ -37,7 +40,7 @@ export const getAllClients = async (): Promise<Client[]> => {
 
 export const getAllQuestionsOfType = async( 
     caseType: string,
-): Promise<Question[]> => {
+  ): Promise<Question[]> => {
     try{
         const ref = await database.collection(`caseTypes/${caseType}/questions`).orderBy('order').get()
         return ref.docs.map(doc => doc.data() as Question);
@@ -46,5 +49,33 @@ export const getAllQuestionsOfType = async(
           throw (e);
     }
   }
+
+export const getClientResponsesOfType = async(
+  client: Client, 
+  caseType: string
+): Promise<Map<string, any>> => {
+  try{
+    const answers: Map<string, Map<string, any>> = client.answers;
+    if (answers && answers[caseType] !== undefined){
+      return answers[caseType];
+    } else {
+      return null
+    }
+  } catch (e){
+    console.warn(e);
+    throw(e);
+  }
+}
+
+// async function loadClient(){
+//   const testCli = await getClient('XX3LfjpVcKNct8036lwDECZAGj32');
+//   console.log(testCli.answers);
+//   const ans1 = testCli.answers.get('general');
+//   console.log(ans1);
+//   console.log(ans1.get('dateOfBirth').get('seconds'));
+
+// }
+
+// loadClient()
 
 

@@ -7,6 +7,7 @@ import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore";
 import IntakeItem from './IntakeDashboard/IntakeItem/IntakeItem';
 import {IntakeTable} from './IntakeDashboard/IntakeTable/IntakeTable';
+import { getAllQuestionsOfType } from '../firebase/queries';
 
 
 export default function Home() {
@@ -17,10 +18,9 @@ export default function Home() {
     {}
   );
 
-  if (!clientLoading && clients) {
-    clients.docs.map((doc) => console.log(doc.data()));
-  }
-
+  // if (!clientLoading && clients) {
+  //   clients.docs.map((doc) => console.log(doc.data()));
+  // }
 
   return (
     <PageContainer>
