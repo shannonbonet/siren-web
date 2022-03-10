@@ -17,10 +17,10 @@ const NavBar = () => {
           <Link href="/">
             <a className={styles["link"]}>Intake Dashboard</a>
           </Link>
-          <Link href="/" >
+          <Link href="/IntakeForms" >
             <a className={styles["link"]}>Intake Form</a>
           </Link>
-          <Link href="/">
+          <Link href="/Calendar">
             <a className={styles["link"]}>
               Calendly <FiExternalLink stroke="white" size={15}/> </a>
           </Link>

@@ -1,4 +1,5 @@
-import { Navbar } from './Navbar/Navbar'
+import { Navbar } from './Navbar/Navbar';
+import { NavBar } from "./NavBarAnd/NavBar";
 import styles from './Layout.module.css'
 import Head from "next/head";
 

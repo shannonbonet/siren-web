@@ -6,6 +6,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
+import Image from "next/image";
 
 
 interface OverlayProps {
@@ -29,7 +30,10 @@ const IntakeFormOverlay: React.FC<OverlayProps> = ({
         {title}
       </div>
       <div className={styles["changebar"]}> 
-        <img src="" alt="" />
+        <Image
+          src="/assets/images/overEye.png"
+          layout="fill" 
+          alt="eye"/>
         <IoEyeOutline size={36}/>
         <BiUndo size={32}/>
         <BiRedo size={32}/>
