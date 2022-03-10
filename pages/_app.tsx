@@ -4,12 +4,16 @@ import IntakeFormOverlay from '../src/components/IntakeFormOverlay/IntakeFormOve
 
 function MyApp({ Component, pageProps }) {
   return (
+<<<<<<< HEAD
     <div>
       <NavBar></NavBar>
       <IntakeFormOverlay
         title="DACA Renewal Questions"
         caseType="DACA Renewal" />
     </div>
+=======
+    <Component {...pageProps} />
+>>>>>>> 7956e4143517fe5ce9ec19c15ef0ddfb6fb6bfa9
   )
 }
 

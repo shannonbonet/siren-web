@@ -4,6 +4,7 @@
     flex-direction: row-reverse;
     height: 78px;
     width: 100%;
+    min-width: 1440px;
     background-color: var(--prussian-blue);
 }
 

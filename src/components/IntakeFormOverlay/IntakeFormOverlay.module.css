@@ -1,8 +1,7 @@
 .overlay {
   width: 100%;
+  min-width: 1440px;
   height: 217px;
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
   position: sticky;
 }

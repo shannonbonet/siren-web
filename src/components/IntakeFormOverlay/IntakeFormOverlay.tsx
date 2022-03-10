@@ -29,6 +29,7 @@ const IntakeFormOverlay: React.FC<OverlayProps> = ({
         {title}
       </div>
       <div className={styles["changebar"]}> 
+        <img src="" alt="" />
         <IoEyeOutline size={36}/>
         <BiUndo size={32}/>
         <BiRedo size={32}/>
