@@ -2,6 +2,8 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore";
+import { TextRegular, TextRegularBold } from '../public/assets/fonts/Fonts';
+import Question from '../components/Question/question';
 
 
 export default function Home() {
@@ -25,9 +27,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          SIREN Admin
-        </h1>
+        {/* <Question/> */}
+        SIREN Admin
       </main>
     </div>
   )
