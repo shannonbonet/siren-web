@@ -27,7 +27,6 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        {/* <Question/> */}
         SIREN Admin
       </main>
     </div>
