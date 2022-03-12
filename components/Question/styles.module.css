@@ -1,0 +1,169 @@
+.questionText {
+    resize: none;
+    width: 617px;
+    height: 37px;
+    background-color: #e7e7e7;
+    color: #2b2b2b;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 16px;
+}
+
+.longText {
+    resize: none;
+    width: 832px;
+    height: 37px;
+    color: #2b2b2b;
+    font-size: 16px;
+    border-width: 0 0 1px;
+    padding-left: 12px;
+    border-color: #2b2b2b;
+    outline: none;
+}
+
+.shortText {
+    resize: none;
+    width: 500px;
+    height: 37px;
+    color: #2b2b2b;
+    font-size: 16px;
+    border-width: 0 0 1px;
+    padding-left: 12px;
+    border-color: #2b2b2b;
+    outline: none;
+}
+
+.answerType {
+    width: 256px;
+    height: 37px;
+    background-color: white;
+    color: #2b2b2b;
+    border-radius: 16px;
+    border-width: 1px #2b2b2b;
+    font-size: 16px;
+    padding-left: 16px;
+    outline: 0;
+}
+
+.answerOption {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px;
+}
+
+.container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.topcontainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.middlecontainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.bottomcontainerrow {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 16px;
+}
+
+.bottomcontainericon {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.bottomcontainercolumn {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.bottombuttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 20px;
+}
+
+.requiredspan {
+    padding-right: 5px;
+}
+
+.react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+    background-color: #F3C8CC;
+  }
+
+.addOption {
+    padding-top: 24px;
+    padding-left: 16px;
+    font-size: 16px;
+    background-color: transparent;
+    width: auto;
+    height: auto;
+    outline: 0;
+    border: 0;
+    left: 0;
+}
+
+.removeOption {
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+.copybutton {
+    padding-right: 24px;
+    padding-left: 24px;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+.trashbutton {
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+.calendardiv {
+    padding-left: 5px;
+}
