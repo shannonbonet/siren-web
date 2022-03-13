@@ -1,35 +1,37 @@
 .App-button {
-    display: flex;
-    width: 184px;
-    height: 40px;
-    border-radius: 8px;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid var(--prussian-blue);
-
+  display: flex;
+  width: 184px;
+  height: 40px;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--prussian-blue);
 }
 
+.App-button:hover {
+  filter: brightness(75%); 
+}
 #button-pruss {
-    background-color: var(--prussian-blue);
+  background-color: var(--prussian-blue);
 }
 
 #button-clear {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .App-button-text {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 19px;
-    text-align: center;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 19px;
+  text-align: center;
 }
 
 #button-text-jet {
-    color: var(--jet);
+  color: var(--jet);
 }
 
 #button-text-white {
-    color: var(--cultured);
+  color: var(--cultured);
 }
 

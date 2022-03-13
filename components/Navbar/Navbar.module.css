@@ -5,6 +5,7 @@
   width: 100%;
   height: 50px; 
   background-color: var(--prussian-blue); 
+  z-index: 1000;
 }
 
 .bar > a {
@@ -21,6 +22,6 @@
 .active {
   transition: all 0.5s ease;
   color: var(--baby-pink); 
-  border-bottom: 1px solid var(--baby-pink); 
+  border-bottom: 3px solid var(--baby-pink); 
   padding-bottom: 3px; 
 }

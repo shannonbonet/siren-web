@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/dist/client/link';
 import styles from "../IntakeFormOverlay/IntakeFormOverlay.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline } from "react-icons/io";
@@ -6,17 +6,17 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
-import Image from "next/image";
+import {LinkForm} from "../LinkForm/LinkForm";
+
+
 
 
 interface OverlayProps {
     title: string;
-    caseType: string;
 }
 
-const IntakeFormOverlay: React.FC<OverlayProps> = ({
+export const IntakeFormOverlay: React.FC<OverlayProps> = ({
   title,
-  caseType
 }) => {
   return (
     <div className={styles["overlay"]}>
@@ -24,19 +24,12 @@ const IntakeFormOverlay: React.FC<OverlayProps> = ({
         <Link href="/">
           <IoIosArrowBack color="#0F2536"/>
         </Link>
-        {/* <p className={styles["title"]}>
-          {title}
-        </p> */}
         {title}
       </div>
       <div className={styles["changebar"]}> 
-        <Image
-          src="/assets/images/overEye.png"
-          layout="fill" 
-          alt="eye"/>
-        <IoEyeOutline size={36}/>
-        <BiUndo size={32}/>
-        <BiRedo size={32}/>
+        <IoEyeOutline size={36} />
+        <BiUndo size={33}/>
+        <BiRedo size={33}/>
         <IoIosAddCircleOutline size={33}/>
         <Button
           text='Save Changes'
@@ -50,16 +43,10 @@ const IntakeFormOverlay: React.FC<OverlayProps> = ({
           textType='button-text-white'
           onPress={() => alert("PUBLISH!")}
         />
-        <BsThreeDotsVertical/>
+        <BsThreeDotsVertical size={30}/>
       </div>
-      <div className={styles["link-form"]}>
-        <p className={styles["link-text"]}>Link to </p>
-        <select name="casetype" id={styles["case-type"]}>
-          <option value={caseType}>{caseType}</option>
-        </select>
-      </div>
+      <LinkForm/>
     </div>
     )
 }
 
-export default IntakeFormOverlay;

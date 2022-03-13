@@ -3,7 +3,8 @@ import styles from '../styles/Home.module.css'
 import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore"
 import Dashboard from './dashboard';
-import Layout from '../components/Layout';
+import GenQuestion from './IntakeForms/GenQuestion';
+import Layout from '../components/layout';
 
 export default function Home() {
 

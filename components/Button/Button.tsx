@@ -28,9 +28,9 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button onClick={onPress} className={styles['App-button']} id={styles[buttonType]}>
-      <p className={styles['App-button-text']} id={styles[textType]}>
+      <a className={styles['App-button-text']} id={styles[textType]}>
         {text}
-      </p>
+      </a>
     </button>
   );
 };

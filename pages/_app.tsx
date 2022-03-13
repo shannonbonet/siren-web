@@ -1,6 +1,6 @@
 import '../styles/globals.css'
-import NavBar from '../src/components/NavBar/NavBar';
-import IntakeFormOverlay from '../src/components/IntakeFormOverlay/IntakeFormOverlay';
+import NavBar from '../components/NavBarAnd/NavBar';
+import IntakeFormOverlay from '../components/IntakeFormOverlay/IntakeFormOverlay';
 
 function MyApp({ Component, pageProps }) {
   return (

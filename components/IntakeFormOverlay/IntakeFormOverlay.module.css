@@ -3,7 +3,8 @@
   min-width: 1440px;
   height: 217px;
   display: flex;
-  position: sticky;
+  position: fixed;
+  background-color: white;
 }
 
 .namebar {
@@ -42,25 +43,6 @@
   align-items: center;
   justify-content: space-evenly;
   color: var(--prussian-blue);
-}
-
-.link-form {
-  display: flex;
-  position: absolute;
-  width: 324px;
-  height: 37px;
-  top: 126px;
-  left: 115px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.link-text {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  color: black;
 }
 
 #case-type {
