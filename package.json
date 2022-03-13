@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.5.0",
+    "@react-icons/all-files": "^4.1.0",
     "firebase": "^8.10.0",
     "next": "^12.1.0",
     "react": "17.0.2",
@@ -16,6 +20,8 @@
     "react-firebase-hooks": "^3.0.4",
     "react-firebaseui": "^5.0.2",
     "react-icons": "^4.3.1",
+    "react-router-dom": "^6.2.2",
+    "styled-components": "^5.3.3",
     "react-select": "^5.2.2",
     "react-textarea-autosize": "^8.3.3",
     "react-toggle": "^4.1.2"

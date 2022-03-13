@@ -5,7 +5,8 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { TextRegular, TextRegularBold } from '../public/assets/fonts/Fonts';
 import Question from '../components/Question/question';
 import Dashboard from './dashboard';
-import Layout from '../components/Layout';
+import GenQuestion from './IntakeForms/GenQuestion';
+import Layout from '../components/layout';
 
 export default function Home() {
 
