@@ -75,30 +75,31 @@ export const IntakeTable = (props: IntakeTableProps) => {
 
 
 
+
     const renderCategoryHeader = () => {
         return (
             <Box className={styles['section-header']}>
                 <div className={itemstyles['name-head']} id={styles['category']}>
                     <body id={styles['category-text']}>Name</body>
                 </div>
-                <div className={itemstyles['action']} id={styles['category']}>
+                <div className={itemstyles['legal-head']} id={styles['category']}>
                     <body id={styles['category-text']}>Legal Disclaimer</body>
                 </div>
-                <div className={itemstyles['admin']} id={styles['category']}>
+                <div className={itemstyles['email-head']} id={styles['category']}>
                     <body id={styles['category-text']}>Email</body>
                 </div>
-                <div className={itemstyles['admin']} id={styles['category']}>
+                <div className={itemstyles['phone-head']} id={styles['category']}>
                     <body id={styles['category-text']}>Phone Number</body>
                 </div>
-                <div className={itemstyles['action']} id={styles['category']}>
+                <div className={itemstyles['address-head']} id={styles['category']}>
                     <body id={styles['category-text']}>Address</body>
                 </div>
-                <div className={itemstyles['date']} id={styles['category-text']}>Birth Date</div>
-                <div className={itemstyles['fid']} id={styles['category-text']}>Age</div>
+                <div className={itemstyles['date-head']} id={styles['category-text']}>Date of birth</div>
+                <div className={itemstyles['age-head']} id={styles['category-text']}>Age</div>
                 {
                     questions.slice(7).map((q) => {
                         return(
-                        <div key={q['order']} id={styles['category-text']}>
+                        <div key={q['order']} className={itemstyles['question-head']}id={styles['category-text']}>
                             {q['displayText']}
                         </div>
                         )
@@ -110,14 +111,13 @@ export const IntakeTable = (props: IntakeTableProps) => {
    
     
     const renderHistory = () => {
-        const respNoBdate = responses.slice(8).concat(responses.slice(12,21));
         
         return(
             <List className={styles['list']}>
                 {
                     responses.map((r) => {
                         return(
-                            <IntakeItem key={r['telephone']} clientName={r['Name']} legalDisc={true} email={r['Email']} telephone={r['telephone']} address={r['address']} birthDate={r['dateOfBirth']} age={r['age']} responses={respNoBdate}/>
+                            <IntakeItem key={r['telephone']} response={r} questions={questions}/>
                         )
                     })
                 }
@@ -126,7 +126,7 @@ export const IntakeTable = (props: IntakeTableProps) => {
     }   
 
    return (
-       <div>
+       <div className={styles['tableStyle']}>
             {renderCategoryHeader()}
             {renderHistory()}
        </div>

@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
   min-height: 65px;
   padding-left: 2%;
   padding-right: 2%;
@@ -10,42 +9,83 @@
   border-top: 0px;
   font-weight: normal;
   font-size: 16px;
-  margin-right: 2%;
+  min-width: 6506.63px;
 }
 
-.date {
-  width: 8%;
+/*name*/
+.name-head{
+  min-width: 209px;
+  align-items: flex-start;
+}
+
+/*legal disc*/
+.legal-head{
+  margin-right: 19px;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox{
   min-width: 90px;
+  margin-right: 58px;
 }
 
-.username {
-  width: 14%;
-  min-width: 90px;
+
+/*email*/
+.email-head{
+  margin-right: 137px;
 }
 
-.fid {
-  width: 6%;
-  min-width: 60px;
+.email{
+  min-width: 185px;
 }
 
-.admin {
-  width: 14%;
-  min-width: 80px;
+/*phone*/
+.phone-head{
+  margin-right: 46px;
 }
 
-.action {
-  width: 12%;
+.phone{
+  min-width: 167px;
+}
+
+/*address*/
+.address-head{
+  margin-right: 220px;
+}
+
+.address{
+  min-width: 292px;
+}
+
+/*dob + age*/
+.date-head{
+  margin-right: 10%;
+}
+
+.dob{
   min-width: 110px;
 }
 
-.message {
-  width: 36%;
-  flex-wrap: wrap;
-  word-wrap: break-word;
+.age-head{
+  margin-right: 25px;
 }
 
-.name-head {
-  width: 14%;
-  min-width: 90px;
-  margin-right: 5%;
+.age{
+  min-width: 72px;
+}
+
+/*intake qs*/
+.question-head{
+  max-width: 308px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 50px;
+}
+
+.response{
+  min-width: 280px;
+  margin-left: 10px;
+  overflow-wrap: break-word;
 }

@@ -1,21 +1,29 @@
 .section-header {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     height: 36px;
     align-items: center;
     background-color: #CFD3D7;
     border: 1px solid #0F2536;
     box-sizing: border-box;
     padding-left: 2%;
-    padding-right: 2%;
     border-radius: 10px 10px 0px 0px;
+    white-space: nowrap;
+    width: fit-content;
   }
   
   .list {
     padding-top: 0%;
     padding-bottom: 0%;
     height: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tableStyle {
+    flex-direction: column;
+    overflow-x: scroll;
   }
   
   #category {
@@ -29,4 +37,5 @@
     font-weight: 500;
     margin-right: 10px;
     color: var(--noirish);
+    text-overflow: ellipsis;
   }
