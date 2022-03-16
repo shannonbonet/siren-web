@@ -17,11 +17,6 @@
     color: black;
   }
 
-
-  .button:hover {
-    filter: brightness(75%);
-  }
-
   #case-type {
     width: 257px;
     height: 37px;

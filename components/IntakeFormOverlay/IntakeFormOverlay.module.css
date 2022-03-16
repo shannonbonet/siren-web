@@ -53,3 +53,6 @@
   background: transparent;
 }
 
+.button:hover {
+  filter: brightness(75%);
+}
