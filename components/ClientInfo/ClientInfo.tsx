@@ -108,7 +108,7 @@ const ClientActionsBox = () => {
                 <div>
                     <TabPanel value='approve' className={styles['no-padding']}>
                         <FormControl>
-                            <RadioGroup className={styles.radio}>
+                            <RadioGroup>
                                 <FormControlLabel value="approve-consultation" control={<Radio size="small" />} label="Consultation" />
                                 <FormControlLabel value="approve-documents" control={<Radio  size="small"/>} label="Documents approved" />
                             </RadioGroup>
