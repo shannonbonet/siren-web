@@ -60,6 +60,21 @@
     align-items: flex-start;
     border: 1px solid;
     border-radius: 5px;
+    margin: 24px 0 24px 0;
+    width: 932px;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+}
+
+.draggable {
+    align-self: center;
+    width: 30px;
+    height: 1px;
+    margin: 7px 0 5px 0;
+    border: none;
+    background-color: white;
 }
 
 .topcontainer {

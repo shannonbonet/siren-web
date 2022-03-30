@@ -4,6 +4,8 @@ import styles from './styles.module.css';
 import Select from 'react-select'
 import { IoCloseOutline, IoRadioButtonOffOutline, IoTrashOutline, IoCalendarOutline } from 'react-icons/io5';
 import { MdOutlineCheckBoxOutlineBlank, MdContentCopy } from 'react-icons/md';
+import Draggable from "../../assets/images/dotsDraggable.png";
+import Image from 'next/image';
 import Toggle from 'react-toggle';
 import "react-toggle/style.css";
 
@@ -113,7 +115,10 @@ const Question = () => {
 	}
 
   return (
-    <div className={styles.container}>  
+    <div className={styles.container} contentEditable="true">
+		<button data-movable-handle className={styles.draggable}>
+			<Image src={Draggable} alt="drag"/>
+		</button>  
       <div className={styles.topcontainer}>
         <TextareaAutosize
           cacheMeasurements
