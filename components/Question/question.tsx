@@ -10,7 +10,7 @@ import Toggle from 'react-toggle';
 import "react-toggle/style.css";
 
 const Question = () => {
-  const [questionText, setQuestionText] = useState("");
+  const [questionText, setQuestionText] = useState();
 	const [descriptionText, setDescriptionText] = useState("");
 	const [answerType, setAnswerType] = useState(null);
 	const [answerOptions, setAnswerOptions] = useState(["Option"]);

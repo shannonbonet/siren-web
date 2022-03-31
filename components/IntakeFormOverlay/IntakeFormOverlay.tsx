@@ -65,7 +65,8 @@ export const IntakeFormOverlay
           <List
           values={questions}
           onChange={({ oldIndex, newIndex }) =>
-            setQuestions(arrayMove(questions, oldIndex, newIndex))
+            {console.log(questions);
+            setQuestions(arrayMove(questions, oldIndex, newIndex))}
           }
           renderList={({ children, props, isDragged }) => (
             <ul
@@ -75,7 +76,11 @@ export const IntakeFormOverlay
               {children}
             </ul>
           )}
-          renderItem={({ value, props }) => <li {...props}>{value}</li>}
+          renderItem={({ value, props }) => 
+          <li 
+            {...props}
+            style={{ listStyleType:"none"}}
+          >{value}</li>}
                 />
         </div>
     </div>
