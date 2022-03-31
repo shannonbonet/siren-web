@@ -34,25 +34,17 @@ const renderResponses = (props: ClientItemProps) => {
 const IntakeItem = (props: ClientItemProps) => {
     const resp = renderResponses(props);
     console.log(resp);
-    console.log(props.questions);
 
     return (
             <ListItem className={styles['list-item']}>
-                <div className={styles['name-head']}>{resp[0]}</div>
-                <div>
-                    <input type='checkbox' className={styles['checkbox']}/>
-                </div>
-                <div className={styles['email']}>{resp[1]}</div>
+                <div className={styles['unique-id']}>10-51324</div>
+                <div className={styles['name']}>{resp[0]}</div> 
+                <div className={styles['a-num']}>{resp[11]}</div>
+                <div className={styles['case-type']}>{resp[23]}</div>
+                <div className={styles['status']}>Approved</div>
                 <div className={styles['phone']}>{resp[2]}</div>
-                <div className={styles['address']}>{resp[3]}</div>
-                <div className={styles['dob']}>{resp[5]}</div>
-                <div className={styles['age']}>{resp[6]}</div>
-                {resp.slice(7).map((r) => {
-                    return(
-                        <div key={r['Name']} className={styles['response']}>{r}</div>
-                    )
-                })}
-
+                <div className={styles['email']}>{resp[1]}</div>
+                <div className={styles['county']}>{resp[4]}</div>
             </ListItem>
         )   
     }
@@ -60,15 +52,13 @@ const IntakeItem = (props: ClientItemProps) => {
     export default IntakeItem;
 
 
-    {/* <div className={styles['username']}>{props.clientName}</div>
-    <div className={styles['action']}>
-        <div><input type='checkbox'/></div>
-    </div>
-    <div className={styles['admin']}>{props.email}</div>
-    <div className={styles['admin']}>{props.telephone}</div>
-    <div className={styles['action']}>{props.address}</div>
-    <div className={styles['date']}>{props.birthDate ? new Date(props.birthDate[0] * 1000).toLocaleDateString('en-US'): 'N/A'}</div>
-    <div className={styles['fid']}>{props.age}</div>
-    <div>
-
-    </div> */}
+    /* 
+    Unique ID -- cid (for now)
+    Name -- responses['Name']
+    Alien Reg Number ? responses['alienRegistrationNumber'] : "N/A"
+    Case Type - responses['visitReason']
+    Status - ?
+    Phone Number - responses.telephone (i=2)
+    Email - responses.email (i=1)
+    City or Address - responses.address (i=3)
+    */  

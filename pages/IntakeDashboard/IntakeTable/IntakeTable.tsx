@@ -79,32 +79,30 @@ export const IntakeTable = (props: IntakeTableProps) => {
     const renderCategoryHeader = () => {
         return (
             <Box className={styles['section-header']}>
-                <div className={itemstyles['name-head']} id={styles['category']}>
+                <div className={itemstyles['unique-id']} id={styles['category']}>
+                    <body id={styles['category-text']}>Unique ID</body>
+                </div>
+                <div className={itemstyles['name']} id={styles['category']}>
                     <body id={styles['category-text']}>Name</body>
                 </div>
-                <div className={itemstyles['legal-head']} id={styles['category']}>
-                    <body id={styles['category-text']}>Legal Disclaimer</body>
+                <div className={itemstyles['a-num']} id={styles['category']}>
+                    <body id={styles['category-text']}>A. Number</body>
                 </div>
-                <div className={itemstyles['email-head']} id={styles['category']}>
-                    <body id={styles['category-text']}>Email</body>
+                <div className={itemstyles['case-type']} id={styles['category']}>
+                    <body id={styles['category-text']}>Case Type</body>
                 </div>
-                <div className={itemstyles['phone-head']} id={styles['category']}>
+                <div className={itemstyles['status']} id={styles['category']}>
+                    <body id={styles['category-text']}>Status</body>
+                </div>
+                <div className={itemstyles['phone']} id={styles['category']}>
                     <body id={styles['category-text']}>Phone Number</body>
                 </div>
-                <div className={itemstyles['address-head']} id={styles['category']}>
-                    <body id={styles['category-text']}>Address</body>
+                <div className={itemstyles['email']} id={styles['category']}>
+                    <body id={styles['category-text']}>Email</body>
                 </div>
-                <div className={itemstyles['date-head']} id={styles['category-text']}>Date of birth</div>
-                <div className={itemstyles['age-head']} id={styles['category-text']}>Age</div>
-                {
-                    questions.slice(7).map((q) => {
-                        return(
-                        <div key={q['order']} className={itemstyles['question-head']}id={styles['category-text']}>
-                            {q['displayText']}
-                        </div>
-                        )
-                    })
-                }
+                <div className={itemstyles['county']} id={styles['category']}>
+                    <body id={styles['category-text']}>County</body>
+                </div>
            </Box>
         )
     }
