@@ -81,3 +81,7 @@
 .questions {
   align-self: center;
 }
+
+.context {
+  background-color: orange;
+}
