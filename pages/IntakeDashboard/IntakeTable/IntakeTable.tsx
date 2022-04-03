@@ -115,7 +115,7 @@ export const IntakeTable = (props: IntakeTableProps) => {
                 {
                     responses.map((r) => {
                         return(
-                            <IntakeItem key={r['telephone']} response={r} questions={questions}/>
+                            <IntakeItem key={r['alienRegistrationNumber']} response={r}/>
                         )
                     })
                 }
