@@ -7,6 +7,7 @@ import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore";
 import IntakeItem from './IntakeDashboard/IntakeItem/IntakeItem';
 import {IntakeTable} from './IntakeDashboard/IntakeTable/IntakeTable';
+import MyTable from './Table'
 import { getAllQuestionsOfType } from '../firebase/queries';
 
 
@@ -36,6 +37,7 @@ export default function Home() {
         </h1>
       </main>  */}
       <IntakeTable/>
+      <MyTable/>
     </PageContainer>
   )
 }

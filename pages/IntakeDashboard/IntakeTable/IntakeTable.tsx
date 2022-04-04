@@ -7,6 +7,7 @@ import styles from './IntakeTable.module.css';
 import itemstyles from '../IntakeItem/IntakeItem.module.css';
 import {getAllQuestionsOfType, getAllClients} from '../../../firebase/queries';
 import {Question} from '../../../types';
+import { DataGrid } from '@mui/x-data-grid';
 
 interface IntakeTableProps {
     intake: Client[]
@@ -70,6 +71,8 @@ export const IntakeTable = (props: IntakeTableProps) => {
             setQuestions(qList);
         }
         loadQuestions();
+
+        console.log('FIRST', responses); 
         
     }, []);
 
@@ -127,7 +130,7 @@ export const IntakeTable = (props: IntakeTableProps) => {
        <div className={styles['tableStyle']}>
             {renderCategoryHeader()}
             {renderHistory()}
-       </div>
 
+       </div>
    );
 }
