@@ -1,17 +1,14 @@
 import TextareaAutosize from 'react-textarea-autosize';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.css'; 
 import Select from 'react-select'
 import { IoCloseOutline, IoRadioButtonOffOutline, IoTrashOutline, IoCalendarOutline } from 'react-icons/io5';
 import { MdOutlineCheckBoxOutlineBlank, MdContentCopy } from 'react-icons/md';
-import dotsDraggable from "../../assets/images/dotsDraggable.png";
-import {Draggable} from 'react-beautiful-dnd';
-import Image from 'next/image';
 import Toggle from 'react-toggle';
 import "react-toggle/style.css";
 
-const Question = (index, id: string) => {
-  const [questionText, setQuestionText] = useState();
+const Question = () => {
+  	const [questionText, setQuestionText] = useState();
 	const [descriptionText, setDescriptionText] = useState("");
 	const [answerType, setAnswerType] = useState(null);
 	const [answerOptions, setAnswerOptions] = useState(["Option"]);
@@ -115,69 +112,49 @@ const Question = (index, id: string) => {
 		}
 	}
 
-  return (
-    <Draggable draggableId={id} index ={index}>
-    	{provided =>(
-        <div
-          className={styles.container}
-          contentEditable="true"
-          {...provided.draggableProps}
-          ref={provided.innerRef}>
-            <div 
-            className={styles.draggable}
-            {...provided.dragHandleProps}
-            >
-              <Image src={dotsDraggable} alt="drag"/>
-            </div>
-            {/* <button 
-            className={styles.draggable}
-            {...provided.dragHandleProps}
-            >
-              <Image src={dotsDraggable} alt="drag"/>
-            </button> */}
-          <div className={styles.topcontainer}>
-            <TextareaAutosize
-              cacheMeasurements
-              value={questionText}
-              placeholder="Question"
-              onChange={ev => setQuestionText(ev.target.value)}
-              className={styles.questionText}
-            />
-                <Select
-                  options={answerTypeOptions}
-                  onChange={setAnswerType}
-                  defaultValue={answerType}
-                  className={styles.answerType}
-                />
-          </div>
-              <div className={styles.middlecontainer}>
-                <TextareaAutosize
-              cacheMeasurements
-              value={descriptionText}
-              placeholder="Description"
-              onChange={ev => setDescriptionText(ev.target.value)}
-              className={styles.longText}
-            />
-              </div>
-              {answerType ? getAnswerTypeComponent() : null}
-              <div className={styles.bottombuttons}>
-                  <span className={styles.requiredspan}>Required</span>
-                  <Toggle
-                    checked={required}
-                    icons={false}
-                    onChange={() => setRequired(!required)}
-                  />
-                  <button className={styles.copybutton}>
-                    <MdContentCopy size="27px"/>
-                  </button>
-                  <button className={styles.trashbutton}>
-                    <IoTrashOutline size="27px"/>
-                  </button>
-              </div>
-        </div>
-      )}
-    </Draggable>
-    )
+	return (
+		<div className={styles.container}>  
+		  <div className={styles.topcontainer}>
+			<TextareaAutosize
+			  cacheMeasurements
+			  value={questionText}
+			  placeholder="Question"
+			  onChange={ev => setQuestionText(ev.target.value)}
+			  className={styles.questionText}
+			/>
+					<Select 
+						options={answerTypeOptions} 
+						onChange={setAnswerType} 
+						defaultValue={answerType}
+						className={styles.answerType}
+					/>
+		  </div>
+				<div className={styles.middlecontainer}>
+					<TextareaAutosize
+			  cacheMeasurements
+			  value={descriptionText}
+			  placeholder="Description"
+			  onChange={ev => setDescriptionText(ev.target.value)}
+			  className={styles.longText}
+			/>
+				</div>
+				{answerType ? getAnswerTypeComponent() : null}
+				<div className={styles.bottombuttons}>
+						<span className={styles.requiredspan}>Required</span>
+						<Toggle
+							checked={required}
+							icons={false}
+							onChange={() => setRequired(!required)}
+						/>
+						<button className={styles.copybutton}>
+							<MdContentCopy size="27px"/>
+						</button>
+						<button className={styles.trashbutton}>
+							<IoTrashOutline size="27px"/>
+						</button>
+				</div>
+		</div>
+		)
 }
 
 export default Question;

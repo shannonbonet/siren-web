@@ -9,8 +9,7 @@ import Button from "../Button/Button";
 import {LinkForm} from "../LinkForm/LinkForm";
 import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
-import { List, arrayMove } from 'react-movable';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export const IntakeFormOverlay
 = () => {
@@ -20,14 +19,22 @@ export const IntakeFormOverlay
   function addQuestion() {
     let list = [...questions];
     let id: string = Math.random().toString(36).slice(2).valueOf();
-    console.log(typeof(id));
-    list.push(<Question key={list.length} index ={list.length} id={id}/>);
+    const draggable = (
+      <Draggable key={list.length} index ={list.length} draggableId={id}>
+        {provided => (
+        <div
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}>
+            {<Question/>}
+          </div>
+          )
+        }
+      </Draggable>
+    )
+    list.push(draggable);
     setQuestions(list);
   }
-
-  let questionList = questions.map(function(question) {
-    return question;
-  })
 
   const onDragEnd = (result) => {
     console.log('TODO: reorder', result);
