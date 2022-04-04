@@ -1,7 +1,7 @@
 import firebase from '../firebase/clientApp'
 import { useCollection } from "react-firebase-hooks/firestore";
 import Dashboard from './dashboard';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 
 export default function Home() {
 
