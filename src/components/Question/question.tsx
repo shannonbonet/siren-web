@@ -1,5 +1,5 @@
 import TextareaAutosize from 'react-textarea-autosize';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.css'; 
 import Select from 'react-select'
 import { IoCloseOutline, IoRadioButtonOffOutline, IoTrashOutline, IoCalendarOutline } from 'react-icons/io5';

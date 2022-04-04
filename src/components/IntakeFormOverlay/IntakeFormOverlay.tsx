@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/dist/client/link';
 import styles from "../IntakeFormOverlay/IntakeFormOverlay.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline } from "react-icons/io";
@@ -7,8 +7,6 @@ import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
 import {LinkForm} from "../LinkForm/LinkForm";
-
-
 
 
 interface OverlayProps {
