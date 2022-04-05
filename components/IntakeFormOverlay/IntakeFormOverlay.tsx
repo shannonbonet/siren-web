@@ -15,33 +15,49 @@ export const IntakeFormOverlay
 = () => {
   const [titleText, setTitleText] = useState("");
   const [questions, setQuestions] = useState([]);
+  const [questionIds, setQuestionIds] = useState([]);
 
   function addQuestion() {
+    const id: string = Math.random().toString(36).slice(2).valueOf();
     let list = [...questions];
-    let id: string = Math.random().toString(36).slice(2).valueOf();
-    var draggable = (
-      <Draggable key={list.length} index ={list.length} draggableId={id}>
+    let ids = [...questionIds];
+    list.push(<Question/>);
+    ids.push(id)
+    setQuestions(list);
+    setQuestionIds(ids);
+  }
+
+  const getDraggable = (question, index) => {
+    return (
+      <Draggable key={questionIds[index]} index ={index} draggableId={questionIds[index]}>
         {provided => (
         <div
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          ref={provided.innerRef}>
-            {<Question key ={list.length}/>}
+          ref={provided.innerRef}
+          className={styles.container}>
+            {question}
           </div>
           )
         }
       </Draggable>
     )
-    list.push(draggable);
-    setQuestions(list);
+  }
+
+  const reorder = (list, source, destination) => {
+    const newList = Array.from(list);
+    const [movedItem] = newList.splice(source, 1);
+    newList.splice(destination, 0, movedItem);
+    return newList;
   }
 
   const onDragEnd = (result) => {
     const { destination, source} = result;
-
     if (!result.destination) {
       return;
     }
+    console.log("From: ", source.index);
+    console.log("To: ", destination.index);
 
     if (
       destination.droppableId === source.droppableId &&
@@ -49,11 +65,10 @@ export const IntakeFormOverlay
     ) {
       return;
     }
-    const newList = Array.from(questions);
-    let movedItem = newList[source.index];
-    newList.splice(source.index, 1);
-    newList.splice(destination.index, 0, movedItem);
-    setQuestions(newList);
+    const newQuestions = reorder(questions, source.index, destination.index);
+    const newQuestionIds = reorder(questionIds, source.index, destination.index);
+    setQuestions(newQuestions);
+    setQuestionIds(newQuestionIds);
   }
   return (
     <DragDropContext
@@ -107,7 +122,7 @@ export const IntakeFormOverlay
             {...droppableProvided.droppableProps}
             ref={droppableProvided.innerRef}
             >
-              {questions}
+              {questions.map((q, index) => (getDraggable(q, index)))}
               {droppableProvided.placeholder}
             </div>
           )}
