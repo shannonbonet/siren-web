@@ -19,14 +19,14 @@ export const IntakeFormOverlay
   function addQuestion() {
     let list = [...questions];
     let id: string = Math.random().toString(36).slice(2).valueOf();
-    const draggable = (
+    var draggable = (
       <Draggable key={list.length} index ={list.length} draggableId={id}>
         {provided => (
         <div
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}>
-            {<Question/>}
+            {<Question key ={list.length}/>}
           </div>
           )
         }
@@ -37,7 +37,23 @@ export const IntakeFormOverlay
   }
 
   const onDragEnd = (result) => {
-    console.log('TODO: reorder', result);
+    const { destination, source} = result;
+
+    if (!result.destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+    const newList = Array.from(questions);
+    let movedItem = newList[source.index];
+    newList.splice(source.index, 1);
+    newList.splice(destination.index, 0, movedItem);
+    setQuestions(newList);
   }
   return (
     <DragDropContext
@@ -96,44 +112,6 @@ export const IntakeFormOverlay
             </div>
           )}
         </Droppable>
-        {/* <DragDropContext
-        className={styles["context"]}
-        onDragEnd={onDragEnd}>
-          <Droppable droppableId="questionsList">
-            {(droppableProvided) => (
-              <div
-              className={styles["questions"]}
-              {...droppableProvided.droppableProps}
-              innerRef={droppableProvided.innerRef}
-              >
-                {questionList}
-                {droppableProvided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext> */}
-          {/* <div className={styles["questions"]}>
-            <List
-            values={questions}
-            onChange={({ oldIndex, newIndex }) =>
-              {console.log(questions);
-              setQuestions(arrayMove(questions, oldIndex, newIndex))}
-            }
-            renderList={({ children, props, isDragged }) => (
-              <ul
-                {...props}
-                style={{ padding: 0, cursor: isDragged ? 'grabbing' : undefined,  listStyleType:"none"}}
-              >
-                {children}
-              </ul>
-            )}
-            renderItem={({ value, props }) =>
-            <li
-              {...props}
-              style={{ listStyleType:"none"}}
-            >{value}</li>}
-                  />
-          </div> */}
       </div>
     </DragDropContext>
     )

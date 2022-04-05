@@ -21,7 +21,6 @@
     "react-firebase-hooks": "^3.0.4",
     "react-firebaseui": "^5.0.2",
     "react-icons": "^4.3.1",
-    "react-movable": "^3.0.4",
     "react-router-dom": "^6.2.2",
     "react-select": "^5.2.2",
     "react-textarea-autosize": "^8.3.3",
