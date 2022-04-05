@@ -1,6 +1,5 @@
-import React, { MouseEvent } from "react";
+import React from "react";
 import styles from "../Button/Button.module.css";
-
 
 export enum ButtonType {
   "button-pruss",
@@ -20,16 +19,11 @@ interface ButtonProps {
 
 }
 
-const Button: React.FC<ButtonProps> = ({
-  text,
-  buttonType,
-  textType,
-  onPress,
-}) => {
+const Button = (props: ButtonProps) => {
   return (
-    <button onClick={onPress} className={styles['App-button']} id={styles[buttonType]}>
-      <a className={styles['App-button-text']} id={styles[textType]}>
-        {text}
+    <button onClick={props.onPress} className={styles['App-button']} id={styles[props.buttonType]}>
+      <a className={styles['App-button-text']} id={styles[props.textType]}>
+        {props.text}
       </a>
     </button>
   );
