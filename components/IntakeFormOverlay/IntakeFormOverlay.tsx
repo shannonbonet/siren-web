@@ -10,6 +10,8 @@ import {LinkForm} from "../LinkForm/LinkForm";
 import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Image from "next/image";
+import dragDots from "../../assets/images/dragDots.png";
 
 export const IntakeFormOverlay
 = () => {
@@ -30,16 +32,31 @@ export const IntakeFormOverlay
   const getDraggable = (question, index) => {
     return (
       <Draggable key={questionIds[index]} index ={index} draggableId={questionIds[index]}>
-        {provided => (
-        <div
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-          className={styles.container}>
-            {question}
-          </div>
-          )
-        }
+         {(provided, snapshot) => {
+          if (snapshot.isDragging) {
+              const offset = { x: -300, y: -8 }
+              const x = provided.draggableProps.style.left - offset.x;
+              const y = provided.draggableProps.style.top - offset.y;
+              provided.draggableProps.style.left = x;
+              provided.draggableProps.style.top = y;
+           }
+           return (
+              <div
+              {...provided.draggableProps}
+              ref={provided.innerRef}
+              className={styles.container}>
+                <div 
+                className={styles["dragDots"]}
+                {...provided.dragHandleProps}
+                >
+                  <Image 
+                  src={dragDots} 
+                  alt="draghere"/>
+                </div>
+                {question}
+              </div>
+           );
+       }}
       </Draggable>
     )
   }
@@ -56,8 +73,6 @@ export const IntakeFormOverlay
     if (!result.destination) {
       return;
     }
-    console.log("From: ", source.index);
-    console.log("To: ", destination.index);
 
     if (
       destination.droppableId === source.droppableId &&

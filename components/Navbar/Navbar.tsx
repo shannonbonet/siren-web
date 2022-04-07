@@ -15,8 +15,8 @@ export const Navbar = () => {
                     Intake Dashboard
                 </a>
             </Link>
-            <Link href="/IntakeForms/GenQuestion" >
-                <a className={router.pathname == "/IntakeForms/GenQuestion" ? styles.active : ""}> 
+            <Link href="/IntakeForms" >
+                <a className={router.pathname == "/IntakeForms" ? styles.active : ""}> 
                     Intake Form
                 </a>
             </Link>

@@ -1,47 +1,47 @@
 .questionText {
     resize: none;
-    width: 617px;
+    width: 70%;
     height: 37px;
     background-color: #e7e7e7;
     color: #2b2b2b;
     border-radius: 8px;
-    padding: 9px 12px;
+    padding: 9px 1.2%;
     font-size: 16px;
 }
 
 .longText {
     resize: none;
-    width: 832px;
+    width: 95%;
     height: 37px;
     color: #2b2b2b;
     font-size: 16px;
     border-width: 0 0 1px;
-    padding-left: 12px;
+    padding-left: 1.3%;
     border-color: #2b2b2b;
     outline: none;
 }
 
 .shortText {
     resize: none;
-    width: 500px;
+    width: 53%;
     height: 37px;
     color: #2b2b2b;
     font-size: 16px;
     border-width: 0 0 1px;
-    padding-left: 12px;
+    padding-left: 1.3%;
     border-color: #2b2b2b;
     outline: none;
 }
 
 .answerType {
-    width: 256px;
+    width: 27%;
     height: 37px;
     background-color: white;
     color: #2b2b2b;
     border-radius: 16px;
     border-width: 1px #2b2b2b;
     font-size: 16px;
-    padding-left: 16px;
+    padding-left: 1.6%;
     outline: 0;
 }
 
@@ -50,41 +50,33 @@
     justify-content: flex-start;
     flex-direction: row;
     align-items: flex-start;
-    padding: 12px;
+    padding: 1.3%;
 }
 
 .container {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-    border: 1px solid;
-    border-radius: 5px;
-    width: 932px;
-    align-self: center;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    background-color: white;
+    width: 100%;
 }
 
 .topcontainer {
+
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 2.1%;
+    padding-right: 2.1%;
     padding-top: 20px;
+    
 }
 
 .middlecontainer {
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 2.1%;
+    padding-right: 2.1%;
     padding-top: 20px;
 }
 
@@ -93,8 +85,8 @@
     justify-content: flex-start;
     flex-direction: row;
     align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 2.1%;
+    padding-right: 2.1%;
     padding-top: 16px;
 }
 
@@ -103,7 +95,7 @@
     justify-content: flex-start;
     flex-direction: row;
     align-items: center;
-    padding-right: 20px;
+    padding-right: 2.1%;
     padding-top: 20px;
 }
 
@@ -112,8 +104,8 @@
     justify-content: center;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 2.1%;
+    padding-right: 2.1%;
     padding-top: 20px;
 }
 
@@ -140,7 +132,7 @@
 
 .addOption {
     padding-top: 24px;
-    padding-left: 16px;
+    padding-left: 1.7%;
     font-size: 16px;
     background-color: transparent;
     width: auto;
@@ -157,8 +149,8 @@
 }
 
 .copybutton {
-    padding-right: 24px;
-    padding-left: 24px;
+    padding-right: 2.6%;
+    padding-left: 2.6%;
     outline: 0;
     border: 0;
     background-color: transparent;
@@ -171,5 +163,5 @@
 }
 
 .calendardiv {
-    padding-left: 5px;
+    padding-left: 0.5%;
 }
