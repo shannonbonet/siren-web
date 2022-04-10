@@ -85,12 +85,10 @@ export const IntakeFormOverlay
     setQuestions(newQuestions);
     setQuestionIds(newQuestionIds);
   }
-  return (
-    <DragDropContext
-    className={styles["context"]}
-    onDragEnd={onDragEnd}>
-      <div className={styles["page"]}>
-        <div className={styles["overlay"]}>
+
+  function Overlay() {
+    return(
+      <div className={styles["overlay"]}>
           <div className={styles["namebar"]}>
             <Link href="/">
               <IoIosArrowBack color="#0F2536"/>
@@ -127,6 +125,15 @@ export const IntakeFormOverlay
           </div>
           <LinkForm/>
         </div>
+    )
+  }
+
+  return (
+    <DragDropContext
+    className={styles["context"]}
+    onDragEnd={onDragEnd}>
+      <div className={styles["page"]}>
+        <Overlay/>
         <div className={styles["spacer"]}/>
         <Droppable 
         droppableId="questionsList"
