@@ -67,15 +67,20 @@ export const getClientResponsesOfType = async(
   }
 }
 
-// async function loadClient(){
-//   const testCli = await getClient('XX3LfjpVcKNct8036lwDECZAGj32');
-//   console.log(testCli.answers);
-//   const ans1 = testCli.answers.get('general');
-//   console.log(ans1);
-//   console.log(ans1.get('dateOfBirth').get('seconds'));
+export const getIdentifiers = async(
+  clientId: string
+): Promise<Array<Object>> => {
+  try{
+    let caseIds = new Array<Object>();
+    const cases = await database.collection(`clients/${clientId}/cases`).get();
+    const cliCases = cases.docs.map(c => c.data());
+    await cliCases.map(c => caseIds.push({caseType: c.type, identifier: c.identifier}))
+    return caseIds;
+  } catch (e){
+    console.warn(e);
+    throw(e);
+  } 
+}
 
-// }
-
-// loadClient()
 
 

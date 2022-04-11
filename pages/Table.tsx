@@ -7,60 +7,60 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import {getAllQuestionsOfType, getAllClients} from '../firebase/queries';
+import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../firebase/queries';
 import {Question} from '../types';
 
 interface Column {
-  id: 'id' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
+  id: 'identifier' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
   label: string;
   minWidth?: number;
-  align?: 'right';
+  align?: 'left';
   format?: (value: number) => string;
 }
 
 const columns: readonly Column[] = [
-  { id: 'id', label: 'Unique ID', minWidth: 170 },
+  { id: 'identifier', label: 'Unique ID', minWidth: 170 },
   { id: 'Name', label: 'Name', minWidth: 100 },
   {
     id: 'alienRegistrationNumber',
     label: 'A. Number',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'visitReason',
     label: 'Case Type',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'status',
     label: 'Status',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'telephone',
     label: 'Phone Number',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'Email',
     label: 'Email',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'county',
     label: 'County',
     minWidth: 170,
-    align: 'right',
+    align: 'left',
     format: (value: number) => value.toFixed(2),
   },
 ];
@@ -81,6 +81,7 @@ const MyTable = () => {
 
   const [responses, setResponses] = useState<Array<Object>>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
 
     useEffect(() => {
         async function loadClientResponses(){
@@ -105,19 +106,27 @@ const MyTable = () => {
         }
         loadQuestions();
 
-        // DEBUGGING 
-        console.log('RESPONSES', 
-          responses.map((res) => 
-            { return (<div>{res['Name']}</div>)
-          }));
+        async function loadIdentifiers(){
+          //filter out empty answers
+          const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
 
-    }, []);
+          Promise.all(
+            clients.map(c => getIdentifiers(c.id))
+          ).then(ids => setIdentifiers(ids));
+        }
+        loadIdentifiers();
 
+    
+    }, [identifiers]);
+    
+    //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
+    
+  
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+          <TableHead sx={{borderRadius: '10px'}}>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
@@ -134,11 +143,17 @@ const MyTable = () => {
             {/* EDIT THIS SECTION */}
             {responses
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, i) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>
-                    {columns.map((column) => { 
-                      const value = row[column.id];
+                    {columns.map((column) => {
+                        let value;
+                        if (column.id == 'identifier'){
+                          // using first case as default for now, should eventually take in caseType and update value accordingly
+                          value = identifiers[i][0]['identifier']; 
+                        } else {
+                          value = row[column.id];
+                        } 
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === 'number'

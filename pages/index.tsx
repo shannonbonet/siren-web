@@ -36,7 +36,6 @@ export default function Home() {
           SIREN Admin
         </h1>
       </main>  */}
-      <IntakeTable/>
       <MyTable/>
     </PageContainer>
   )
