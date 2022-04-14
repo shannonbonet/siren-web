@@ -34,7 +34,7 @@ export const IntakeFormOverlay
       <Draggable key={questionIds[index]} index ={index} draggableId={questionIds[index]}>
          {(provided, snapshot) => {
           if (snapshot.isDragging) {
-              const offset = { x: -300, y: -8 }
+              const offset = { x: -1*(window.innerWidth * 0.193) , y: -1*(window.innerHeight*0.01) }
               const x = provided.draggableProps.style.left - offset.x;
               const y = provided.draggableProps.style.top - offset.y;
               provided.draggableProps.style.left = x;
