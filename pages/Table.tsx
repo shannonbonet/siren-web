@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../firebase/queries';
 import {Question} from '../types';
+import {camelize} from '../firebase/helpers';
 
 interface Column {
   id: 'identifier' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
@@ -16,6 +17,12 @@ interface Column {
   minWidth?: number;
   align?: 'left';
   format?: (value: number) => string;
+}
+
+const caseTypes = {
+  'dacaRenewal': 10,
+  'adjustmentOfStatus': 11,
+  'i90': 12,
 }
 
 const columns: readonly Column[] = [
@@ -84,9 +91,10 @@ const MyTable = () => {
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
 
     useEffect(() => {
-        async function loadClientResponses(){
-            let clientAns: Array<Object> = new Array();
-
+      let clientAns: Array<Object> = new Array();
+      let caseIdentifiers: Array<Object[]> = new Array();
+        
+      async function loadClientResponses(){
             //filter out clients w no answers
             const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
 
@@ -95,6 +103,10 @@ const MyTable = () => {
                 clientAns.push(clients[i].answers);
             }
             const clientGenAns: Array<Object> = clientAns.map(c => c['general']);
+
+            //set identifiers
+            const ids = clients.map(c => getIdentifiers(c.id)); 
+            Promise.all(ids).then(ids => setIdentifiers(ids))
 
             setResponses(clientGenAns);
         }
@@ -106,22 +118,11 @@ const MyTable = () => {
         }
         loadQuestions();
 
-        async function loadIdentifiers(){
-          //filter out empty answers
-          const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
-
-          Promise.all(
-            clients.map(c => getIdentifiers(c.id))
-          ).then(ids => setIdentifiers(ids));
-        }
-        loadIdentifiers();
-
-    
-    }, [identifiers]);
+    }, []);
     
     //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
-    
-  
+    console.log(identifiers);
+    console.log(responses);
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -132,7 +133,7 @@ const MyTable = () => {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ minWidth: column.minWidth, backgroundColor: '#CFD3D7', borderColor: '#0F2536', maxHeight: '36px'}}
                 >
                   {column.label}
                 </TableCell>
@@ -150,7 +151,13 @@ const MyTable = () => {
                         let value;
                         if (column.id == 'identifier'){
                           // using first case as default for now, should eventually take in caseType and update value accordingly
-                          value = identifiers[i][0]['identifier']; 
+                          const caseType = camelize(row['visitReason']);
+                          for (const o of identifiers[i]){
+                            if (o['caseType'] == caseType){
+                              value = o['identifier'];
+                              break;
+                            }
+                          }
                         } else {
                           value = row[column.id];
                         } 
