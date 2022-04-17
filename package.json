@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.5.0",
+    "@mui/lab": "^5.0.0-alpha.75",
     "@react-icons/all-files": "^4.1.0",
     "firebase": "^8.10.0",
     "next": "^12.1.0",

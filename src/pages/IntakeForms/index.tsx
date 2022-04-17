@@ -1,5 +1,5 @@
 import IntakeForm from '../../components/IntakeForm/IntakeForm';
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 
 
 export default function GenQuestion() {

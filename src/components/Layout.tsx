@@ -1,7 +1,6 @@
 import { Navbar } from './Navbar/Navbar';
 import styles from './Layout.module.css'
 import Head from "next/head";
-import { IntakeFormOverlay } from './IntakeForm/IntakeForm';
 
 export default function Layout({ children }) {
   return (
