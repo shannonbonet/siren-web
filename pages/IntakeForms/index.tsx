@@ -1,6 +1,5 @@
-import { IntakeFormOverlay } from '../../components/IntakeFormOverlay/IntakeFormOverlay';
+import IntakeForm from '../../components/IntakeForm/IntakeForm';
 import Layout from "../../components/layout";
-import styles from './IntakeForms.module.css'
 
 
 export default function GenQuestion() {
@@ -8,7 +7,7 @@ export default function GenQuestion() {
   return (
     <div>
       <Layout>
-        <IntakeFormOverlay/>
+        <IntakeForm/>
       </Layout>
     </div>
     )

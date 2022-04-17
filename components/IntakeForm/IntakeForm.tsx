@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/dist/client/link';
-import styles from "./IntakeFormOverlay.module.css";
+import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline } from "react-icons/io";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
@@ -13,8 +13,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import dragDots from "../../assets/images/dragDots.png";
 
-export const IntakeFormOverlay
-= () => {
+const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
   const [questions, setQuestions] = useState([]);
   const [questionIds, setQuestionIds] = useState([]);
@@ -133,7 +132,7 @@ export const IntakeFormOverlay
     className={styles["context"]}
     onDragEnd={onDragEnd}>
       <div className={styles["page"]}>
-        <Overlay/>
+        {Overlay()}
         <div className={styles["spacer"]}/>
         <Droppable 
         droppableId="questionsList"
@@ -154,4 +153,6 @@ export const IntakeFormOverlay
     )
 
 } 
+
+export default IntakeForm;
 
