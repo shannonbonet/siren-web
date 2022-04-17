@@ -1,13 +1,12 @@
 import React from 'react';
-import { IntakeFormOverlay } from '../../../components/IntakeFormOverlay/IntakeFormOverlay';
-import {TempForm} from "../../../components/TempForm/TempForm";
+import IntakeForm  from '../../../components/IntakeForm/IntakeForm';
 
 export default function Citizenship() {
   return (
     <div>
       <div>
-        <IntakeFormOverlay 
-        title="Citizenship"
+        <IntakeForm
+          // title="Citizenship"
         />
       </div>
     </div>
