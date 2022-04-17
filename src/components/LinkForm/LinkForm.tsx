@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './LinkForm.module.css';
 
 
-
 export const LinkForm = () => {
   return(
     <div className={styles["link-form"]}>

@@ -1,6 +1,5 @@
-import Head from 'next/head'
 import Dashboard from './dashboard';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 import { useAuth } from '../firebase/auth/useFirebaseAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

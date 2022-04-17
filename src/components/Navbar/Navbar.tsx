@@ -5,7 +5,6 @@ import { FiExternalLink} from "react-icons/fi";
 import { CgProfile} from "react-icons/cg";
 
 
-
 export const Navbar = () => {   
     const router = useRouter();
     return (

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/dist/client/link';
-import styles from "./IntakeFormOverlay.module.css";
+import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline } from "react-icons/io";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
@@ -11,10 +11,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
-import dragDots from "../../assets/images/dragDots.png";
+import dragDots from "../../../assets/images/dragDots.png";
 
-export const IntakeFormOverlay
-= () => {
+const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
   const [questions, setQuestions] = useState([]);
   const [questionIds, setQuestionIds] = useState([]);
@@ -34,7 +33,7 @@ export const IntakeFormOverlay
       <Draggable key={questionIds[index]} index ={index} draggableId={questionIds[index]}>
          {(provided, snapshot) => {
           if (snapshot.isDragging) {
-              const offset = { x: -300, y: -8 }
+              const offset = { x: -1*(window.innerWidth * 0.193) , y: -1*(window.innerHeight*0.01) }
               const x = provided.draggableProps.style.left - offset.x;
               const y = provided.draggableProps.style.top - offset.y;
               provided.draggableProps.style.left = x;
@@ -85,12 +84,10 @@ export const IntakeFormOverlay
     setQuestions(newQuestions);
     setQuestionIds(newQuestionIds);
   }
-  return (
-    <DragDropContext
-    className={styles["context"]}
-    onDragEnd={onDragEnd}>
-      <div className={styles["page"]}>
-        <div className={styles["overlay"]}>
+
+  function Overlay() {
+    return(
+      <div className={styles["overlay"]}>
           <div className={styles["namebar"]}>
             <Link href="/">
               <IoIosArrowBack color="#0F2536"/>
@@ -127,6 +124,15 @@ export const IntakeFormOverlay
           </div>
           <LinkForm/>
         </div>
+    )
+  }
+
+  return (
+    <DragDropContext
+    className={styles["context"]}
+    onDragEnd={onDragEnd}>
+      <div className={styles["page"]}>
+        {Overlay()}
         <div className={styles["spacer"]}/>
         <Droppable 
         droppableId="questionsList"
@@ -147,4 +153,6 @@ export const IntakeFormOverlay
     )
 
 } 
+
+export default IntakeForm;
 

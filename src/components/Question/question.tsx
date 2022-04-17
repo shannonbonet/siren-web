@@ -8,7 +8,7 @@ import Toggle from 'react-toggle';
 import "react-toggle/style.css";
 
 const Question = () => {
-  	const [questionText, setQuestionText] = useState();
+  const [questionText, setQuestionText] = useState("");
 	const [descriptionText, setDescriptionText] = useState("");
 	const [answerType, setAnswerType] = useState(null);
 	const [answerOptions, setAnswerOptions] = useState(["Option"]);
@@ -112,49 +112,49 @@ const Question = () => {
 		}
 	}
 
-	return (
-		<div className={styles.container}>  
-		  <div className={styles.topcontainer}>
-			<TextareaAutosize
-			  cacheMeasurements
-			  value={questionText}
-			  placeholder="Question"
-			  onChange={ev => setQuestionText(ev.target.value)}
-			  className={styles.questionText}
-			/>
-					<Select 
-						options={answerTypeOptions} 
-						onChange={setAnswerType} 
-						defaultValue={answerType}
-						className={styles.answerType}
+  return (
+    <div className={styles.container}>  
+      <div className={styles.topcontainer}>
+        <TextareaAutosize
+          cacheMeasurements
+          value={questionText}
+          placeholder="Question"
+          onChange={ev => setQuestionText(ev.target.value)}
+          className={styles.questionText}
+        />
+				<Select 
+					options={answerTypeOptions} 
+					onChange={setAnswerType} 
+					defaultValue={answerType}
+					className={styles.answerType}
+				/>
+      </div>
+			<div className={styles.middlecontainer}>
+				<TextareaAutosize
+          cacheMeasurements
+          value={descriptionText}
+          placeholder="Description"
+          onChange={ev => setDescriptionText(ev.target.value)}
+          className={styles.longText}
+        />
+			</div>
+			{answerType ? getAnswerTypeComponent() : null}
+			<div className={styles.bottombuttons}>
+					<span className={styles.requiredspan}>Required</span>
+					<Toggle
+						checked={required}
+						icons={false}
+						onChange={() => setRequired(!required)}
 					/>
-		  </div>
-				<div className={styles.middlecontainer}>
-					<TextareaAutosize
-			  cacheMeasurements
-			  value={descriptionText}
-			  placeholder="Description"
-			  onChange={ev => setDescriptionText(ev.target.value)}
-			  className={styles.longText}
-			/>
-				</div>
-				{answerType ? getAnswerTypeComponent() : null}
-				<div className={styles.bottombuttons}>
-						<span className={styles.requiredspan}>Required</span>
-						<Toggle
-							checked={required}
-							icons={false}
-							onChange={() => setRequired(!required)}
-						/>
-						<button className={styles.copybutton}>
-							<MdContentCopy size="27px"/>
-						</button>
-						<button className={styles.trashbutton}>
-							<IoTrashOutline size="27px"/>
-						</button>
-				</div>
-		</div>
-		)
+					<button className={styles.copybutton}>
+						<MdContentCopy size="27px"/>
+					</button>
+					<button className={styles.trashbutton}>
+						<IoTrashOutline size="27px"/>
+					</button>
+			</div>
+    </div>
+    )
 }
 
 export default Question;
