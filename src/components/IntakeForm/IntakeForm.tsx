@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/dist/client/link';
 import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline } from "react-icons/io";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
@@ -11,7 +11,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
-import dragDots from "../../assets/images/dragDots.png";
+import dragDots from "../../../assets/images/dragDots.png";
 
 const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
