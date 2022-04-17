@@ -1,5 +1,5 @@
 import styles from './styles.module.css'; 
-import sirenLogo from '../../assets/images/siren_logo.png';
+import sirenLogo from '../../../assets/images/siren_logo.png';
 import Image from 'next/image'
 import { useRouter } from 'next/router';
 

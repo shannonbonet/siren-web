@@ -1,10 +1,11 @@
 import '../styles/globals.css'
 import { AuthUserProvider } from '../firebase/auth/useFirebaseAuth'
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps })  => {
+  
   return (
     <AuthUserProvider><Component {...pageProps} /></AuthUserProvider>
   )
 }
 
-export default MyApp
+export default MyApp;
