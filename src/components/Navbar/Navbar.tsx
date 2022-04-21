@@ -3,11 +3,9 @@ import styles from './Navbar.module.css'
 import { useRouter } from 'next/router';
 import { FiExternalLink} from "react-icons/fi";
 import Avatar from '@mui/material/Avatar';
-import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 
 export const Navbar = () => {   
     const router = useRouter();
-    const { signOut } = useAuth(); 
     return (
         <nav className={styles.bar}>
             <Link href="/" >

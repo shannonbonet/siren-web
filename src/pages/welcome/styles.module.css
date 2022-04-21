@@ -26,49 +26,19 @@
 }
 
 .register {
-    width: 40%;
-    height: 60%;
-    background-color: #0F2536;
+    width: 100px;
+    height: 40px;
     border-radius: 7px;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.register:active {
-    background: #15364f;
-    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
-       -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
-            box-shadow: inset 0px 0px 5px #c1c1c1;
-     outline: none;
-}
 
 .login {
-    width: 40%;
-    height: 60%;
-    background-color: white;
+    width: 100px;
+    height: 40px;
     border-radius: 7px;
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.login:active {
-    background: #e5e5e5;
-    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
-       -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
-            box-shadow: inset 0px 0px 5px #c1c1c1;
-     outline: none;
 }
 
 .p {
     color: white;
-    font-size: 105%;
 }
 
-.p1 {
-    color: black;
-    font-size: 105%;
-}
