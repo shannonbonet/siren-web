@@ -10,7 +10,7 @@
     height: 600px;
     display: flex;
     flex-direction: column;
-    background-color: #EEEFF0;
+    background-color: var(--back-drop);
     justify-content: center;
     align-items: center;
     border-radius: 2.5%;

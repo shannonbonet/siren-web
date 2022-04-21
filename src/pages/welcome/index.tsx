@@ -13,7 +13,7 @@ const Welcome = () => {
         <div className={styles.logo}>
           <Image src={sirenLogo} alt="Siren Logo" width="200%" height="100%"/>
         </div>
-        <div className={styles.buttondiv}>
+        <div className={styles.buttons}>
           <Button className={styles.login} onClick={() => router.push('/login')} variant="outlined">
             Log In 
           </Button>

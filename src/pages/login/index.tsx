@@ -31,7 +31,7 @@ const SignUp = () => {
         <div className={styles.window}>
           <h1 className={styles.header}>Log in</h1>
           <div className={styles.form}>
-            <form id="login" onSubmit={onSubmit} className={styles.form}>
+            <form id="login" onSubmit={onSubmit}>
               <div className={styles.input}>
                 <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
                 <TextField id="outlined-basic" label="Password" type="password" variant="outlined" onChange={(e) => setPassword(e.target.value)} />
