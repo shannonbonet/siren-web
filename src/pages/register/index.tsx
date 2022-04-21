@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import styles from './styles.module.css'; 
-import { Button, TextField } from '@material-ui/core';
-
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("")
   const [passwordOne, setPasswordOne] = useState("");
   const [passwordTwo, setPasswordTwo] = useState("");
+  const [showPassOne, setShowOne] = useState(false); 
+  const [showPassTwo, setShowTwo] = useState(false); 
   const router = useRouter();
 
   const { createUserWithEmailAndPassword } = useAuth();
@@ -58,17 +60,67 @@ function checkPassword (password: string, password2: string): boolean {
     return password === password2; 
   }
 
+  const toggleFirstPassword = () => {
+    setShowOne(!showPassOne); 
+  }
+  const toggleSecondPassword = () => {
+    setShowTwo(!showPassTwo); 
+  }
+
   return (
     <div className={styles.container}>
         <div className={styles.window}>
-          <h1 className={styles.header}>Sign up</h1>
+          <h1 className={styles.header}>Sign Up</h1>
           <div className={styles.form}>
             <form id="register" onSubmit={onSubmit}>
               <div className={styles.input}>
                 <TextField label="Name" variant="outlined" onChange={(e) => setName(e.target.value)} />
                 <TextField label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
-                <TextField label="Password" type="password" variant="outlined" onChange={(e) => setPasswordOne(e.target.value)} />
-                <TextField label="Re-enter Password" type="password" variant="outlined" onChange={(e) => setPasswordTwo(e.target.value)} />
+                {/* Not sure how to fix 'no overloads match this call' error for FormControl but it works on my end
+                Without FormControl, the InputLabel doesn't format nicely */}
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassOne ? 'text' : 'password'}
+                      onChange={(e) => setPasswordOne(e.target.value)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={toggleFirstPassword}
+                            edge="end"
+                          >
+                            {showPassOne ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    label="Password"
+                  />
+                </FormControl>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Re-enter Password</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassOne ? 'text' : 'password'}
+                      onChange={(e) => setPasswordTwo(e.target.value)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={toggleSecondPassword}
+                            edge="end"
+                          >
+                            {showPassTwo ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    label="Password"
+                  />
+                </FormControl>
+
+                {/* old password version with no icon */}
+                {/* <TextField label="Re-enter Password" type={showPassTwo ? "text" :"password"} variant="outlined" onChange={(e) => setPasswordTwo(e.target.value)} /> */}
               </div>
             </form>
           </div>

@@ -28,7 +28,7 @@
 .input {
     display: flex; 
     flex-direction: column;
-    height: 350px; 
+    height: 400px; 
     padding: 20px;
     justify-content: space-around;
 }

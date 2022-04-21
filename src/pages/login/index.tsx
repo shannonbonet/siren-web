@@ -4,27 +4,33 @@ import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import styles from './styles.module.css'; 
+import { FormControl, InputLabel, IconButton, InputAdornment, OutlinedInput } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); 
 
   const { signInWithEmailAndPassword } = useAuth();
 
   const onSubmit = event => {
-    setError(null)
     signInWithEmailAndPassword(email, password)
     .then(authUser => {
       router.push('/');
     })
     .catch(error => {
-      setError(error.message)
+      console.log(error)
+      alert(error)
     });
     event.preventDefault();
   };
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword); 
+  }
 
   return (
     <div className={styles.container}>
@@ -34,7 +40,26 @@ const SignUp = () => {
             <form id="login" onSubmit={onSubmit}>
               <div className={styles.input}>
                 <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
-                <TextField id="outlined-basic" label="Password" type="password" variant="outlined" onChange={(e) => setPassword(e.target.value)} />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassword ? 'text' : 'password'}
+                      onChange={(e) => setPassword(e.target.value)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={togglePassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    label="Password"
+                  />
+                </FormControl>
               </div>
             </form>
           </div>
