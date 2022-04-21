@@ -70,3 +70,16 @@
 .button {
     margin-right: 10px;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+    text-align:center
+}
+
+.successNotif {
+    display: flex;
+    align-items: row;
+    font-size: 1.17em;
+    font-weight: bold;
+}

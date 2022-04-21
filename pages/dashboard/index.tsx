@@ -5,7 +5,7 @@ export default function IntakeDashboard() {
         // Layout wraps this component in index.tsx
         <div> 
             <h1>Intake Dashboard</h1>
-            <ClientInfo />
+            <ClientInfo /> {/* <<< TODO: implement ability to pass in client as argument */}
         </div>
     )
 }
