@@ -65,7 +65,9 @@ const OverviewBox = () => {
                         <div className={styles.flex}>
                             <h3>Extra Info</h3>
                             <div>
+                                {/* TODO: retrieve from firebase instead
                                 <p><b>Favorite food</b><br />Pasta</p>
+                                */}
                             </div>
                         </div>
                     </TabPanel>
@@ -121,16 +123,21 @@ const ClientActions = () => {
                         </FormControl>
                     </TabPanel>
                     <TabPanel value='reject' className={styles['no-padding']}>
-                        <p>???</p>
+                        <RadioGroup>
+                            <FormControlLabel value="send-referral-link" control={<Radio size="small" />} label="Send referral link" />
+                        </RadioGroup>
                     </TabPanel>
                     <TabPanel value='remind' className={styles['no-padding']}>
-                        <p>???</p>
+                        <RadioGroup>
+                            <FormControlLabel value="upload-documents" control={<Radio size="small" />} label="To upload documents" />
+                            <FormControlLabel value="appointment" control={<Radio  size="small"/>} label="Upcoming appointment" />
+                        </RadioGroup>
                     </TabPanel>
                 </div>
             </TabContext>
             <div className={styles.buttons}>
                 <Button variant="outlined" className={styles.button}>Clear</Button>
-                <Button variant="contained">Send</Button>
+                <Button variant="contained" onClick={() => setClientActionsState(1)}>Send</Button>
             </div>
         </div>
     );
@@ -162,7 +169,8 @@ const ClientActionsConfirm = () => {
 const ClientActionsBox = () => {
     // TODO: depending on if send was successfully executed, change from ClientActions to ClientActionsSuccess
     //          - maybe have some const or var outside to give ability to change this
-    const sendSuccessful = 0; // TODO: change this
+    const [clientActionsState, setClientActionsState] = useState(0);
+    const sendSuccessful = clientActionsState; // TODO: change this
     switch ( sendSuccessful ) {
         case 1:
             return(<ClientActionsConfirm />)
