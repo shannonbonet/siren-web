@@ -150,6 +150,7 @@ const IntakeTable = () => {
             {responses
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
+                console.log(clientsPass[i]);
                 return (
                   //
                   // Taking out this line below will introduce red squigglies 
@@ -161,7 +162,7 @@ const IntakeTable = () => {
                     query: { fullName: clientsPass[i]["fullName"],
                              email: clientsPass[i]["email"],
                              id: clientsPass[i]["id"],
-                             client: clientsPass[i]
+                             answers: clientsPass[i]["answers"]
                             }
                   }} passHref>
                     <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>

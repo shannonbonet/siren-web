@@ -27,6 +27,8 @@ export const ClientInfo = ( {query} ) => {
 // RENDER BOXES
 
 const OverviewBox = ({query}) => {
+    console.log(query)
+    console.log(query["answers"])
     const [tabValue, setTabValue] = useState('overview');
     return (
         <div className={`${styles.outline} ${styles.overview}`}>
@@ -45,7 +47,7 @@ const OverviewBox = ({query}) => {
                             </div>
                         </div>
                         <div className={styles.flex}>
-                            <h3>Basic Info</h3>
+                            <h3>COVID-19</h3>
                             <div>
                                 {/* TODO: retrieve from firebase instead
                                 <p><b>Legal disclaimer</b></p>
@@ -100,7 +102,7 @@ const ClientActionsBox = () => {
     const [tabValue, setTabValue] = useState('approve');
     const sendSuccessful = clientActionsState;
     const handleApproveState = ev => {
-        setApproveState();
+        setApproveState(); // TODO: set approve state correctly
     }
     switch ( sendSuccessful ) {
         case 1:
