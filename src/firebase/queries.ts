@@ -9,7 +9,7 @@ import {
     Dictionary,
     Document,
     Question,
-  } from '../types';
+  } from '../../types';
 import firebase from './clientApp';
 import {objectToMap} from './helpers';
 

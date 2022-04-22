@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import firebase from "firebase/app/dist/index.cjs.js";
+import "firebase/auth/dist/index.cjs.js";
+import "firebase/firestore/dist/index.node.cjs.js";
 
 const clientCredentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

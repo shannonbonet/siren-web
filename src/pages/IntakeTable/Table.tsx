@@ -7,9 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../src/firebase/queries';
-import {Question} from '../types';
-import {camelize} from '../src/firebase/helpers';
+import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../../firebase/queries';
+import {Question} from '../../../types';
+import {camelize} from '../../firebase/helpers';
 
 interface Column {
   id: 'identifier' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
@@ -19,48 +19,54 @@ interface Column {
   format?: (value: number) => string;
 }
 
+const caseTypes = {
+  'dacaRenewal': 10,
+  'adjustmentOfStatus': 11,
+  'i90': 12,
+}
+
 const columns: readonly Column[] = [
-  { id: 'identifier', label: 'Unique ID', minWidth: 73 },
-  { id: 'Name', label: 'Name', minWidth: 172 },
+  { id: 'identifier', label: 'Unique ID', minWidth: 170 },
+  { id: 'Name', label: 'Name', minWidth: 100 },
   {
     id: 'alienRegistrationNumber',
     label: 'A. Number',
-    minWidth: 88,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'visitReason',
     label: 'Case Type',
-    minWidth: 111,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'status',
     label: 'Status',
-    minWidth: 67,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'telephone',
     label: 'Phone Number',
-    minWidth: 112,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'Email',
     label: 'Email',
-    minWidth: 181,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toFixed(2),
   },
   {
     id: 'county',
     label: 'County',
-    minWidth: 60,
+    minWidth: 170,
     align: 'left',
     format: (value: number) => value.toFixed(2),
   },
@@ -81,6 +87,7 @@ const MyTable = () => {
   };
 
   const [responses, setResponses] = useState<Array<Object>>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
 
     useEffect(() => {
@@ -99,11 +106,17 @@ const MyTable = () => {
 
             //set identifiers
             const ids = clients.map(c => getIdentifiers(c.id)); 
-            await Promise.all(ids).then(ids => setIdentifiers(ids))
+            Promise.all(ids).then(ids => setIdentifiers(ids))
 
             setResponses(clientGenAns);
         }
         loadClientResponses();
+
+        async function loadQuestions(){
+            const qList = await getAllQuestionsOfType('general');
+            setQuestions(qList);
+        }
+        loadQuestions();
 
     }, []);
     
@@ -111,7 +124,7 @@ const MyTable = () => {
     console.log(identifiers);
     console.log(responses);
   return (
-    <Paper sx={{ width: 1298, overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead sx={{borderRadius: '10px'}}>
@@ -120,7 +133,7 @@ const MyTable = () => {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth, backgroundColor: '#CFD3D7', borderColor: '#0F2536', maxHeight: 36}}
+                  style={{ minWidth: column.minWidth, backgroundColor: '#CFD3D7', borderColor: '#0F2536', maxHeight: '36px'}}
                 >
                   {column.label}
                 </TableCell>
@@ -137,6 +150,7 @@ const MyTable = () => {
                     {columns.map((column) => {
                         let value;
                         if (column.id == 'identifier'){
+                          // using first case as default for now, should eventually take in caseType and update value accordingly
                           const caseType = camelize(row['visitReason']);
                           for (const o of identifiers[i]){
                             if (o['caseType'] == caseType){
