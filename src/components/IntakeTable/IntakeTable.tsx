@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../../firebase/queries';
 import {Question} from '../../../types';
 import {camelize} from '../../firebase/helpers';
+import Link from 'next/link';
 
 interface Column {
   id: 'identifier' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
@@ -145,31 +146,40 @@ const IntakeTable = () => {
             {responses
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
+                console.log("BREAK");
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>
-                    {columns.map((column) => {
-                        let value;
-                        if (column.id == 'identifier'){
-                          // using first case as default for now, should eventually take in caseType and update value accordingly
-                          const caseType = camelize(row['visitReason']);
-                          for (const o of identifiers[i]){
-                            if (o['caseType'] == caseType){
-                              value = o['identifier'];
-                              break;
+                  //
+                  // Taking out this line below will introduce red squigglies 
+                  // for reasons I am not sure why.
+                  //
+                  // eslint-disable-next-line react/jsx-key
+                  <Link href="/clientview">
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>
+                      {columns.map((column) => {
+                          let value;
+                          if (column.id == 'identifier'){
+                            // using first case as default for now, should eventually take in caseType and update value accordingly
+                            const caseType = camelize(row['visitReason']);
+                            for (const o of identifiers[i]){
+                              if (o['caseType'] == caseType){
+                                value = o['identifier'];
+                                break;
+                              }
                             }
-                          }
-                        } else {
-                          value = row[column.id];
-                        } 
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
+                          } else {
+                            value = row[column.id];
+                          } 
+                          console.log(value);
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.format && typeof value === 'number'
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </Link>
                 );
               })}
           </TableBody>
