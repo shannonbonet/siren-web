@@ -101,83 +101,64 @@ const DocumentsBox = () => {
     );
 }
 
-const ClientActions = () => {
-    const [tabValue, setTabValue] = useState('approve');
-    return (
-        <div className={`${styles.outline} ${styles.padding}`}>
-            <h3>Client Actions</h3>
-            <TabContext value={tabValue}>
-                <TabList onChange={(event, newValue) => setTabValue(newValue)}>
-                    <Tab disableRipple label='approve' value='approve' />
-                    <Tab disableRipple label='reject' value='reject' />
-                    <Tab disableRipple label='remind' value='remind' />
-                </TabList>
-                <br />
-                <div>
-                    <TabPanel value='approve' className={styles['no-padding']}>
-                        <FormControl>
-                            <RadioGroup>
-                                <FormControlLabel value="approve-consultation" control={<Radio size="small" />} label="Consultation" />
-                                <FormControlLabel value="approve-documents" control={<Radio  size="small"/>} label="Documents approved" />
-                            </RadioGroup>
-                        </FormControl>
-                    </TabPanel>
-                    <TabPanel value='reject' className={styles['no-padding']}>
-                        <RadioGroup>
-                            <FormControlLabel value="send-referral-link" control={<Radio size="small" />} label="Send referral link" />
-                        </RadioGroup>
-                    </TabPanel>
-                    <TabPanel value='remind' className={styles['no-padding']}>
-                        <RadioGroup>
-                            <FormControlLabel value="upload-documents" control={<Radio size="small" />} label="To upload documents" />
-                            <FormControlLabel value="appointment" control={<Radio  size="small"/>} label="Upcoming appointment" />
-                        </RadioGroup>
-                    </TabPanel>
-                </div>
-            </TabContext>
-            <div className={styles.buttons}>
-                <Button variant="outlined" className={styles.button}>Clear</Button>
-                <Button variant="contained" onClick={() => setClientActionsState(1)}>Send</Button>
-            </div>
-        </div>
-    );
-}
-
-const ClientActionsSuccess = () => {
-    return(
-    <div className={`${styles.outline} ${styles.padding}`}>
-        <div className={styles.center}>
-            <div className={styles.successNotif}><StatusIcon completed={true} /> Success!</div>
-        </div>
-        <p className={styles.center}>This client has been notified of their approval.</p>
-        <div className={styles.center}><Button variant="contained">Go Back</Button></div>
-    </div>)
-}
-
-const ClientActionsConfirm = () => {
-    return(
-    <div className={`${styles.outline} ${styles.padding}`}>
-        <h3>Client Actions</h3>
-        <p>Are you sure you want to approve this client for a consultation?</p>
-        <div className={styles.buttons}>
-            <Button variant="outlined" className={styles.button}>Back</Button>
-            <Button variant="contained">Confirm</Button>
-        </div>
-    </div>)
-}
-
 const ClientActionsBox = () => {
     // TODO: depending on if send was successfully executed, change from ClientActions to ClientActionsSuccess
     //          - maybe have some const or var outside to give ability to change this
-    const [clientActionsState, setClientActionsState] = useState(0);
+    const [clientActionsState, setClientActionsState] = useState(1);
+    const [tabValue, setTabValue] = useState('approve');
     const sendSuccessful = clientActionsState; // TODO: change this
     switch ( sendSuccessful ) {
         case 1:
-            return(<ClientActionsConfirm />)
+            return(
+                <div className={`${styles.outline} ${styles.padding}`}>
+                    <h3>Client Actions</h3>
+                    <p>Are you sure you want to approve this client for a consultation?</p>
+                    <div className={styles.buttons}>
+                        <Button variant="outlined" className={styles.button} onClick={() => setClientActionsState(0)}>Back</Button>
+                        <Button variant="contained" onClick={() => setClientActionsState(2)}>Confirm</Button>
+                    </div>
+                </div>)
         case 2:
-            return(<ClientActionsSuccess />)
+            return(
+                <div className={`${styles.outline} ${styles.padding}`}>
+                    <div className={styles.center}>
+                        <div className={styles.successNotif}><StatusIcon completed={true} /> Success!</div>
+                    </div>
+                    <p className={styles.center}>This client has been notified of their approval.</p>
+                    <div className={styles.center}><Button variant="contained" onClick={() => setClientActionsState(0)}>Go Back</Button></div>
+                </div>)
         default: 
-            return(<ClientActions />)
+            return (
+                <div className={`${styles.outline} ${styles.padding}`}>
+                    <h3>Client Actions</h3>
+                    <TabContext value={tabValue}>
+                        <TabList onChange={(event, newValue) => setTabValue(newValue)}>
+                            <Tab disableRipple label='approve' value='approve' />
+                            <Tab disableRipple label='reject' value='reject' />
+                        </TabList>
+                        <br />
+                        <div>
+                            <TabPanel value='approve' className={styles['no-padding']}>
+                                <FormControl>
+                                    <RadioGroup>
+                                        <FormControlLabel value="approve-consultation" control={<Radio size="small" />} label="Consultation" />
+                                        <FormControlLabel value="approve-documents" control={<Radio  size="small"/>} label="Documents approved" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </TabPanel>
+                            <TabPanel value='reject' className={styles['no-padding']}>
+                                <RadioGroup>
+                                    <FormControlLabel value="send-referral-link" control={<Radio size="small" />} label="Send referral link" />
+                                </RadioGroup>
+                            </TabPanel>
+                        </div>
+                    </TabContext>
+                    <div className={styles.buttons}>
+                        <Button variant="outlined" className={styles.button}>Clear</Button>
+                        <Button variant="contained" onClick={() => setClientActionsState(1)}>Send</Button>
+                    </div>
+                </div>
+            );
      }
 }
 
