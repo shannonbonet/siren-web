@@ -121,11 +121,11 @@ const IntakeTable = () => {
     }, []);
     
     //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
-    console.log(identifiers);
-    console.log(responses);
+    // console.log(identifiers);
+    // console.log(responses);
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 1000 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead sx={{borderRadius: '10px'}}>
             <TableRow>
