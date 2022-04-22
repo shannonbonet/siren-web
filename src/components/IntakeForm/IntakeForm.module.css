@@ -133,3 +133,8 @@
   border: 0;
   background-color: transparent;
 }
+
+.undo-redo {
+  background: transparent;
+  border: none;
+}
