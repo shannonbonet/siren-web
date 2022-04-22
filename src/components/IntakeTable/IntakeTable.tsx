@@ -73,7 +73,7 @@ const columns: readonly Column[] = [
 ];
 
 
-const MyTable = () => {
+const IntakeTable = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -106,7 +106,7 @@ const MyTable = () => {
 
             //set identifiers
             const ids = clients.map(c => getIdentifiers(c.id)); 
-            Promise.all(ids).then(ids => setIdentifiers(ids))
+            await Promise.all(ids).then(ids => setIdentifiers(ids))
 
             setResponses(clientGenAns);
         }
@@ -188,4 +188,4 @@ const MyTable = () => {
   );
 }
 
-export default MyTable; 
+export default IntakeTable; 
