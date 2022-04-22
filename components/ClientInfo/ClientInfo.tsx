@@ -7,7 +7,9 @@ import { useState } from 'react';
 
 var clientName = "Client Name"; // TODO: grab client name from firebase
   
-export const ClientInfo = () => {   // TODO: implement ability to pass in client as argument
+export const ClientInfo = () => {   
+    // TODO: implement ability to pass in client as argument? Either that or
+    //       get the client in this file.
     return (
         <>
             <h2>{clientName}</h2>
@@ -77,36 +79,31 @@ const OverviewBox = () => {
     )
 }
 
+
+
 const DocumentsBox = () => {
     return (
         <div className={`${styles.outline} ${styles.padding}`}>
             <h3>Documents</h3>
-            <div className={styles.flex}>
-                {/* TODO: retrieve from firebase instead
+            {/* USE THIS:  window.open('/Export/PrintPdf'); 
+                    - make function that will open the link
+                    - let <a> call the function on click
+            */}
+            {/*<div className={styles.flex}>
                 <StatusIcon completed={true} />
-                    <p>
+                <p>
                     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Employment Authorization Document</a>
                     <FiExternalLink className={styles.external} />
-                    </p> */}
-            </div>
-            <div className={styles.flex}>
-                {/* TODO: retrieve from firebase instead
-                <StatusIcon completed={false} />
-                    <p>
-                    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Employment Authorization Document</a>
-                    <FiExternalLink className={styles.external} />
-                    </p> */}
-            </div>
+                </p> 
+            </div>*/}
         </div>
     );
 }
 
 const ClientActionsBox = () => {
-    // TODO: depending on if send was successfully executed, change from ClientActions to ClientActionsSuccess
-    //          - maybe have some const or var outside to give ability to change this
     const [clientActionsState, setClientActionsState] = useState(0);
     const [tabValue, setTabValue] = useState('approve');
-    const sendSuccessful = clientActionsState; // TODO: change this
+    const sendSuccessful = clientActionsState;
     switch ( sendSuccessful ) {
         case 1:
             return(
@@ -141,14 +138,14 @@ const ClientActionsBox = () => {
                             <TabPanel value='approve' className={styles['no-padding']}>
                                 <FormControl>
                                     <RadioGroup>
-                                        <FormControlLabel value="approve-consultation" control={<Radio size="small" />} label="Consultation" />
-                                        <FormControlLabel value="approve-documents" control={<Radio  size="small"/>} label="Documents approved" />
+                                        <Radio value="approve-consultation" name="Consultation" />
+                                        <Radio value="approve-documents" name="Documents approved" />
                                     </RadioGroup>
                                 </FormControl>
                             </TabPanel>
                             <TabPanel value='reject' className={styles['no-padding']}>
                                 <RadioGroup>
-                                    <FormControlLabel value="send-referral-link" control={<Radio size="small" />} label="Send referral link" />
+                                    <Radio value="send-referral-link" name="Send referral link" />
                                 </RadioGroup>
                             </TabPanel>
                         </div>
