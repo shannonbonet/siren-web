@@ -138,14 +138,14 @@ const ClientActionsBox = () => {
                             <TabPanel value='approve' className={styles['no-padding']}>
                                 <FormControl>
                                     <RadioGroup>
-                                        <Radio value="approve-consultation" name="Consultation" />
-                                        <Radio value="approve-documents" name="Documents approved" />
+                                        <FormControlLabel value="approve-consultation" control={<Radio size="small" />} label="Consultation" />
+                                        <FormControlLabel value="approve-documents" control={<Radio  size="small"/>} label="Documents approved" />
                                     </RadioGroup>
                                 </FormControl>
                             </TabPanel>
                             <TabPanel value='reject' className={styles['no-padding']}>
                                 <RadioGroup>
-                                    <Radio value="send-referral-link" name="Send referral link" />
+                                    <FormControlLabel value="send-referral-link" control={<Radio size="small" />} label="Send referral link" />
                                 </RadioGroup>
                             </TabPanel>
                         </div>
