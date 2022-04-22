@@ -90,6 +90,7 @@ const IntakeTable = () => {
   const [responses, setResponses] = useState<Array<Object>>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
+  const [clientsPass, setClientsPass] = useState<Array<Object>>([]);
 
     useEffect(() => {
       let clientAns: Array<Object> = new Array();
@@ -98,6 +99,9 @@ const IntakeTable = () => {
       async function loadClientResponses(){
             //filter out clients w no answers
             const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
+            setClientsPass(clients);
+            console.log(clients);
+            console.log(clientsPass);
 
             //add all client answer objects to array, then select 'general' responses
             for (const i in clients){
@@ -146,14 +150,20 @@ const IntakeTable = () => {
             {responses
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
-                console.log("BREAK");
                 return (
                   //
                   // Taking out this line below will introduce red squigglies 
                   // for reasons I am not sure why.
                   //
                   // eslint-disable-next-line react/jsx-key
-                  <Link href="/clientview">
+                  <Link href={{
+                    pathname: '/clientview',
+                    query: { fullName: clientsPass[i]["fullName"],
+                             email: clientsPass[i]["email"],
+                             id: clientsPass[i]["id"],
+                             client: clientsPass[i]
+                            }
+                  }} passHref>
                     <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>
                       {columns.map((column) => {
                           let value;
@@ -169,7 +179,6 @@ const IntakeTable = () => {
                           } else {
                             value = row[column.id];
                           } 
-                          console.log(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === 'number'

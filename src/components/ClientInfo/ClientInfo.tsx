@@ -7,14 +7,14 @@ import { useState } from 'react';
 
 var clientName = "Client Name"; // TODO: grab client name from firebase
   
-export const ClientInfo = () => {   
+export const ClientInfo = ( {query} ) => {   
     // TODO: implement ability to pass in client as argument? Either that or
     //       get the client in this file.
     return (
         <>
-            <h2>{clientName}</h2>
+            <h2>{query["fullName"]}</h2>
             <div className={styles.grid}>
-                <OverviewBox />
+                <OverviewBox query={query}/>
                 <div>
                     <DocumentsBox />
                     <ClientActionsBox />
@@ -26,7 +26,7 @@ export const ClientInfo = () => {
 
 // RENDER BOXES
 
-const OverviewBox = () => {
+const OverviewBox = ({query}) => {
     const [tabValue, setTabValue] = useState('overview');
     return (
         <div className={`${styles.outline} ${styles.overview}`}>
@@ -41,13 +41,7 @@ const OverviewBox = () => {
                         <div className={styles.flex}>
                             <h3>Basic Info</h3>
                             <div>
-                                {/* TODO: retrieve from firebase instead
-                                <p><b>Legal disclaimer</b></p>
-                                <p><b>Email</b><br />graceng@berkeley.edu</p>
-                                <p><b>Telephone</b><br/>631-255-8829</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p> */}
+                                <p><b>Email</b><br />{query["email"]}</p>
                             </div>
                         </div>
                         <div className={styles.flex}>
