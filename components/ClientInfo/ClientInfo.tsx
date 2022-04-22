@@ -104,7 +104,7 @@ const DocumentsBox = () => {
 const ClientActionsBox = () => {
     // TODO: depending on if send was successfully executed, change from ClientActions to ClientActionsSuccess
     //          - maybe have some const or var outside to give ability to change this
-    const [clientActionsState, setClientActionsState] = useState(1);
+    const [clientActionsState, setClientActionsState] = useState(0);
     const [tabValue, setTabValue] = useState('approve');
     const sendSuccessful = clientActionsState; // TODO: change this
     switch ( sendSuccessful ) {
