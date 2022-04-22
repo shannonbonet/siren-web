@@ -102,7 +102,7 @@ function checkPassword (password: string, password2: string): boolean {
                     <InputLabel htmlFor="outlined-adornment-password">Re-enter Password</InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-password"
-                      type={showPassOne ? 'text' : 'password'}
+                      type={showPassTwo ? 'text' : 'password'}
                       onChange={(e) => setPasswordTwo(e.target.value)}
                       endAdornment={
                         <InputAdornment position="end">
@@ -118,9 +118,6 @@ function checkPassword (password: string, password2: string): boolean {
                     label="Password"
                   />
                 </FormControl>
-
-                {/* old password version with no icon */}
-                {/* <TextField label="Re-enter Password" type={showPassTwo ? "text" :"password"} variant="outlined" onChange={(e) => setPasswordTwo(e.target.value)} /> */}
               </div>
             </form>
           </div>
