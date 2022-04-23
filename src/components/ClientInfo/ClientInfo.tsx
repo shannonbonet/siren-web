@@ -50,31 +50,37 @@ const OverviewBox = ({client}) => {
                         <div className={styles.flex}>
                             <h3>Basic Info</h3>
                             <div>
-                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key, value) => (
-                                    (key=="Name") ? null : <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p>
+                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
+                                    (key=="Name" || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Covid") 
+                                                 || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Law")
+                                                 || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Alien")) ? null : <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p>
                                 )) : null}
                             </div>
                         </div>
                         <div className={styles.flex}>
                             <h3>COVID-19</h3>
                             <div>
-                                {/* TODO: retrieve from firebase instead
-                                <p><b>Legal disclaimer</b></p>
-                                <p><b>Email</b><br />graceng@berkeley.edu</p>
-                                <p><b>Telephone</b><br/>631-255-8829</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p>
-                                <p><b>Address</b><br/>2500 Durant Ave, Apt 407, Berkeley CA 94704</p> */}
+                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
+                                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Covid")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
+                                )) : null}
                             </div>
                         </div>
                     </TabPanel>
                     <TabPanel value='immigration' className={styles['no-padding']}>
                         <div className={styles.flex}>
-                            <h3>Extra Info</h3>
+                            <h3>Background</h3>
                             <div>
-                                {/* TODO: retrieve from firebase instead
-                                <p><b>Favorite food</b><br />Pasta</p>
-                                */}
+                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
+                                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Alien")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
+                                )) : null}
+                            </div>
+                        </div>
+                        <div className={styles.flex}>
+                            <h3>Criminal Record</h3>
+                            <div>
+                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
+                                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Law")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
+                                )) : null}
                             </div>
                         </div>
                     </TabPanel>
