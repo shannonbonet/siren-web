@@ -4,17 +4,26 @@ import { AiOutlineExclamation } from "react-icons/ai";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl, Tab } from '@mui/material';
 import { TabPanel, TabList, TabContext } from '@mui/lab';
 import { useState } from 'react';
+import {getAllClients} from '../../firebase/queries';
+import { Client } from '/types';
 
-var clientName = "Client Name"; // TODO: grab client name from firebase
   
 export const ClientInfo = ( {query} ) => {   
-    // TODO: implement ability to pass in client as argument? Either that or
-    //       get the client in this file.
+    const [client, setClient] = useState<Client>(null);
+    async function loadClientResponses(){
+        // get the correct client
+        const correctClient = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
+        setClient(correctClient[0]);
+        console.log(client as Client);
+        console.log((client &&  client.answers && client.answers.general) ? client.answers.general : "not loaded");
+    }
+    loadClientResponses();
+
     return (
         <>
-            <h2>{query["fullName"]}</h2>
+            <h2>{(client &&  client.answers && client.answers.general) ? client.answers.general.Name : query["fullName"]}</h2>
             <div className={styles.grid}>
-                <OverviewBox query={query}/>
+                <OverviewBox client={client}/>
                 <div>
                     <DocumentsBox />
                     <ClientActionsBox />
@@ -26,9 +35,7 @@ export const ClientInfo = ( {query} ) => {
 
 // RENDER BOXES
 
-const OverviewBox = ({query}) => {
-    console.log(query)
-    console.log(query["answers"])
+const OverviewBox = ({client}) => {
     const [tabValue, setTabValue] = useState('overview');
     return (
         <div className={`${styles.outline} ${styles.overview}`}>
@@ -43,7 +50,9 @@ const OverviewBox = ({query}) => {
                         <div className={styles.flex}>
                             <h3>Basic Info</h3>
                             <div>
-                                <p><b>Email</b><br />{query["email"]}</p>
+                                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key, value) => (
+                                    (key=="Name") ? null : <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p>
+                                )) : null}
                             </div>
                         </div>
                         <div className={styles.flex}>

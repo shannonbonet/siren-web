@@ -100,8 +100,6 @@ const IntakeTable = () => {
             //filter out clients w no answers
             const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
             setClientsPass(clients);
-            console.log(clients);
-            console.log(clientsPass);
 
             //add all client answer objects to array, then select 'general' responses
             for (const i in clients){
@@ -150,7 +148,6 @@ const IntakeTable = () => {
             {responses
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
-                console.log(clientsPass[i]);
                 return (
                   //
                   // Taking out this line below will introduce red squigglies 
