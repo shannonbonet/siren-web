@@ -14,8 +14,6 @@ export const ClientInfo = ( {query} ) => {
         // get the correct client
         const correctClient = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
         setClient(correctClient[0]);
-        console.log(client as Client);
-        console.log((client &&  client.answers && client.answers.general) ? client.answers.general : "not loaded");
     }
     loadClientResponses();
 
@@ -48,17 +46,19 @@ const OverviewBox = ({client}) => {
                 <div>
                     <TabPanel value='overview' className={styles['no-padding']}>
                         <div className={styles.flex}>
-                            <h3>Basic Info</h3>
+                            <h3 className={styles.category}>Basic Info</h3>
                             <div>
                                 {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
                                     (key=="Name" || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Covid") 
                                                  || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Law")
+                                                 || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Court")
+                                                 || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Arrival")
                                                  || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Alien")) ? null : <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p>
                                 )) : null}
                             </div>
                         </div>
                         <div className={styles.flex}>
-                            <h3>COVID-19</h3>
+                            <h3 className={styles.category}>COVID-19</h3>
                             <div>
                                 {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
                                     ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Covid")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
@@ -68,15 +68,18 @@ const OverviewBox = ({client}) => {
                     </TabPanel>
                     <TabPanel value='immigration' className={styles['no-padding']}>
                         <div className={styles.flex}>
-                            <h3>Background</h3>
+                            <h3 className={styles.category}>Background</h3>
                             <div>
                                 {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
-                                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Alien")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
+                                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Alien")
+                                    || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Court")
+                                    || (key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Arrival")
+                                    ) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
                                 )) : null}
                             </div>
                         </div>
                         <div className={styles.flex}>
-                            <h3>Criminal Record</h3>
+                            <h3 className={styles.category}>Criminal Record</h3>
                             <div>
                                 {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
                                     ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Law")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
