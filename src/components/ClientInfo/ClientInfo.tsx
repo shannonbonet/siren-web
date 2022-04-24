@@ -4,15 +4,20 @@ import { AiOutlineExclamation } from "react-icons/ai";
 import { Button, Radio, RadioGroup, FormControlLabel, FormControl, Tab } from '@mui/material';
 import { TabPanel, TabList, TabContext } from '@mui/lab';
 import { useState } from 'react';
-import {getAllClients} from '../../firebase/queries';
-import { Client } from '/types';
+import {getAllClients, getCaseTypes} from '../../firebase/queries';
+import { Client, CaseType } from '../../../types';
 
   
 export const ClientInfo = ( {query} ) => {   
     const [client, setClient] = useState<Client>(null);
+    const [caseType, setCaseType] = useState<CaseType>(null);
     async function loadClientResponses(){
         // get the correct client
         const correctClient = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
+        setClient(correctClient[0]);
+
+        // get the correct case type
+        const correctCaseType = (await getCaseTypes()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
         setClient(correctClient[0]);
     }
     loadClientResponses();
@@ -23,7 +28,7 @@ export const ClientInfo = ( {query} ) => {
             <div className={styles.grid}>
                 <OverviewBox client={client}/>
                 <div>
-                    <DocumentsBox />
+                    <DocumentsBox client={client}/>
                     <ClientActionsBox />
                 </div>
             </div>
@@ -95,7 +100,8 @@ const OverviewBox = ({client}) => {
 
 
 
-const DocumentsBox = () => {
+const DocumentsBox = (client) => {
+    console.log(client);
     return (
         <div className={`${styles.outline} ${styles.padding}`}>
             <h3>Documents</h3>
@@ -103,13 +109,16 @@ const DocumentsBox = () => {
                     - make function that will open the link
                     - let <a> call the function on click
             */}
-            {/*<div className={styles.flex}>
+            <div className={styles.flex}>
                 <StatusIcon completed={true} />
                 <p>
                     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Employment Authorization Document</a>
                     <FiExternalLink className={styles.external} />
                 </p> 
-            </div>*/}
+                {(client && client.answers && client.answers.general) ? Object.keys(client.answers.general).map((key) => (
+                    ((key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)).includes("Law")) ? <p><b>{key.charAt(0).toUpperCase() + key.replace(/[A-Z]/g, ' $&').trim().slice(1)}</b><br />{client.answers.general[key]}</p> : null
+                )) : null}
+            </div>
         </div>
     );
 }

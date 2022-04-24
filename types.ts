@@ -30,6 +30,12 @@ export enum CaseStatus {
     status: CaseStatus;
     type: string;
   };
+
+  export type CaseType = {
+    documentList: Array<string>;
+    identifier: number;
+    key: string;
+  };
   
   export type CalendlyLink = {
     type: string;

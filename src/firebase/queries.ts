@@ -5,6 +5,7 @@ import {
     Appointment,
     CalendlyLink,
     Case,
+    CaseType,
     Client,
     Dictionary,
     Document,
@@ -15,6 +16,7 @@ import {objectToMap} from './helpers';
 
   const database = firebase.firestore();
   const clientCollection = database.collection('clients');
+  const caseTypesCollection = database.collection('caseTypes');
 
   export const getClient = async (clientId: string): Promise<Client> => {
     try {
@@ -36,6 +38,16 @@ export const getAllClients = async (): Promise<Client[]> => {
         console.warn(e);
         throw e;
       }
+}
+
+export const getCaseTypes = async (): Promise<CaseType[]> => {
+  try {
+      const ref = await caseTypesCollection.get();
+      return ref.docs.map(doc => doc.data() as CaseType);
+  } catch (e) {
+      console.warn(e);
+      throw e;
+    }
 }
 
 export const getAllQuestionsOfType = async( 
