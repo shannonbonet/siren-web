@@ -2,8 +2,7 @@ import Link from 'next/link'
 import styles from './Navbar.module.css'
 import { useRouter } from 'next/router';
 import { FiExternalLink} from "react-icons/fi";
-import { CgProfile} from "react-icons/cg";
-
+import Avatar from '@mui/material/Avatar';
 
 export const Navbar = () => {   
     const router = useRouter();
@@ -24,7 +23,11 @@ export const Navbar = () => {
                     Calendly <FiExternalLink stroke="white" size={15}/>
                 </a>
             </Link>
-            <CgProfile style={{fill: 'white'}} size={25}/>
+            <Link href="/settings">
+                <a className={router.pathname == "/settings" ? styles.active : ""}> 
+                    <Avatar sx={{ width: 28, height: 28 }}>TBD</Avatar>
+                </a>
+            </Link>
         </nav>
     )
 }
