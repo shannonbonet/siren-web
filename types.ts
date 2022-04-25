@@ -23,6 +23,7 @@ export enum CaseStatus {
     fullName: string;
     createdAt: Date;
     answers: Map<string, Map<string, any>>;
+    cases: Array<Case>;
   };
   
   export type Case = {

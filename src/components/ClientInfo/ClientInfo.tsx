@@ -15,9 +15,10 @@ export const ClientInfo = ( {query} ) => {
         // get the correct client
         const correctClient = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
         setClient(correctClient[0]);
+        const typeID = correctClient;
 
         // get the correct case type
-        const correctCaseType = (await getCaseTypes()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1 && c.id == query["id"]);
+        const correctCaseType = (await getCaseTypes()).filter(c => c.identifier !== undefined && c.identifier == type);
         setClient(correctClient[0]);
     }
     loadClientResponses();

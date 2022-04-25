@@ -91,6 +91,8 @@ const IntakeTable = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
   const [clientsPass, setClientsPass] = useState<Array<Object>>([]);
+  // structure looks like this: [ [ClientObject, CaseObject] ]
+  const [clientCases, setClientCases] = useState<Array<Array<Object>>>([]);
 
     useEffect(() => {
       let clientAns: Array<Object> = new Array();
@@ -114,6 +116,7 @@ const IntakeTable = () => {
             setResponses(clientGenAns);
         }
         loadClientResponses();
+        console.log(clientsPass[5]);
 
         async function loadQuestions(){
             const qList = await getAllQuestionsOfType('general');

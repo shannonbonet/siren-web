@@ -94,5 +94,19 @@ export const getIdentifiers = async(
   } 
 }
 
+export const getClientCases = async(
+  clientId: string
+): Promise<Array<Object>> => {
+  try{
+    let cliCases = new Array<Object>();
+    const cases = await database.collection(`clients/${clientId}/cases`).get();
+    cliCases = cases.docs.map(c => c.data());
+    return cliCases;
+  } catch (e){
+    console.warn(e);
+    throw(e);
+  } 
+}
+
 
 
