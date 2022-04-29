@@ -9,12 +9,14 @@ import {
     Dictionary,
     Document,
     Question,
+    SirenUser
   } from '../../types';
 import firebase from './clientApp';
 import {objectToMap} from './helpers';
 
   const database = firebase.firestore();
   const clientCollection = database.collection('clients');
+  const sirenUserCollection = database.collection('sirenUsers');
 
   export const getClient = async (clientId: string): Promise<Client> => {
     try {
@@ -82,5 +84,47 @@ export const getIdentifiers = async(
   } 
 }
 
+export const getSirenUser = async (uid: string ) => {
+  try {
+    const doc = await sirenUserCollection.doc(uid).get();
+    const sirenUser = doc.data() as SirenUser;
+    return sirenUser;
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+}
+
+export const setSirenUser = async (sirenUser: SirenUser) => {
+  try {
+    await sirenUserCollection.doc(sirenUser.uid).set(sirenUser);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
+
+export const getAllApprovedSirenUsers = async (): Promise<SirenUser[]> => {
+  try {
+    const ref = await sirenUserCollection.where('isApproved', '==', true).get();
+    return ref.docs.map(doc => doc.data() as SirenUser);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling
+  }
+};
+
+export const getAllPendingSirenUsers = async (): Promise<SirenUser[]> => {
+  try {
+    const ref = await sirenUserCollection.where('isApproved', '==', false).get();
+    return ref.docs.map(doc => doc.data() as SirenUser);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling
+  }
+};
 
 

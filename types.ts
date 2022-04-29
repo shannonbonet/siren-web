@@ -89,3 +89,11 @@ export enum CaseStatus {
     poReport: string;
     // remaining types
   }
+
+export type SirenUser = {
+  uid: string;
+  name: string;
+  email: string;
+  role: string;
+  isApproved: boolean;
+};

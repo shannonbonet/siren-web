@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import styles from './styles.module.css'; 
 import { FormControl, InputLabel, IconButton, InputAdornment, OutlinedInput } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { SirenUser } from '../../../types';
+import { getSirenUser } from '../../firebase/queries';
 
 
 const SignUp = () => {
@@ -18,8 +20,13 @@ const SignUp = () => {
 
   const onSubmit = event => {
     signInWithEmailAndPassword(email, password)
-    .then(authUser => {
-      router.push('/');
+    .then(async authUser => {
+      const sirenUser: SirenUser = await getSirenUser(authUser.user.uid)
+      if (sirenUser.isApproved) {
+        router.push('/');
+      } else {
+        alert("You have not been approved yet! Contact SIREN administrator for access.");
+      }
     })
     .catch(error => {
       console.log(error)
