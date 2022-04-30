@@ -205,6 +205,7 @@ const DocumentsBox = () => {
 const ClientActionsBox = () => {
   const [clientActionsState, setClientActionsState] = useState(0);
   const [approveState, setApproveState] = useState("");
+  const [rejectState, setRejectState] = useState("");
   const [tabValue, setTabValue] = useState("approve");
   const sendSuccessful = clientActionsState;
   // TODO: edit this after Greg's branched is merged
@@ -217,6 +218,9 @@ const ClientActionsBox = () => {
   ];
   const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
     setApproveState(value); // TODO: set approve state correctly
+  };
+  const handleRejectState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setRejectState(value); // TODO: set approve state correctly
   };
   switch (sendSuccessful) {
     case 1:
@@ -298,7 +302,10 @@ const ClientActionsBox = () => {
                 </FormControl>
               </TabPanel>
               <TabPanel value="reject" className={styles["no-padding"]}>
-                <RadioGroup>
+                <RadioGroup
+                  onChange={handleRejectState}
+                  value={rejectState}
+                >
                   <FormControlLabel
                     value="send-referral-link"
                     control={<Radio size="small" />}
