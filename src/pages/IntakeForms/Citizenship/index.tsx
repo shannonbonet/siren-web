@@ -1,14 +1,14 @@
-import React from 'react';
-import IntakeForm  from '../../../components/IntakeForm/IntakeForm';
+import React from "react";
+import IntakeForm from "../../../components/IntakeForm/IntakeForm";
 
 export default function Citizenship() {
   return (
     <div>
       <div>
         <IntakeForm
-          // title="Citizenship"
+        // title="Citizenship"
         />
       </div>
     </div>
-    )
+  );
 }
