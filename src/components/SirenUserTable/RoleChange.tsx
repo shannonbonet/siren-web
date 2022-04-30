@@ -5,7 +5,7 @@ import { SirenUser } from '../../../types';
 import { setSirenUser } from '../../firebase/queries';
 
 export default function RoleChange(props) {
-  const sirenUserInput = props.props.user;
+  const sirenUserInput = props.user;
   const [role, setRole] = useState("Viewer");
   const [currentUser, setCurrentUser] = useState(sirenUserInput);
   const handleChange = (event) => {

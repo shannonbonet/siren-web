@@ -1,19 +1,26 @@
 import * as React from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getAllApprovedSirenUsers } from '../../firebase/queries';
+import { getSirenUsersWhere } from '../../firebase/queries';
 import RoleChange from './RoleChange';
 
-export default function SirenUserTable() {
+export default function SirenUserTable(props) {
   const [sirenUsers, setSirenUsers] = useState([]);
-
-  const getApprovedSirenUsers = async () => {
-    const users = await getAllApprovedSirenUsers();
-    setSirenUsers(users);
+  const getSirenUsers = async () => {
+    var rolesToDisplay = ['Viewer', 'Editor'];
+    if (props.currentUser.role == 'Super') {
+      rolesToDisplay.push('Admin');
+    }
+    const queryParams = [
+      {field: 'status', operator: '==', value: 'Approved'},
+      {field: 'role', operator: 'in', value: rolesToDisplay},
+    ]
+    const users = await getSirenUsersWhere(queryParams);
+    setSirenUsers(users.filter(u => u.uid != props.currentUser.uid));
   }
 
   useEffect(() => {
-    getApprovedSirenUsers();
+    getSirenUsers();
   }, []);
   return (
     <TableContainer sx={{border: 1, borderRadius: 2}}>
@@ -33,7 +40,7 @@ export default function SirenUserTable() {
             >
               <TableCell component="th" scope="row">{user.name}</TableCell>
               <TableCell component="th" scope="row">{user.email}</TableCell>
-              <TableCell component="th" scope="row"><RoleChange props={user}/></TableCell>
+              <TableCell component="th" scope="row"><RoleChange user={user}/></TableCell>
             </TableRow>
           ))}
         </TableBody> : null}

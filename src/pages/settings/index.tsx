@@ -1,8 +1,10 @@
 import Layout from '../../components/Layout'
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import { Button, Tab, Tabs, Box, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SirenUserTable from '../../components/SirenUserTable/SirenUserTable';
+import SirenApprovalTable from '../../components/SirenUserTable/SirenApprovalTable';
+import { getSirenUser } from '../../firebase/queries';
 
 
 
@@ -33,11 +35,23 @@ function TabPanel(props) {
   }
 
 export default function Settings() {
-    const { signOut } = useAuth();
+    const { signOut, authUser } = useAuth();
     const [value, setValue] = useState(0);
+    const [currentUser, setCurrentUser] = useState(null);
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+    const getCurrentUser = async () => {
+        const user = await getSirenUser(authUser.uid);
+        setCurrentUser(user);
+    }
+    
+    useEffect(() => {
+        if (authUser) {
+            getCurrentUser();
+        }
+    }, [authUser]);
+
     return (
         <Layout>
             <h1>Settings</h1>
@@ -45,19 +59,31 @@ export default function Settings() {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Overview" {...a11yProps(0)} />
-                    <Tab label="Permissions" {...a11yProps(1)} />
-                    <Tab label="Client Accounts" {...a11yProps(2)} />
+                    <Tab label="Client Accounts" {...a11yProps(1)} />
+                    {(currentUser && ['Super', 'Admin'].includes(currentUser.role)) ? 
+                        [
+                        <Tab label="Account Approvals" {...a11yProps(2)} key={2}/>,
+                        <Tab label="Permissions" {...a11yProps(3)} key={3}/>
+                        ]
+                    : null}
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
                     <Button variant="outlined" onClick={signOut} >Sign Out</Button>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <SirenUserTable/>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
                     Item Three
                 </TabPanel>
+                {(currentUser && ['Super', 'Admin'].includes(currentUser.role)) ?
+                    [
+                        <TabPanel value={value} index={2} key={2}>
+                            <SirenApprovalTable/>
+                        </TabPanel>,
+                        <TabPanel value={value} index={3}>
+                            <SirenUserTable currentUser={currentUser} key={3}/>
+                        </TabPanel>
+                    ]
+                : null}
             </Box>
         </Layout>
     )

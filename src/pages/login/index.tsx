@@ -2,19 +2,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import styles from './styles.module.css'; 
 import { FormControl, InputLabel, IconButton, InputAdornment, OutlinedInput } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { SirenUser } from '../../../types';
-import { getSirenUser } from '../../firebase/queries';
+import { getSirenUser, setSirenUser } from '../../firebase/queries';
 
 
-const SignUp = () => {
+const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false); 
+  const [approvalOpen, setApprovalOpen] = useState(false); 
+  const [deniedOpen, setDeniedOpen] = useState(false); 
+  const [user, setUser] = useState(null); 
 
   const { signInWithEmailAndPassword } = useAuth();
 
@@ -22,10 +25,13 @@ const SignUp = () => {
     signInWithEmailAndPassword(email, password)
     .then(async authUser => {
       const sirenUser: SirenUser = await getSirenUser(authUser.user.uid)
-      if (sirenUser.isApproved) {
+      setUser(sirenUser);
+      if (sirenUser.status == "Approved") {
         router.push('/');
+      } else if (sirenUser.status === "Pending") {
+        setApprovalOpen(true);
       } else {
-        alert("You have not been approved yet! Contact SIREN administrator for access.");
+        setDeniedOpen(true);
       }
     })
     .catch(error => {
@@ -37,6 +43,66 @@ const SignUp = () => {
 
   const togglePassword = () => {
     setShowPassword(!showPassword); 
+  }
+
+  const handleClose = () => {
+    setApprovalOpen(false);
+    setDeniedOpen(false);
+  }
+
+  const handleRequestAccess = () => {
+    const updatedUser = {...user};
+    updatedUser.status = "Pending";
+    setUser(updatedUser);
+    setSirenUser(updatedUser);
+    handleClose();
+  }
+
+  const getApprovalDialog = () => {
+    return (
+      <Dialog
+      open={approvalOpen}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Approval Status"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You have not been approved yet. Contact a SIREN Administrator to get approved.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
+  const getDeniedDialog = () => {
+    return (
+      <Dialog
+      open={deniedOpen}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Approval Status"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You have been denied for an account.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRequestAccess}>Request Access</Button>
+          <Button onClick={handleClose} autoFocus>Close</Button>
+        </DialogActions>
+      </Dialog>
+    )
   }
 
   return (
@@ -69,11 +135,13 @@ const SignUp = () => {
                 </FormControl>
               </div>
             </form>
-          </div>
+            {getApprovalDialog()}
+            {getDeniedDialog()}
+        </div>
             <Button type="submit" form="login" variant="contained"> Log In </Button>
         </div>
     </div>
   )
 }
 
-export default SignUp;
+export default LogIn;

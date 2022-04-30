@@ -30,7 +30,7 @@ const SignUp = () => {
           name: name,
           email: email,
           role: "Viewer",
-          isApproved: false,
+          status: "Pending",
         }
         await setSirenUser(newUser);
         router.push("/login");

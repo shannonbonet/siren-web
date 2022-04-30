@@ -95,5 +95,11 @@ export type SirenUser = {
   name: string;
   email: string;
   role: string;
-  isApproved: boolean;
+  status: string;
 };
+
+export type FirebaseQueryParams = {
+  field: string;
+  operator: string;
+  value: any;
+}

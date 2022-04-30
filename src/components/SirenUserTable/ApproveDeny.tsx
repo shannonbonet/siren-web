@@ -1,32 +1,17 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Box, FormControl, Select, MenuItem } from '@mui/material';
-import { SirenUser } from '../../../types';
-import { setSirenUser } from '../../firebase/queries';
+import { Stack, Button } from '@mui/material';
 
 export default function ApproveDeny(props) {
-  const sirenUserInput = props;
-  const [currentUser, setCurrentUser] = useState(sirenUserInput);
-  const handleChange = (event) => {
-    const updatedUser = {...currentUser};
-    updatedUser.role = event.target.value;
-    setRole(event.target.value);
-    setCurrentUser(updatedUser);
-    setSirenUser(updatedUser);
-  };
+  const sirenUserInput = props.user
+  const handleStatusChange = props.handleStatusChange
   return (
-    <Box>
-      <FormControl>
-        <Select
-          value={role}
-          label="Role"
-          onChange={handleChange}
-        >
-          <MenuItem value={"Adminstrator"}>Administrator</MenuItem>
-          <MenuItem value={"Editor"}>Editor</MenuItem>
-          <MenuItem value={"Viewer"}>Viewer</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <Stack direction="row" spacing={2}>
+      <Button variant="contained" color="success" onClick={() => handleStatusChange(sirenUserInput, "Approved")}>
+        Approve
+      </Button>
+      <Button variant="outlined" color="error" onClick={() => handleStatusChange(sirenUserInput, "Denied")}>
+        Deny
+      </Button>
+    </Stack>
   )
 }

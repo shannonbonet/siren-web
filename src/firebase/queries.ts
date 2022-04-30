@@ -8,6 +8,7 @@ import {
     Client,
     Dictionary,
     Document,
+    FirebaseQueryParams,
     Question,
     SirenUser
   } from '../../types';
@@ -105,9 +106,22 @@ export const setSirenUser = async (sirenUser: SirenUser) => {
   }
 };
 
-export const getAllApprovedSirenUsers = async (): Promise<SirenUser[]> => {
+export const getSirenUsersWhere = async (params: FirebaseQueryParams[]): Promise<SirenUser[]> => {
+  /*
+  Takes in a list of FirebaseQueryParams. You can use this function to query collections with
+  certain conditions. See https://firebase.google.com/docs/firestore/query-data/queries.
+  An example usage is in in src/components/SirenUserTable/SirenUserTable.tsx.
+  */
+  if (params.length == 0) {
+    return null;
+  }
   try {
-    const ref = await sirenUserCollection.where('isApproved', '==', true).get();
+    var ref;
+    for (let i = 0; i < params.length; i++) {
+      const { field, operator, value } = params[i];
+      ref = await sirenUserCollection.where(field, operator, value);
+    }
+    ref = await ref.get();
     return ref.docs.map(doc => doc.data() as SirenUser);
   } catch (e) {
     console.warn(e);
@@ -115,16 +129,3 @@ export const getAllApprovedSirenUsers = async (): Promise<SirenUser[]> => {
     // TODO: Add error handling
   }
 };
-
-export const getAllPendingSirenUsers = async (): Promise<SirenUser[]> => {
-  try {
-    const ref = await sirenUserCollection.where('isApproved', '==', false).get();
-    return ref.docs.map(doc => doc.data() as SirenUser);
-  } catch (e) {
-    console.warn(e);
-    throw e;
-    // TODO: Add error handling
-  }
-};
-
-

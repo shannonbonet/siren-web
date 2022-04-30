@@ -1,15 +1,26 @@
 import * as React from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getAllPendingSirenUsers } from '../../firebase/queries';
-import RoleChange from './RoleChange';
+import { getSirenUsersWhere, setSirenUser } from '../../firebase/queries';
+import ApproveDeny from './ApproveDeny';
+import { SirenUser } from '../../../types';
 
 export default function SirenApprovalTable() {
   const [sirenUsers, setSirenUsers] = useState([]);
 
   const getPendingSirenUsers = async () => {
-    const users = await getAllPendingSirenUsers();
+    const queryParams = [
+        {field: 'status', operator: '==', value: 'Pending'}
+    ]
+    const users = await getSirenUsersWhere(queryParams);
     setSirenUsers(users);
+  }
+
+  const handleStatusChange = async (user: SirenUser, status: string) => {
+    const updatedUser = {...user};
+    updatedUser.status = status;
+    setSirenUser(updatedUser);
+    setSirenUsers(sirenUsers.filter(u => u.uid != updatedUser.uid))
   }
 
   useEffect(() => {
@@ -33,7 +44,7 @@ export default function SirenApprovalTable() {
             >
               <TableCell component="th" scope="row">{user.name}</TableCell>
               <TableCell component="th" scope="row">{user.email}</TableCell>
-              <TableCell component="th" scope="row"><ApproveDeny props={user}/></TableCell>
+              <TableCell component="th" scope="row"><ApproveDeny user={user} handleStatusChange={handleStatusChange}/></TableCell>
             </TableRow>
           ))}
         </TableBody>
