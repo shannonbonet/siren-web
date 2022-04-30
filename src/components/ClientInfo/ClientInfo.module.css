@@ -70,3 +70,7 @@
 .button {
   margin-right: 10px;
 }
+
+.clientActionsHeader {
+  display: flex;
+}

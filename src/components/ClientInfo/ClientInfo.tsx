@@ -13,6 +13,7 @@ import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
 import { getAllClients } from "../../firebase/queries";
 import { Client } from "/types";
+import Select from "react-select";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
@@ -206,14 +207,22 @@ const ClientActionsBox = () => {
   const [approveState, setApproveState] = useState("");
   const [tabValue, setTabValue] = useState("approve");
   const sendSuccessful = clientActionsState;
-  const handleApproveState = (ev) => {
-    setApproveState(); // TODO: set approve state correctly
+  // TODO: edit this after Greg's branched is merged
+  //  - take all the cases of the client & turn them into array for answerTypeOptions
+  const [answerTypeOptions, setAnswerTypeOptions] = useState([]);
+  // test:
+  const answerTypeOptionsTest = [
+    { value: "dacaRenewal", label: "Daca Renewal" },
+    { value: "citizenship", label: "Citizenship" },
+  ];
+  const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setApproveState(value); // TODO: set approve state correctly
   };
   switch (sendSuccessful) {
     case 1:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
-          <h3>Client Actions</h3>
+          <h3>Client Actions</h3> 
           <p>
             Are you sure you want to approve this client for a consultation?
           </p>
@@ -258,7 +267,10 @@ const ClientActionsBox = () => {
     default:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
-          <h3>Client Actions</h3>
+          <div className={styles.clientActionsHeader}>
+            <h3>Client Actions</h3> 
+            <Select options={answerTypeOptionsTest}/>
+          </div>
           <TabContext value={tabValue}>
             <TabList onChange={(event, newValue) => setTabValue(newValue)}>
               <Tab disableRipple label="approve" value="approve" />
