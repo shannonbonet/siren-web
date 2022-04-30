@@ -1,11 +1,10 @@
-import Dashboard from './dashboard';
-import Layout from '../components/Layout';
+import Dashboard from "./dashboard";
+import Layout from "../components/Layout";
 
 export default function Home() {
-
-  return (  
+  return (
     <Layout>
-      <Dashboard/>
+      <Dashboard />
     </Layout>
-  )
+  );
 }

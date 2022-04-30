@@ -16,13 +16,16 @@ interface ButtonProps {
   buttonType: string;
   textType: string;
   onPress: () => void;
-
 }
 
 const Button = (props: ButtonProps) => {
   return (
-    <button onClick={props.onPress} className={styles['App-button']} id={styles[props.buttonType]}>
-      <a className={styles['App-button-text']} id={styles[props.textType]}>
+    <button
+      onClick={props.onPress}
+      className={styles["App-button"]}
+      id={styles[props.buttonType]}
+    >
+      <a className={styles["App-button-text"]} id={styles[props.textType]}>
         {props.text}
       </a>
     </button>
