@@ -24,7 +24,7 @@ const LogIn = () => {
   const onSubmit = event => {
     signInWithEmailAndPassword(email, password)
     .then(async authUser => {
-      const sirenUser: SirenUser = await getSirenUser(authUser.user.uid)
+      const sirenUser: SirenUser = await getSirenUser(authUser.user.uid) // signIn changes user context; authUser is set by now
       setUser(sirenUser);
       if (sirenUser.status == "Approved") {
         router.push('/');

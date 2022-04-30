@@ -116,10 +116,10 @@ export const getSirenUsersWhere = async (params: FirebaseQueryParams[]): Promise
     return null;
   }
   try {
-    var ref;
+    var ref = sirenUserCollection;
     for (let i = 0; i < params.length; i++) {
       const { field, operator, value } = params[i];
-      ref = await sirenUserCollection.where(field, operator, value);
+      ref = await ref.where(field, operator, value);
     }
     ref = await ref.get();
     return ref.docs.map(doc => doc.data() as SirenUser);

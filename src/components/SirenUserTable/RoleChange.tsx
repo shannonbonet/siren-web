@@ -6,7 +6,7 @@ import { setSirenUser } from '../../firebase/queries';
 
 export default function RoleChange(props) {
   const sirenUserInput = props.user;
-  const [role, setRole] = useState("Viewer");
+  const [role, setRole] = useState(sirenUserInput.role);
   const [currentUser, setCurrentUser] = useState(sirenUserInput);
   const handleChange = (event) => {
     const updatedUser = {...currentUser};
@@ -20,7 +20,6 @@ export default function RoleChange(props) {
       <FormControl>
         <Select
           value={role}
-          label="Role"
           onChange={handleChange}
         >
           <MenuItem value={"Admin"}>Admin</MenuItem>
