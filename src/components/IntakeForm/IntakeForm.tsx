@@ -14,6 +14,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
+import { setQuestion } from "../../firebase/queries";
+import { firestoreAutoId } from '../../firebase/helpers';
 
 
 
@@ -124,6 +126,23 @@ const IntakeForm = () => {
       default:
         return state;
     }
+  }
+
+  function setIntake() {
+    var questionList = qState.questions;
+    questionList.map(q => 
+      await setQuestion({
+        id: firestoreAutoId();
+        displayText: 
+        description:
+        example:
+        questionType: 
+        key:
+        order:
+        active:
+        answerType:
+        answerOptions?:
+      }));
   }
 
   const reorder = (list, source, destination) => {

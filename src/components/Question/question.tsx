@@ -9,8 +9,12 @@ import {
 } from "react-icons/io5";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
+import { setQuestion } from "../../firebase/queries";
+import { firestoreAutoId } from "../../firebase/helpers";
+import { QuestionType } from "../../firebase/queries";
 
-const Question = () => {
+
+const Question = async (caseType) => {
   const [questionText, setQuestionText] = useState("");
   const [descriptionText, setDescriptionText] = useState("");
   const [answerType, setAnswerType] = useState(null);
@@ -144,6 +148,22 @@ const Question = () => {
           onChange={(ev) => setDescriptionText(ev.target.value)}
           className={styles.longText}
         />
+        <button
+         className={styles.saveButton}
+         onClick={await setQuestion({
+          id: firestoreAutoId(),
+          displayText: new Map([["EN:", questionText], ["ES:", questionText], ["VIET", questionText]]),
+          description: new Map([["EN:", descriptionText], ["ES:", descriptionText], ["VIET", descriptionText]]),
+          example: new Map([["EN:", ""], ["ES:", ""], ["VIET", ""]]),
+          questionType: QuestionType.Daca,
+          key: firestoreAutoId(),
+          order:0,
+          active: true,
+          answerType: answerType,
+          answerOptions?:
+         })}
+        >Save
+        </button>
       </div>
       {answerType ? getAnswerTypeComponent() : null}
     </div>

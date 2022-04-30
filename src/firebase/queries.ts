@@ -9,12 +9,14 @@ import {
   Dictionary,
   Document,
   Question,
+  QuestionType
 } from "../../types";
 import firebase from "./clientApp";
 import { objectToAnswerOptionsMap, objectToMap } from "./helpers";
 
 const database = firebase.firestore();
 const clientCollection = database.collection("clients");
+const caseCollection = database.collection("caseTypes");
 
 export const getClient = async (clientId: string): Promise<Client> => {
   try {
@@ -103,3 +105,19 @@ export const getIdentifiers = async (
     throw e;
   }
 };
+
+export const setQuestion= async (
+   question: Question
+) => {
+  try {
+    await database
+      .collection(`caseTypes/${question.questionType}/questions`)
+      .doc(question.id)
+      .set(question);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+}
+
+
