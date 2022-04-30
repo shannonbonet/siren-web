@@ -1,10 +1,6 @@
-import React from 'react';
-import styles from './TempForm.module.css';
+import React from "react";
+import styles from "./TempForm.module.css";
 
 export const TempForm = () => {
-  return (
-    <div className={styles["block"]}>
-      HI
-    </div>
-  )
-}
+  return <div className={styles["block"]}>HI</div>;
+};

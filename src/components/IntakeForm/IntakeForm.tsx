@@ -228,4 +228,3 @@ const IntakeForm = () => {
 } 
 
 export default IntakeForm;
-
