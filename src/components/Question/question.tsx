@@ -5,11 +5,9 @@ import Select from "react-select";
 import {
   IoCloseOutline,
   IoRadioButtonOffOutline,
-  IoTrashOutline,
   IoCalendarOutline,
 } from "react-icons/io5";
-import { MdOutlineCheckBoxOutlineBlank, MdContentCopy } from "react-icons/md";
-import Toggle from "react-toggle";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
 
 const Question = () => {
@@ -17,7 +15,6 @@ const Question = () => {
   const [descriptionText, setDescriptionText] = useState("");
   const [answerType, setAnswerType] = useState(null);
   const [answerOptions, setAnswerOptions] = useState(["Option"]);
-  const [required, setRequired] = useState(false);
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
     { value: "date", label: "Date" },
@@ -36,7 +33,8 @@ const Question = () => {
           <TextareaAutosize
             cacheMeasurements
             value={answerOptions[i]}
-            className={styles.shortText}
+            className={styles.multiText}
+            placeholder="Option"
             onChange={(ev) => {
               let options = [...answerOptions];
               options[i] = ev.target.value;
@@ -148,20 +146,6 @@ const Question = () => {
         />
       </div>
       {answerType ? getAnswerTypeComponent() : null}
-      <div className={styles.bottombuttons}>
-        <span className={styles.requiredspan}>Required</span>
-        <Toggle
-          checked={required}
-          icons={false}
-          onChange={() => setRequired(!required)}
-        />
-        <button className={styles.copybutton}>
-          <MdContentCopy size="27px" />
-        </button>
-        <button className={styles.trashbutton}>
-          <IoTrashOutline size="27px" />
-        </button>
-      </div>
     </div>
   );
 };
