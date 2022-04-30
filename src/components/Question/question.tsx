@@ -15,7 +15,6 @@ const Question = () => {
   const [descriptionText, setDescriptionText] = useState("");
   const [answerType, setAnswerType] = useState(null);
   const [answerOptions, setAnswerOptions] = useState(["Option"]);
-  const [required, setRequired] = useState(false);
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
     { value: "date", label: "Date" },
