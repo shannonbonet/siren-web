@@ -9,7 +9,7 @@
 }
 
 .App-button:hover {
-  filter: brightness(75%); 
+  filter: brightness(75%);
 }
 #button-pruss {
   background-color: var(--prussian-blue);
@@ -34,4 +34,3 @@
 #button-text-white {
   color: var(--cultured);
 }
-
