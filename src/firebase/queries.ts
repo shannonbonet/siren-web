@@ -11,7 +11,7 @@ import {
   Question,
 } from "../../types";
 import firebase from "./clientApp";
-import { objectToMap } from "./helpers";
+import { objectToMap, mapToObject } from "./helpers";
 
 const database = firebase.firestore();
 const clientCollection = database.collection("clients");
@@ -86,3 +86,24 @@ export const getIdentifiers = async (
     throw e;
   }
 };
+
+
+export const updateInfo = async(
+  client: Client, 
+  caseType: string,
+  field: string, // field to be updated on client response
+  newInfo: string,
+) => {
+  try{
+    const copy = {...client} as Dictionary;
+    copy.answers = mapToObject(client.answers);
+    copy.answers[caseType][field] = newInfo;
+    await clientCollection.doc(copy.id).set(copy);
+  } catch(e){
+    console.warn(e)
+    throw(e)
+  }
+};
+
+
+
