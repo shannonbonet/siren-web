@@ -196,6 +196,9 @@ const IntakeTable = () => {
                         if (column.id == "identifier") {
                           // using first case as default for now, should eventually take in caseType and update value accordingly
                           const caseType = camelize(row["visitReason"]);
+                          if (!caseType) {
+                            return null;
+                          }
                           for (const o of identifiers[i]) {
                             if (o["caseType"] == caseType) {
                               value = o["identifier"];
@@ -205,6 +208,7 @@ const IntakeTable = () => {
                         } else {
                           value = row[column.id];
                         }
+                        console.log(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"

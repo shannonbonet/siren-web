@@ -8,6 +8,9 @@ import {
   FormControlLabel,
   FormControl,
   Tab,
+  MenuItem,
+  Select,
+  InputLabel,
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
@@ -204,36 +207,111 @@ const DocumentsBox = () => {
 const ClientActionsBox = () => {
   const [clientActionsState, setClientActionsState] = useState(0);
   const [approveState, setApproveState] = useState("");
+  const [rejectState, setRejectState] = useState("");
   const [tabValue, setTabValue] = useState("approve");
-  const sendSuccessful = clientActionsState;
-  const handleApproveState = (ev) => {
-    setApproveState(); // TODO: set approve state correctly
+  const [selectCaseValue, setSelectCaseValue] = useState("");
+  // TODO: edit this after Greg's branched is merged
+  //  - take all the cases of the client & turn them into array for answerTypeOptions
+  const [answerTypeOptions, setAnswerTypeOptions] = useState([]);
+  // test:
+  const answerTypeOptionsTest = [
+    { value: "dacaRenewal", label: "Daca Renewal" },
+    { value: "citizenship", label: "Citizenship" },
+  ];
+  const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setApproveState(value);
   };
-  switch (sendSuccessful) {
+  const handleRejectState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setRejectState(value);
+  };
+  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setSelectCaseValue(value.props.value);
+    console.log(selectCaseValue);
+  };
+  switch (clientActionsState) {
     case 1:
-      return (
-        <div className={`${styles.outline} ${styles.padding}`}>
-          <h3>Client Actions</h3>
-          <p>
-            Are you sure you want to approve this client for a consultation?
-          </p>
-          <div className={styles.buttons}>
-            <Button
-              variant="outlined"
-              className={styles.button}
-              onClick={() => setClientActionsState(0)}
-            >
-              Back
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setClientActionsState(2)}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      );
+      if (tabValue == "approve") {
+        if (approveState == "approve-consultation") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to approve this client for a consultation?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else if (approveState == "approve-documents") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to approve this client's documents?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else {
+          setClientActionsState(0);
+        }
+      } else {
+        if (rejectState == "send-referral-link") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to send a referral link to this client?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else {
+          setClientActionsState(0);
+        }
+      }
+      
     case 2:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
@@ -258,7 +336,22 @@ const ClientActionsBox = () => {
     default:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
-          <h3>Client Actions</h3>
+          <div className={styles.clientActionsHeader}>
+            <h3>Client Actions</h3> 
+            {/*<FormControl fullWidth className={styles.selectCase}>
+              <InputLabel id="demo-simple-select-label">Select Case</InputLabel>
+              <Select 
+                onChange={handleSelectCaseValue}
+                value={selectCaseValue}
+              >
+                { map MenuItems here }
+                {answerTypeOptionsTest.map((key, value) => 
+                  <MenuItem value={key.value}>{key.label}</MenuItem>
+                )}
+                { use Shannon's set and get functions from mobile }
+              </Select>
+            </FormControl>*/}
+          </div>
           <TabContext value={tabValue}>
             <TabList onChange={(event, newValue) => setTabValue(newValue)}>
               <Tab disableRipple label="approve" value="approve" />
@@ -286,7 +379,10 @@ const ClientActionsBox = () => {
                 </FormControl>
               </TabPanel>
               <TabPanel value="reject" className={styles["no-padding"]}>
-                <RadioGroup>
+                <RadioGroup
+                  onChange={handleRejectState}
+                  value={rejectState}
+                >
                   <FormControlLabel
                     value="send-referral-link"
                     control={<Radio size="small" />}
