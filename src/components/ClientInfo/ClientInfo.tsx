@@ -225,7 +225,7 @@ const ClientActionsBox = () => {
     setRejectState(value);
   };
   const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setSelectCaseValue(value);
+    setSelectCaseValue(value.props.value);
     console.log(selectCaseValue);
   };
   switch (clientActionsState) {
@@ -338,19 +338,19 @@ const ClientActionsBox = () => {
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.clientActionsHeader}>
             <h3>Client Actions</h3> 
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            {/*<FormControl fullWidth className={styles.selectCase}>
+              <InputLabel id="demo-simple-select-label">Select Case</InputLabel>
               <Select 
                 onChange={handleSelectCaseValue}
                 value={selectCaseValue}
               >
-                {/* map MenuItems here */}
+                { map MenuItems here }
                 {answerTypeOptionsTest.map((key, value) => 
                   <MenuItem value={key.value}>{key.label}</MenuItem>
                 )}
-                {/* use Shannon's set and get functions from mobile */}
+                { use Shannon's set and get functions from mobile }
               </Select>
-            </FormControl>
+            </FormControl>*/}
           </div>
           <TabContext value={tabValue}>
             <TabList onChange={(event, newValue) => setTabValue(newValue)}>

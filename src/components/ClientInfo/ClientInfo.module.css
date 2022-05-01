@@ -74,3 +74,8 @@
 .clientActionsHeader {
   display: flex;
 }
+
+.selectCase {
+  min-width: 150px;
+  max-width: 200px;
+}
