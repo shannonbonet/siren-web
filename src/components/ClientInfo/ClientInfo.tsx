@@ -8,12 +8,14 @@ import {
   FormControlLabel,
   FormControl,
   Tab,
+  MenuItem,
+  Select,
+  InputLabel,
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
 import { getAllClients } from "../../firebase/queries";
 import { Client } from "/types";
-import Select from "react-select";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
@@ -207,7 +209,7 @@ const ClientActionsBox = () => {
   const [approveState, setApproveState] = useState("");
   const [rejectState, setRejectState] = useState("");
   const [tabValue, setTabValue] = useState("approve");
-  const sendSuccessful = clientActionsState;
+  const [selectCaseValue, setSelectCaseValue] = useState("");
   // TODO: edit this after Greg's branched is merged
   //  - take all the cases of the client & turn them into array for answerTypeOptions
   const [answerTypeOptions, setAnswerTypeOptions] = useState([]);
@@ -217,36 +219,99 @@ const ClientActionsBox = () => {
     { value: "citizenship", label: "Citizenship" },
   ];
   const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setApproveState(value); // TODO: set approve state correctly
+    setApproveState(value);
   };
   const handleRejectState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setRejectState(value); // TODO: set approve state correctly
+    setRejectState(value);
   };
-  switch (sendSuccessful) {
+  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setSelectCaseValue(value);
+    console.log(selectCaseValue);
+  };
+  switch (clientActionsState) {
     case 1:
-      return (
-        <div className={`${styles.outline} ${styles.padding}`}>
-          <h3>Client Actions</h3> 
-          <p>
-            Are you sure you want to approve this client for a consultation?
-          </p>
-          <div className={styles.buttons}>
-            <Button
-              variant="outlined"
-              className={styles.button}
-              onClick={() => setClientActionsState(0)}
-            >
-              Back
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => setClientActionsState(2)}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      );
+      if (tabValue == "approve") {
+        if (approveState == "approve-consultation") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to approve this client for a consultation?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else if (approveState == "approve-documents") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to approve this client's documents?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else {
+          setClientActionsState(0);
+        }
+      } else {
+        if (rejectState == "send-referral-link") {
+          return (
+            <div className={`${styles.outline} ${styles.padding}`}>
+              <h3>Client Actions</h3> 
+              <p>
+                Are you sure you want to send a referral link to this client?
+              </p>
+              <div className={styles.buttons}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => setClientActionsState(0)}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setClientActionsState(2)}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          );
+        } else {
+          setClientActionsState(0);
+        }
+      }
+      
     case 2:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
@@ -273,7 +338,19 @@ const ClientActionsBox = () => {
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.clientActionsHeader}>
             <h3>Client Actions</h3> 
-            <Select options={answerTypeOptionsTest}/>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <Select 
+                onChange={handleSelectCaseValue}
+                value={selectCaseValue}
+              >
+                {/* map MenuItems here */}
+                {answerTypeOptionsTest.map((key, value) => 
+                  <MenuItem value={key.value}>{key.label}</MenuItem>
+                )}
+                {/* use Shannon's set and get functions from mobile */}
+              </Select>
+            </FormControl>
           </div>
           <TabContext value={tabValue}>
             <TabList onChange={(event, newValue) => setTabValue(newValue)}>
