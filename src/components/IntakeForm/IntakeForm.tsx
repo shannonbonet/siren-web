@@ -40,8 +40,10 @@ const IntakeForm = () => {
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
 
   const loadQuestions = async (): Promise<void> => {
+    console.log("CAlling load questions");
     const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
     setAllQuestions(qs);
+    console.log(qs);
     allQuestions.map(q => initialState.questions.push
       (<Question 
         id={q.id}
@@ -121,7 +123,7 @@ const IntakeForm = () => {
         const id: string = Math.random().toString(36).slice(2).valueOf();
         newState.past.push([newState.ids, newState.questions])
         newState.ids.push(id);
-        newState.questions.push(<QuestionComp/>);
+        newState.questions.push(<Question/>);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -152,22 +154,22 @@ const IntakeForm = () => {
     }
   }
 
-  function setIntake() {
-    var questionList = qState.questions;
-    questionList.map(q => 
-      await setQuestion({
-        id: firestoreAutoId();
-        displayText: 
-        description:
-        example:
-        questionType: 
-        key:
-        order:
-        active:
-        answerType:
-        answerOptions?:
-      }));
-  }
+  // function setIntake() {
+  //   var questionList = qState.questions;
+  //   questionList.map(q => 
+  //     await setQuestion({
+  //       id: firestoreAutoId();
+  //       displayText: 
+  //       description:
+  //       example:
+  //       questionType: 
+  //       key:
+  //       order:
+  //       active:
+  //       answerType:
+  //       answerOptions?:
+  //     }));
+  // }
 
   const reorder = (list, source, destination) => {
     const newList = Array.from(list);

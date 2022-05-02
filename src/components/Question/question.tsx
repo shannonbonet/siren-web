@@ -13,23 +13,36 @@ import { setQuestion } from "../../firebase/queries";
 import { firestoreAutoId } from "../../firebase/helpers";
 import { QuestionType, AnswerType } from "../../../types";
 
+interface questionProps {
+  id?: string; 
+  displayText?: Map<string, string>;
+  description?: Map<string, string>; 
+  example?: Map<string, string>;
+  questionType?: QuestionType;
+  key?: string;
+  order?: number;
+  active?: boolean;
+  typeAnswer?: AnswerType;
+  optionAnswer?: Map<string, string[]>;
+}
 
-const Question = (
-  id: string = firestoreAutoId(),
-  displayText: Map<string, string> = new Map(),
-  description: Map<string, string> = new Map(),
-  example: Map<string, string> = new Map(),
-  questionType: QuestionType = QuestionType.Daca,
-  key: string = "",
-  order: number = 1,
-  active: boolean = false,
-  typeAnswer: AnswerType = AnswerType.SmallInput,
-  optionAnswer: Map<string, string[]> = new Map(),
+
+const Question = ({
+  id = firestoreAutoId(),
+  displayText = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+  description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+  example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+  questionType = QuestionType.Daca,
+  key = "",
+  order = 1,
+  active = false,
+  typeAnswer = null,
+  optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}: questionProps
 ) => {
-  const [questionText, setQuestionText] = useState("");
-  const [descriptionText, setDescriptionText] = useState("");
+  const [questionText, setQuestionText] = useState(displayText.get('EN'));
+  const [descriptionText, setDescriptionText] = useState(description.get('EN'));
   const [answerType, setAnswerType] = useState(null);
-  const [answerOptions, setAnswerOptions] = useState(["Option"]);
+  const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
     { value: "date", label: "Date" },
@@ -73,7 +86,7 @@ const Question = (
   };
 
   const getAnswerTypeComponent = () => {
-    if (answerType.value === "smallInput") {
+    if (answerType === "smallInput") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -84,7 +97,7 @@ const Question = (
           />
         </div>
       );
-    } else if (answerType.value === "largeInput") {
+    } else if (answerType === "largeInput") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -95,7 +108,7 @@ const Question = (
           />
         </div>
       );
-    } else if (answerType.value === "date") {
+    } else if (answerType === "calendar") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -111,9 +124,9 @@ const Question = (
       );
     } else {
       const icon =
-        answerType.value === "radio" ? (
+        answerType === "radio" ? (
           <IoRadioButtonOffOutline size="20px" />
-        ) : answerType.value === "checkbox" ? (
+        ) : answerType === "checkbox" ? (
           <MdOutlineCheckBoxOutlineBlank size="20px" />
         ) : null;
       return (

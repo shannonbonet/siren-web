@@ -15,6 +15,7 @@ export enum AnswerType {
   Dropdown = "dropdown",
   Calendar = "calendar",
   Radio = "radio",
+  Checkbox = "checkbox"
 }
 
 export type Client = {
