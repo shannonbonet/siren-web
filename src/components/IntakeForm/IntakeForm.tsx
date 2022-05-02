@@ -14,6 +14,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
+import { setQuestion, getAllQuestionsOfType} from "../../firebase/queries";
+import { firestoreAutoId } from '../../firebase/helpers';
+import { Question as QuestionObj } from "../../../types";
 
 
 
@@ -27,6 +30,7 @@ enum IntakeActionTypes {
 const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
   const [required, setRequired] = useState(false);
+  const [allQuestions, setAllQuestions] = useState([] as QuestionObj[]);
   var initialState = {
     ids: [],
     questions: [],
@@ -34,6 +38,28 @@ const IntakeForm = () => {
     future: []
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
+
+  const loadQuestions = async (): Promise<void> => {
+    const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
+    setAllQuestions(qs);
+    allQuestions.map(q => initialState.questions.push
+      (<Question 
+        id={q.id}
+        displayText={q.displayText}
+        description={q.description}
+        example={q.example}
+        questionType={q.questionType}
+        key={q.key}
+        order={q.order}
+        active={q.active}
+        typeAnswer={q.answerType}
+        optionAnswer={q.answerOptions}/>))
+  };
+
+  useEffect(() => {
+    loadQuestions();
+  }, []);
+
 
   const getDraggable = (question, index) => {
     return (
@@ -95,7 +121,7 @@ const IntakeForm = () => {
         const id: string = Math.random().toString(36).slice(2).valueOf();
         newState.past.push([newState.ids, newState.questions])
         newState.ids.push(id);
-        newState.questions.push(<Question/>);
+        newState.questions.push(<QuestionComp/>);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -124,6 +150,23 @@ const IntakeForm = () => {
       default:
         return state;
     }
+  }
+
+  function setIntake() {
+    var questionList = qState.questions;
+    questionList.map(q => 
+      await setQuestion({
+        id: firestoreAutoId();
+        displayText: 
+        description:
+        example:
+        questionType: 
+        key:
+        order:
+        active:
+        answerType:
+        answerOptions?:
+      }));
   }
 
   const reorder = (list, source, destination) => {

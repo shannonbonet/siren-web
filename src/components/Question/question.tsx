@@ -9,8 +9,23 @@ import {
 } from "react-icons/io5";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
+import { setQuestion } from "../../firebase/queries";
+import { firestoreAutoId } from "../../firebase/helpers";
+import { QuestionType, AnswerType } from "../../../types";
 
-const Question = () => {
+
+const Question = (
+  id: string = firestoreAutoId(),
+  displayText: Map<string, string> = new Map(),
+  description: Map<string, string> = new Map(),
+  example: Map<string, string> = new Map(),
+  questionType: QuestionType = QuestionType.Daca,
+  key: string = "",
+  order: number = 1,
+  active: boolean = false,
+  typeAnswer: AnswerType = AnswerType.SmallInput,
+  optionAnswer: Map<string, string[]> = new Map(),
+) => {
   const [questionText, setQuestionText] = useState("");
   const [descriptionText, setDescriptionText] = useState("");
   const [answerType, setAnswerType] = useState(null);
@@ -144,6 +159,22 @@ const Question = () => {
           onChange={(ev) => setDescriptionText(ev.target.value)}
           className={styles.longText}
         />
+        <button
+         className={styles.saveButton}
+        //  onClick={setQuestion({
+        //   id: firestoreAutoId(),
+        //   displayText: new Map([["EN:", questionText], ["ES:", questionText], ["VIET", questionText]]),
+        //   description: new Map([["EN:", descriptionText], ["ES:", descriptionText], ["VIET", descriptionText]]),
+        //   example: new Map([["EN:", ""], ["ES:", ""], ["VIET", ""]]),
+        //   questionType: QuestionType.Daca,
+        //   key: firestoreAutoId(),
+        //   order:0,
+        //   active: true,
+        //   answerType: answerType,
+        //   answerOptions?:
+        //  })}
+        >Save
+        </button>
       </div>
       {answerType ? getAnswerTypeComponent() : null}
     </div>
