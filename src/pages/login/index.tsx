@@ -138,10 +138,6 @@ const LogIn = () => {
         </div>
             <Button type="submit" form="login" variant="contained"> Log In </Button>
         </div>
-        <Button type="submit" form="login" variant="contained">
-          {" "}
-          Log In{" "}
-        </Button>
       </div>
   );
 };
