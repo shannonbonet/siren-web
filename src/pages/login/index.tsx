@@ -8,7 +8,7 @@ import { FormControl, InputLabel, IconButton, InputAdornment, OutlinedInput } fr
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { SirenUser } from '../../../types';
 import { getSirenUser, setSirenUser } from '../../firebase/queries';
-
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -18,10 +18,9 @@ const LogIn = () => {
   const [approvalOpen, setApprovalOpen] = useState(false); 
   const [deniedOpen, setDeniedOpen] = useState(false); 
   const [user, setUser] = useState(null); 
-
   const { signInWithEmailAndPassword } = useAuth();
 
-  const onSubmit = event => {
+  const onSubmit = (event) => {
     signInWithEmailAndPassword(email, password)
     .then(async authUser => {
       const sirenUser: SirenUser = await getSirenUser(authUser.user.uid) // signIn changes user context; authUser is set by now
@@ -42,8 +41,8 @@ const LogIn = () => {
   };
 
   const togglePassword = () => {
-    setShowPassword(!showPassword); 
-  }
+    setShowPassword(!showPassword);
+  };
 
   const handleClose = () => {
     setApprovalOpen(false);
@@ -140,8 +139,13 @@ const LogIn = () => {
         </div>
             <Button type="submit" form="login" variant="contained"> Log In </Button>
         </div>
+        <Button type="submit" form="login" variant="contained">
+          {" "}
+          Log In{" "}
+        </Button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default LogIn;

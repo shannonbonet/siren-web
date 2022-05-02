@@ -103,3 +103,4 @@ export type FirebaseQueryParams = {
   operator: string;
   value: any;
 }
+
