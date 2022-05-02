@@ -13,7 +13,7 @@ import {
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import {objectToMap} from './helpers';
+import { objectToAnswerOptionsMap, objectToMap } from './helpers';
 
   const database = firebase.firestore();
   const clientCollection = database.collection('clients');
