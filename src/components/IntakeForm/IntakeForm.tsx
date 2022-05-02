@@ -56,6 +56,8 @@ const IntakeForm = () => {
         active={q.active}
         typeAnswer={q.answerType}
         optionAnswer={q.answerOptions}/>))
+    allQuestions.map(q => initialState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+    
   };
 
   useEffect(() => {

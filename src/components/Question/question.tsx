@@ -37,11 +37,11 @@ const Question = ({
   order = 1,
   active = false,
   typeAnswer = null,
-  optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}: questionProps
+  optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
+  :questionProps
 ) => {
   const [questionText, setQuestionText] = useState(displayText.get('EN'));
   const [descriptionText, setDescriptionText] = useState(description.get('EN'));
-  const [answerType, setAnswerType] = useState(null);
   const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
@@ -51,6 +51,9 @@ const Question = ({
     { value: "checkbox", label: "Checkbox" },
     { value: "dropdown", label: "Dropdown" },
   ];
+  const [answerType, setAnswerType] =
+   useState(typeAnswer === null ? null : 
+    answerTypeOptions[answerTypeOptions.findIndex(o => {return o.value === typeAnswer})]);
 
   const getAnswerOptions = (icon) => {
     let components = [];
@@ -86,7 +89,7 @@ const Question = ({
   };
 
   const getAnswerTypeComponent = () => {
-    if (answerType === "smallInput") {
+    if (answerType.value === "smallInput") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -97,7 +100,7 @@ const Question = ({
           />
         </div>
       );
-    } else if (answerType === "largeInput") {
+    } else if (answerType.value === "largeInput") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -108,7 +111,7 @@ const Question = ({
           />
         </div>
       );
-    } else if (answerType === "calendar") {
+    } else if (answerType.value === "date") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -124,9 +127,9 @@ const Question = ({
       );
     } else {
       const icon =
-        answerType === "radio" ? (
+        answerType.value === "radio" ? (
           <IoRadioButtonOffOutline size="20px" />
-        ) : answerType === "checkbox" ? (
+        ) : answerType.value === "checkbox" ? (
           <MdOutlineCheckBoxOutlineBlank size="20px" />
         ) : null;
       return (
