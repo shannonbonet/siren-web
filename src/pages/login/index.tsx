@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import styles from './styles.module.css'; 
 import { FormControl, InputLabel, IconButton, InputAdornment, OutlinedInput } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { SirenUser } from '../../../types';
 import { getSirenUser, setSirenUser } from '../../firebase/queries';
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -144,7 +143,6 @@ const LogIn = () => {
           Log In{" "}
         </Button>
       </div>
-    </div>
   );
 };
 
