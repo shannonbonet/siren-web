@@ -40,6 +40,7 @@ const Question = ({
   optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
   :questionProps
 ) => {
+  console.log("KEY!", displayText.get("EN"));
   const [questionText, setQuestionText] = useState(displayText.get('EN'));
   const [descriptionText, setDescriptionText] = useState(description.get('EN'));
   const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));

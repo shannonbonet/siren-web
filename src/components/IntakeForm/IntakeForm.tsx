@@ -24,7 +24,8 @@ enum IntakeActionTypes {
   ADD = "add",
   REMOVE = "remove",
   UNDO = "undo",
-  REDO = "redo"
+  REDO = "redo",
+  LOAD = "load"
 }
 
 const IntakeForm = () => {
@@ -42,21 +43,23 @@ const IntakeForm = () => {
     console.log("CAlling load questions");
     const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
     setAllQuestions(qs);
-    console.log(qs);
-    allQuestions.map(q => qState.questions.push
-      (<Question 
-        id={q.id}
-        displayText={new Map([['EN', q.displayText], ['ES', q.displayText], ['VIET', q.displayText]])}
-        description={new Map([['EN', q.description], ['ES', q.description], ['VIET', q.description]])}
-        example={new Map([['EN', q.example], ['ES', q.example], ['VIET', q.example]])}
-        questionType={q.questionType}
-        key={q.key}
-        order={q.order}
-        active={q.active}
-        typeAnswer={q.answerType}
-        optionAnswer={new Map([['EN', q.answerOptions], ['ES', q.answerOptions], ['VIET', q.answerOptions]])}/>))
-    allQuestions.map(q => qState.ids.push(Math.random().toString(36).slice(2).valueOf()))
-    console.log("Q State", qState);
+    console.log("1st Payload:", allQuestions);
+    dispatch({type: IntakeActionTypes.LOAD, payload: allQuestions})
+    // console.log(qs);
+    // allQuestions.map(q => qState.questions.push
+    //   (<Question 
+    //     id={q.id}
+    //     displayText={new Map([['EN', q.displayText], ['ES', q.displayText], ['VIET', q.displayText]])}
+    //     description={new Map([['EN', q.description], ['ES', q.description], ['VIET', q.description]])}
+    //     example={new Map([['EN', q.example], ['ES', q.example], ['VIET', q.example]])}
+    //     questionType={q.questionType}
+    //     key={q.key}
+    //     order={q.order}
+    //     active={q.active}
+    //     typeAnswer={q.answerType}
+    //     optionAnswer={new Map([['EN', q.answerOptions], ['ES', q.answerOptions], ['VIET', q.answerOptions]])}/>))
+    // allQuestions.map(q => qState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+    // console.log("Q State", qState);
     
   };
 
@@ -150,6 +153,25 @@ const IntakeForm = () => {
           newState.questions = futureState[1];
         }
         return newState;
+      case IntakeActionTypes.LOAD:
+        console.log("payload", action.payload);
+        action.payload.map(q => newState.questions.push
+          (<Question 
+            id={q.id}
+            displayText={q.displayText}
+            description={q.description}
+            example={q.example}
+            questionType={q.questionType}
+            key={q.key}
+            order={q.order}
+            active={q.active}
+            typeAnswer={q.answerType}
+            optionAnswer={q.answerOptions}/>))
+        action.payload.map(q => newState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+        console.log("Q State", newState);
+        return newState;
+
+
       default:
         return state;
     }
