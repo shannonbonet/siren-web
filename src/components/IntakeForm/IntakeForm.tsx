@@ -38,32 +38,31 @@ const IntakeForm = () => {
     future: []
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
-
   const loadQuestions = async (): Promise<void> => {
     console.log("CAlling load questions");
     const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
     setAllQuestions(qs);
     console.log(qs);
-    allQuestions.map(q => initialState.questions.push
+    allQuestions.map(q => qState.questions.push
       (<Question 
         id={q.id}
-        displayText={q.displayText}
-        description={q.description}
-        example={q.example}
+        displayText={new Map([['EN', q.displayText], ['ES', q.displayText], ['VIET', q.displayText]])}
+        description={new Map([['EN', q.description], ['ES', q.description], ['VIET', q.description]])}
+        example={new Map([['EN', q.example], ['ES', q.example], ['VIET', q.example]])}
         questionType={q.questionType}
         key={q.key}
         order={q.order}
         active={q.active}
         typeAnswer={q.answerType}
-        optionAnswer={q.answerOptions}/>))
-    allQuestions.map(q => initialState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+        optionAnswer={new Map([['EN', q.answerOptions], ['ES', q.answerOptions], ['VIET', q.answerOptions]])}/>))
+    allQuestions.map(q => qState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+    console.log("Q State", qState);
     
   };
 
   useEffect(() => {
     loadQuestions();
   }, []);
-
 
   const getDraggable = (question, index) => {
     return (
