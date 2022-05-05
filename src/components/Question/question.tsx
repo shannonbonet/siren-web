@@ -46,7 +46,7 @@ const Question = ({
   const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
-    { value: "date", label: "Date" },
+    { value: "calendar", label: "Date" },
     { value: "radio", label: "Multiple Choice" },
     { value: "largeInput", label: "Long answer" },
     { value: "checkbox", label: "Checkbox" },
@@ -89,6 +89,8 @@ const Question = ({
     return components;
   };
 
+  const unfilled = displayText.get('EN').length == 0;
+
   const getAnswerTypeComponent = () => {
     if (answerType.value === "smallInput") {
       return (
@@ -96,7 +98,7 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value="Short answer text"
+            value= {unfilled ? 'Short answer text' : displayText.get('EN')}
             className={styles.shortText}
           />
         </div>
@@ -107,12 +109,12 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value="Long answer text"
+            value={unfilled ? 'Long answer text' : displayText.get('EN')}
             className={styles.longText}
           />
         </div>
       );
-    } else if (answerType.value === "date") {
+    } else if (answerType.value === "calendar") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
