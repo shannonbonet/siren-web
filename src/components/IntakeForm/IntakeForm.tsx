@@ -158,23 +158,6 @@ const IntakeForm = () => {
     }
   }
 
-  // function setIntake() {
-  //   var questionList = qState.questions;
-  //   questionList.map(q => 
-  //     await setQuestion({
-  //       id: firestoreAutoId();
-  //       displayText: 
-  //       description:
-  //       example:
-  //       questionType: 
-  //       key:
-  //       order:
-  //       active:
-  //       answerType:
-  //       answerOptions?:
-  //     }));
-  // }
-
   const reorder = (list, source, destination) => {
     const newList = Array.from(list);
     const [movedItem] = newList.splice(source, 1);

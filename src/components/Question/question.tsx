@@ -180,18 +180,6 @@ const Question = ({
         />
         <button
          className={styles.saveButton}
-        //  onClick={setQuestion({
-        //   id: firestoreAutoId(),
-        //   displayText: new Map([["EN:", questionText], ["ES:", questionText], ["VIET", questionText]]),
-        //   description: new Map([["EN:", descriptionText], ["ES:", descriptionText], ["VIET", descriptionText]]),
-        //   example: new Map([["EN:", ""], ["ES:", ""], ["VIET", ""]]),
-        //   questionType: QuestionType.Daca,
-        //   key: firestoreAutoId(),
-        //   order:0,
-        //   active: true,
-        //   answerType: answerType,
-        //   answerOptions?:
-        //  })}
         >Save
         </button>
       </div>
