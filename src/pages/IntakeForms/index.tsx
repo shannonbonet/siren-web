@@ -4,9 +4,8 @@ import Layout from "../../components/Layout";
 export default function GenQuestion() {
   return (
     <div>
-      <Layout>
-        <IntakeForm />
-      </Layout>
+        <h1>Intake Forms</h1>
+        {/* <IntakeForm /> */}
     </div>
   );
 }
