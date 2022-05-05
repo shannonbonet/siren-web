@@ -11,7 +11,7 @@ interface FormHolderProps {
 const FormHolder = (props: FormHolderProps) => {
     return (
         <div className={styles.root}>
-                <h3 className={styles.title}> <FeedOutlinedIcon /> {props.formTitle}</h3>
+            <h3 className={styles.title}> <FeedOutlinedIcon /> {props.formTitle}</h3>
             <div className={styles.icons}>
                 <EditIcon />
                 <DeleteIcon />
