@@ -1,78 +1,89 @@
-import React, {useState, useEffect} from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import {getAllQuestionsOfType, getAllClients, getIdentifiers} from '../../firebase/queries';
-import {Question} from '../../../types';
-import {camelize} from '../../firebase/helpers';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import {
+  getAllQuestionsOfType,
+  getAllClients,
+  getIdentifiers,
+} from "../../firebase/queries";
+import { Question } from "../../../types";
+import { camelize } from "../../firebase/helpers";
+import Link from "next/link";
 
 interface Column {
-  id: 'identifier' | 'Name' | 'alienRegistrationNumber' | 'visitReason' | 'status' | 'telephone' | 'Email' | 'county';
+  id:
+    | "identifier"
+    | "Name"
+    | "alienRegistrationNumber"
+    | "visitReason"
+    | "status"
+    | "telephone"
+    | "Email"
+    | "county";
   label: string;
   minWidth?: number;
-  align?: 'left';
+  align?: "left";
   format?: (value: number) => string;
 }
 
 const caseTypes = {
-  'dacaRenewal': 10,
-  'adjustmentOfStatus': 11,
-  'i90': 12,
-}
+  dacaRenewal: 10,
+  adjustmentOfStatus: 11,
+  i90: 12,
+};
 
 const columns: readonly Column[] = [
-  { id: 'identifier', label: 'Unique ID', minWidth: 170 },
-  { id: 'Name', label: 'Name', minWidth: 100 },
+  { id: "identifier", label: "Unique ID", minWidth: 170 },
+  { id: "Name", label: "Name", minWidth: 100 },
   {
-    id: 'alienRegistrationNumber',
-    label: 'A. Number',
+    id: "alienRegistrationNumber",
+    label: "A. Number",
     minWidth: 170,
-    align: 'left',
-    format: (value: number) => value.toLocaleString('en-US'),
+    align: "left",
+    format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: 'visitReason',
-    label: 'Case Type',
+    id: "visitReason",
+    label: "Case Type",
     minWidth: 170,
-    align: 'left',
-    format: (value: number) => value.toLocaleString('en-US'),
+    align: "left",
+    format: (value: number) => value.toLocaleString("en-US"),
   },
   {
-    id: 'status',
-    label: 'Status',
+    id: "status",
+    label: "Status",
     minWidth: 170,
-    align: 'left',
+    align: "left",
     format: (value: number) => value.toFixed(2),
   },
   {
-    id: 'telephone',
-    label: 'Phone Number',
+    id: "telephone",
+    label: "Phone Number",
     minWidth: 170,
-    align: 'left',
+    align: "left",
     format: (value: number) => value.toFixed(2),
   },
   {
-    id: 'Email',
-    label: 'Email',
+    id: "Email",
+    label: "Email",
     minWidth: 170,
-    align: 'left',
+    align: "left",
     format: (value: number) => value.toFixed(2),
   },
   {
-    id: 'county',
-    label: 'County',
+    id: "county",
+    label: "County",
     minWidth: 170,
-    align: 'left',
+    align: "left",
     format: (value: number) => value.toFixed(2),
   },
 ];
-
 
 const IntakeTable = () => {
   const [page, setPage] = React.useState(0);
@@ -82,7 +93,9 @@ const IntakeTable = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -94,52 +107,57 @@ const IntakeTable = () => {
   // structure looks like this: [ [ClientObject, CaseObject] ]
   const [clientCases, setClientCases] = useState<Array<Array<Object>>>([]);
 
-    useEffect(() => {
-      let clientAns: Array<Object> = new Array();
-      let caseIdentifiers: Array<Object[]> = new Array();
-        
-      async function loadClientResponses(){
-            //filter out clients w no answers
-            const clients = (await getAllClients()).filter(c => c.answers !== undefined && Object.keys(c.answers).length >= 1);
-            setClientsPass(clients);
+  useEffect(() => {
+    let clientAns: Array<Object> = new Array();
+    let caseIdentifiers: Array<Object[]> = new Array();
 
-            //add all client answer objects to array, then select 'general' responses
-            for (const i in clients){
-                clientAns.push(clients[i].answers);
-            }
-            const clientGenAns: Array<Object> = clientAns.map(c => c['general']);
+    async function loadClientResponses() {
+      //filter out clients w no answers
+      const clients = (await getAllClients()).filter(
+        (c) => c.answers !== undefined && Object.keys(c.answers).length >= 1
+      );
+      setClientsPass(clients);
 
-            //set identifiers
-            const ids = clients.map(c => getIdentifiers(c.id)); 
-            await Promise.all(ids).then(ids => setIdentifiers(ids))
+      //add all client answer objects to array, then select 'general' responses
+      for (const i in clients) {
+        clientAns.push(clients[i].answers);
+      }
+      const clientGenAns: Array<Object> = clientAns.map((c) => c["general"]);
 
-            setResponses(clientGenAns);
-        }
-        loadClientResponses();
-        console.log(clientsPass[5]);
+      //set identifiers
+      const ids = clients.map((c) => getIdentifiers(c.id));
+      await Promise.all(ids).then((ids) => setIdentifiers(ids));
 
-        async function loadQuestions(){
-            const qList = await getAllQuestionsOfType('general');
-            setQuestions(qList);
-        }
-        loadQuestions();
+      setResponses(clientGenAns);
+    }
+    loadClientResponses();
 
-    }, []);
-    
-    //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
-    // console.log(identifiers);
-    // console.log(responses);
+    async function loadQuestions() {
+      const qList = await getAllQuestionsOfType("general");
+      setQuestions(qList);
+    }
+    loadQuestions();
+  }, []);
+
+  //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
+  // console.log(identifiers);
+  // console.log(responses);
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 1000 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead sx={{borderRadius: '10px'}}>
+          <TableHead sx={{ borderRadius: "10px" }}>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth, backgroundColor: '#CFD3D7', borderColor: '#0F2536', maxHeight: '36px'}}
+                  style={{
+                    minWidth: column.minWidth,
+                    backgroundColor: "#CFD3D7",
+                    borderColor: "#0F2536",
+                    maxHeight: "36px",
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -153,36 +171,49 @@ const IntakeTable = () => {
               .map((row, i) => {
                 return (
                   //
-                  // Taking out this line below will introduce red squigglies 
+                  // Taking out this line below will introduce red squigglies
                   // for reasons I am not sure why.
                   //
                   // eslint-disable-next-line react/jsx-key
-                  <Link href={{
-                    pathname: '/clientview',
-                    query: { fullName: clientsPass[i]["fullName"],
-                             email: clientsPass[i]["email"],
-                             id: clientsPass[i]["id"],
-                             answers: clientsPass[i]["answers"]
-                            }
-                  }} passHref>
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row['Name']}>
+                  <Link
+                    href={{
+                      pathname: "/clientview",
+                      query: {
+                        fullName: clientsPass[i]["fullName"],
+                        email: clientsPass[i]["email"],
+                        id: clientsPass[i]["id"],
+                        answers: clientsPass[i]["answers"],
+                      },
+                    }}
+                    passHref
+                  >
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row["Name"]}
+                    >
                       {columns.map((column) => {
-                          let value;
-                          if (column.id == 'identifier'){
-                            // using first case as default for now, should eventually take in caseType and update value accordingly
-                            const caseType = camelize(row['visitReason']);
-                            for (const o of identifiers[i]){
-                              if (o['caseType'] == caseType){
-                                value = o['identifier'];
-                                break;
-                              }
+                        let value;
+                        if (column.id == "identifier") {
+                          // using first case as default for now, should eventually take in caseType and update value accordingly
+                          const caseType = camelize(row["visitReason"]);
+                          if (!caseType) {
+                            return null;
+                          }
+                          for (const o of identifiers[i]) {
+                            if (o["caseType"] == caseType) {
+                              value = o["identifier"];
+                              break;
                             }
-                          } else {
-                            value = row[column.id];
-                          } 
+                          }
+                        } else {
+                          value = row[column.id];
+                        }
+                        console.log(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
+                            {column.format && typeof value === "number"
                               ? column.format(value)
                               : value}
                           </TableCell>
@@ -206,6 +237,6 @@ const IntakeTable = () => {
       />
     </Paper>
   );
-}
+};
 
-export default IntakeTable; 
+export default IntakeTable;

@@ -96,3 +96,18 @@ export enum CaseStatus {
     poReport: string;
     // remaining types
   }
+
+export type SirenUser = {
+  uid: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+};
+
+export type FirebaseQueryParams = {
+  field: string;
+  operator: string;
+  value: any;
+}
+
