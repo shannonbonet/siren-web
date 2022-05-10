@@ -14,11 +14,12 @@ import {
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
-import { getAllClients } from "../../firebase/queries";
-import { Client } from "/types";
+import { getAllClients, getAllCaseTypes } from "../../firebase/queries";
+import { Client, CaseType } from "/types";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
+  const [cases, setCases] = useState<Array<CaseType>>(null);
   async function loadClientResponses() {
     // get the correct client
     const correctClient = (await getAllClients()).filter(
@@ -28,6 +29,15 @@ export const ClientInfo = ({ query }) => {
         c.id == query["id"]
     );
     setClient(correctClient[0]);
+
+    ///// TEST DATA /////
+    const testCasesOpen = ["DACA renewal", "Citizenship"];
+    // get documents of each case
+    const caseTypes = (await getAllCaseTypes()).filter(
+      (c) =>
+        testCasesOpen.includes(c.key)
+    );
+    setCases(caseTypes);
   }
   loadClientResponses();
 
@@ -41,7 +51,7 @@ export const ClientInfo = ({ query }) => {
       <div className={styles.grid}>
         <OverviewBox client={client} />
         <div>
-          <DocumentsBox />
+          <DocumentsBox cases={cases}/>
           <ClientActionsBox />
         </div>
       </div>
@@ -185,7 +195,7 @@ const OverviewBox = ({ client }) => {
   );
 };
 
-const DocumentsBox = () => {
+const DocumentsBox = (cases) => {
   return (
     <div className={`${styles.outline} ${styles.padding}`}>
       <h3>Documents</h3>
