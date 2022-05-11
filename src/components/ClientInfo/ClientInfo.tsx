@@ -30,6 +30,7 @@ export const ClientInfo = ({ query }) => {
 
     ///// TEST DATA /////
     const testCasesOpen = ["DACA renewal", "Citizenship"];
+    
     // get documents of each case
     const caseTypes = (await getAllCaseTypes()).filter(
       (c) =>
@@ -248,8 +249,8 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
       return found;
     })).length > 0) : false);
     if (docExists) {
-      return (<div key={doc}>
-        <StatusIcon completed={true} />
+      return (<div className={`${styles.alignHorizontal} ${styles.docEntry}`} key={doc}>
+       <div className={styles.docAlign}> <StatusIcon completed={true} /></div>
         <p>
           <a href={url} rel="noopener noreferrer" target="_blank">
             {doc}
@@ -258,8 +259,8 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
         </p> 
       </div>)
     } else {
-      return (<div key={doc}>
-        <StatusIcon completed={false} />
+      return (<div className={`${styles.alignHorizontal} ${styles.docEntry}`} key={doc}>
+        <div className={styles.docAlign}> <StatusIcon completed={false} /></div>
         <p>
           {doc}
         </p> 
@@ -269,15 +270,18 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
   // render
   return (
     <div className={`${styles.outline} ${styles.padding}`}>
-      <h3>Documents</h3>
-      {cases ? <select onChange={handleSelectCaseValue}>
-        <option selected disabled>
-          Select Case
-        </option>
-        {cases.map((key, value) => 
-          <option value={key.key}>{key.key}</option>
-        )}
-      </select> : null}
+      <div className={styles.alignHorizontal}>
+        <h3 className={styles.flex}>Documents</h3>
+        {cases ? 
+        <select onChange={handleSelectCaseValue} className={styles.flex}>
+          <option selected disabled>
+            Select Case
+          </option>
+          {cases.map((key, value) => 
+            <option value={key.key}>{key.key}</option>
+          )}
+        </select> : null}
+      </div>
         { selectCaseValue ? displayDocList() : null }
     </div>
   );
@@ -415,7 +419,7 @@ const ClientActionsBox = () => {
     default:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
-          <div className={styles.clientActionsHeader}>
+          <div className={styles.alignHorizontal}>
             <h3>Client Actions</h3> 
             {/*<FormControl fullWidth className={styles.selectCase}>
               <InputLabel id="demo-simple-select-label">Select Case</InputLabel>
