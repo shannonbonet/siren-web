@@ -104,6 +104,8 @@ const IntakeTable = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
   const [clientsPass, setClientsPass] = useState<Array<Object>>([]);
+  // structure looks like this: [ [ClientObject, CaseObject] ]
+  const [clientCases, setClientCases] = useState<Array<Array<Object>>>([]);
 
   useEffect(() => {
     let clientAns: Array<Object> = new Array();

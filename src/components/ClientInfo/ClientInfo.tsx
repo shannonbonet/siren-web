@@ -7,18 +7,17 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  Tab,
-  MenuItem,
-  Select,
-  InputLabel,
+  Tab
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
-import { getAllClients } from "../../firebase/queries";
-import { Client } from "/types";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
+import { Client, CaseType, Case, Document } from "/types";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
+  const [cases, setCases] = useState<Array<CaseType>>(null);
+  const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null);
   async function loadClientResponses() {
     // get the correct client
     const correctClient = (await getAllClients()).filter(
@@ -28,6 +27,28 @@ export const ClientInfo = ({ query }) => {
         c.id == query["id"]
     );
     setClient(correctClient[0]);
+
+    ///// TEST DATA /////
+    const testCasesOpen = ["DACA renewal", "Citizenship"];
+    
+    // get documents of each case
+    const caseTypes = (await getAllCaseTypes()).filter(
+      (c) =>
+        testCasesOpen.includes(c.key)
+    );
+    setCases(caseTypes);
+    // get client cases
+    const openClientCases = (correctClient && correctClient[0] ? (await getClientCases(correctClient[0].id)) : null);
+    // get case docs
+    const caseDocs = (openClientCases ? await openClientCases.map((c) => 
+      (getClientCaseDocs(correctClient[0].id, c.id))
+    ) : null );
+    var docToCaseArr = new Array();
+    for (const c in openClientCases) {
+      const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);
+      docToCaseArr.push([openClientCases[c], d]);
+    }
+    setClientDocsToCase(docToCaseArr);
   }
   loadClientResponses();
 
@@ -41,13 +62,20 @@ export const ClientInfo = ({ query }) => {
       <div className={styles.grid}>
         <OverviewBox client={client} />
         <div>
-          <DocumentsBox />
+          <DocumentsBox cases={cases} clientDocsToCase={clientDocsToCase}/>
           <ClientActionsBox />
         </div>
       </div>
     </>
   );
 };
+
+const caseOptions = new Map<string, string>([
+  ["I90", "I-90"],
+  ["adjustmentOfStatus", "Adjustment of status"],
+  ["citizenship", "Citizenship"],
+  ["dacaRenewal", "DACA renewal"],
+]);
 
 // RENDER BOXES
 
@@ -185,21 +213,76 @@ const OverviewBox = ({ client }) => {
   );
 };
 
-const DocumentsBox = () => {
+const DocumentsBox = ({ cases, clientDocsToCase }) => {
+  const [selectCaseValue, setSelectCaseValue] = useState('');
+  // This function is triggered when the select changes
+  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectCaseValue(event.target.value);
+  };
+  // function to render document list
+  const displayDocList = (): React.Component => {
+    const cas = cases.filter((element) => {
+      return element.key == selectCaseValue
+    });
+    const docsToCase = (clientDocsToCase ? clientDocsToCase.filter((element) => {
+      return caseOptions.get(element[0].type) == selectCaseValue
+    }) : null);
+    const docs = (docsToCase && docsToCase[0] ? docsToCase[0][1] : null)
+    if (cas) {
+      return (
+        cas[0]['documentList'].map((doc) => (
+          displayDoc(docs, doc)
+          ))
+      );
+    } else {
+      return (<p>Documents are loading...</p>);
+    }
+  };
+  // returns document link component to render
+  const displayDoc = (docs, doc): React.Component => {
+    let url = '';
+    const docExists = (docs ? ((docs.filter((element) => {
+      const found = element.type == doc;
+      if (found) {
+        url = element.url;
+      }
+      return found;
+    })).length > 0) : false);
+    if (docExists) {
+      return (<div className={`${styles.alignHorizontal} ${styles.docEntry}`} key={doc}>
+       <div className={styles.docAlign}> <StatusIcon completed={true} /></div>
+        <p>
+          <a href={url} rel="noopener noreferrer" target="_blank">
+            {doc}
+          </a>
+          <FiExternalLink className={styles.external} />
+        </p> 
+      </div>)
+    } else {
+      return (<div className={`${styles.alignHorizontal} ${styles.docEntry}`} key={doc}>
+        <div className={styles.docAlign}> <StatusIcon completed={false} /></div>
+        <p>
+          {doc}
+        </p> 
+      </div>)
+    }
+  }
+  // render
   return (
     <div className={`${styles.outline} ${styles.padding}`}>
-      <h3>Documents</h3>
-      {/* USE THIS:  window.open('/Export/PrintPdf'); 
-                    - make function that will open the link
-                    - let <a> call the function on click
-            */}
-      {/*<div className={styles.flex}>
-                <StatusIcon completed={true} />
-                <p>
-                    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Employment Authorization Document</a>
-                    <FiExternalLink className={styles.external} />
-                </p> 
-            </div>*/}
+      <div className={styles.alignHorizontal}>
+        <h3 className={styles.flex}>Documents</h3>
+        {cases ? 
+        <select onChange={handleSelectCaseValue} className={styles.flex}>
+          <option selected disabled>
+            Select Case
+          </option>
+          {cases.map((key, value) => 
+            <option value={key.key}>{key.key}</option>
+          )}
+        </select> : null}
+      </div>
+        { selectCaseValue ? displayDocList() : null }
     </div>
   );
 };
@@ -336,7 +419,7 @@ const ClientActionsBox = () => {
     default:
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
-          <div className={styles.clientActionsHeader}>
+          <div className={styles.alignHorizontal}>
             <h3>Client Actions</h3> 
             {/*<FormControl fullWidth className={styles.selectCase}>
               <InputLabel id="demo-simple-select-label">Select Case</InputLabel>

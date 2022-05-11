@@ -23,12 +23,20 @@ export enum CaseStatus {
     fullName: string;
     createdAt: Date;
     answers: Map<string, Map<string, any>>;
+    cases: Array<Case>;
   };
   
   export type Case = {
     id: string;
+    identifier: string;
     status: CaseStatus;
     type: string;
+  };
+
+  export type CaseType = {
+    documentList: Array<string>;
+    identifier: number;
+    key: string;
   };
   
   export type CalendlyLink = {
