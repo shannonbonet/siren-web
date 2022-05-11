@@ -47,7 +47,6 @@ export const ClientInfo = ({ query }) => {
       const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);
       docToCaseArr.push([openClientCases[c], d]);
     }
-    console.log(docToCaseArr);
     setClientDocsToCase(docToCaseArr);
   }
   loadClientResponses();
@@ -70,12 +69,12 @@ export const ClientInfo = ({ query }) => {
   );
 };
 
-const caseOptions = [
-  { value: "I-90", label: "I-90" },
-  { value: "Adjustment of status", label: "Adjustment of Status" },
-  { value: "Citizenship", label: "Citizenship" },
-  { value: "DACA renewal", label: "DACA renewal" }
-]
+const caseOptions = new Map<string, string>([
+  ["I90", "I-90"],
+  ["adjustmentOfStatus", "Adjustment of status"],
+  ["citizenship", "Citizenship"],
+  ["dacaRenewal", "DACA renewal"],
+]);
 
 // RENDER BOXES
 
@@ -224,25 +223,49 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
     const cas = cases.filter((element) => {
       return element.key == selectCaseValue
     });
+    const docsToCase = (clientDocsToCase ? clientDocsToCase.filter((element) => {
+      return caseOptions.get(element[0].type) == selectCaseValue
+    }) : null);
+    const docs = (docsToCase && docsToCase[0] ? docsToCase[0][1] : null)
     if (cas) {
       return (
         cas[0]['documentList'].map((doc) => (
-          <div key={doc}>
-            <StatusIcon completed={true} />
-            <p>
-              <a href="https://firebasestorage.googleapis.com/v0/b/siren-6099f.appspot.com/o/wCoaxy58szdkLdAWyp6b.jpg?alt=media&token=7dbb633e-2b9c-49f6-a761-44f05abbac77"
-                rel="noopener noreferrer" target="_blank">
-                {doc}
-              </a>
-              <FiExternalLink className={styles.external} />
-            </p> 
-          </div>
+          displayDoc(docs, doc)
           ))
       );
     } else {
-      return (<p>No documents required for this case.</p>);
+      return (<p>Documents are loading...</p>);
     }
   };
+  // returns document link component to render
+  const displayDoc = (docs, doc): React.Component => {
+    let url = '';
+    const docExists = (docs ? ((docs.filter((element) => {
+      const found = element.type == doc;
+      if (found) {
+        url = element.url;
+      }
+      return found;
+    })).length > 0) : false);
+    if (docExists) {
+      return (<div key={doc}>
+        <StatusIcon completed={true} />
+        <p>
+          <a href={url} rel="noopener noreferrer" target="_blank">
+            {doc}
+          </a>
+          <FiExternalLink className={styles.external} />
+        </p> 
+      </div>)
+    } else {
+      return (<div key={doc}>
+        <StatusIcon completed={false} />
+        <p>
+          {doc}
+        </p> 
+      </div>)
+    }
+  }
   // render
   return (
     <div className={`${styles.outline} ${styles.padding}`}>
