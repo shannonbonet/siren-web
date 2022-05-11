@@ -43,6 +43,26 @@ export const getAllClients = async (): Promise<Client[]> => {
   }
 };
 
+export const getClientCases = async (clientId: string): Promise<Case[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').get();
+    return ref.docs.map((doc) => doc.data() as Case);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getClientCaseDocs = async (clientId: string, caseId: string): Promise<Document[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').doc(caseId).collection('documents').get();
+    return ref.docs.map((doc) => doc.data() as Document);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
 export const getCaseType = async (
   caseType: string
 ): Promise<CaseType> => {

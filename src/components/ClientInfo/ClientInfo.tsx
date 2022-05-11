@@ -7,19 +7,17 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  Tab,
-  MenuItem,
-  Select,
-  InputLabel,
+  Tab
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { useState } from "react";
-import { getAllClients, getAllCaseTypes } from "../../firebase/queries";
-import { Client, CaseType } from "/types";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
+import { Client, CaseType, Case, Document } from "/types";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
   const [cases, setCases] = useState<Array<CaseType>>(null);
+  const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null);
   async function loadClientResponses() {
     // get the correct client
     const correctClient = (await getAllClients()).filter(
@@ -38,6 +36,19 @@ export const ClientInfo = ({ query }) => {
         testCasesOpen.includes(c.key)
     );
     setCases(caseTypes);
+    // get client cases
+    const openClientCases = (correctClient && correctClient[0] ? (await getClientCases(correctClient[0].id)) : null);
+    // get case docs
+    const caseDocs = (openClientCases ? await openClientCases.map((c) => 
+      (getClientCaseDocs(correctClient[0].id, c.id))
+    ) : null );
+    var docToCaseArr = new Array();
+    for (const c in openClientCases) {
+      const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);
+      docToCaseArr.push([openClientCases[c], d]);
+    }
+    console.log(docToCaseArr);
+    setClientDocsToCase(docToCaseArr);
   }
   loadClientResponses();
 
@@ -51,13 +62,20 @@ export const ClientInfo = ({ query }) => {
       <div className={styles.grid}>
         <OverviewBox client={client} />
         <div>
-          <DocumentsBox cases={cases}/>
+          <DocumentsBox cases={cases} clientDocsToCase={clientDocsToCase}/>
           <ClientActionsBox />
         </div>
       </div>
     </>
   );
 };
+
+const caseOptions = [
+  { value: "I-90", label: "I-90" },
+  { value: "Adjustment of status", label: "Adjustment of Status" },
+  { value: "Citizenship", label: "Citizenship" },
+  { value: "DACA renewal", label: "DACA renewal" }
+]
 
 // RENDER BOXES
 
@@ -195,24 +213,49 @@ const OverviewBox = ({ client }) => {
   );
 };
 
-const DocumentsBox = (cases) => {
+const DocumentsBox = ({ cases, clientDocsToCase }) => {
+  const [selectCaseValue, setSelectCaseValue] = useState('');
+  // This function is triggered when the select changes
+  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectCaseValue(event.target.value);
+  };
+  // function to render document list
+  const displayDocList = (): React.Component => {
+    const cas = cases.filter((element) => {
+      return element.key == selectCaseValue
+    });
+    if (cas) {
+      return (
+        cas[0]['documentList'].map((doc) => (
+          <div key={doc}>
+            <StatusIcon completed={true} />
+            <p>
+              <a href="https://firebasestorage.googleapis.com/v0/b/siren-6099f.appspot.com/o/wCoaxy58szdkLdAWyp6b.jpg?alt=media&token=7dbb633e-2b9c-49f6-a761-44f05abbac77"
+                rel="noopener noreferrer" target="_blank">
+                {doc}
+              </a>
+              <FiExternalLink className={styles.external} />
+            </p> 
+          </div>
+          ))
+      );
+    } else {
+      return (<p>No documents required for this case.</p>);
+    }
+  };
+  // render
   return (
     <div className={`${styles.outline} ${styles.padding}`}>
       <h3>Documents</h3>
-      {/* USE THIS:  window.open('/Export/PrintPdf'); 
-                    - make function that will open the link
-                    - let <a> call the function on click
-            */}
-      <div className={styles.flex}>
-        <StatusIcon completed={true} />
-        <p>
-            <a href="https://firebasestorage.googleapis.com/v0/b/siren-6099f.appspot.com/o/wCoaxy58szdkLdAWyp6b.jpg?alt=media&token=7dbb633e-2b9c-49f6-a761-44f05abbac77"
-            rel="noopener noreferrer" target="_blank">
-              Employment Authorization Document
-              </a>
-            <FiExternalLink className={styles.external} />
-        </p> 
-          </div>
+      {cases ? <select onChange={handleSelectCaseValue}>
+        <option selected disabled>
+          Select Case
+        </option>
+        {cases.map((key, value) => 
+          <option value={key.key}>{key.key}</option>
+        )}
+      </select> : null}
+        { selectCaseValue ? displayDocList() : null }
     </div>
   );
 };

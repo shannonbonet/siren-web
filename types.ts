@@ -28,6 +28,7 @@ export enum CaseStatus {
   
   export type Case = {
     id: string;
+    identifier: string;
     status: CaseStatus;
     type: string;
   };
