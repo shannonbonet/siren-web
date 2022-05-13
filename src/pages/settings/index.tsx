@@ -2,6 +2,7 @@ import Layout from '../../components/Layout'
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import { Button, Tab, Tabs, Box, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
+import ClientsTable from '../../components/SirenUserTable/ClientsTable';
 import SirenUserTable from '../../components/SirenUserTable/SirenUserTable';
 import SirenApprovalTable from '../../components/SirenUserTable/SirenApprovalTable';
 import { getSirenUser } from '../../firebase/queries';
@@ -72,7 +73,7 @@ export default function Settings() {
                     <Button variant="outlined" onClick={signOut} >Sign Out</Button>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Item Three
+                    <ClientsTable/>
                 </TabPanel>
                 {(currentUser && ['Super', 'Admin'].includes(currentUser.role)) ?
                     [
