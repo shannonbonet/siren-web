@@ -3,14 +3,11 @@ import { FiCheck, FiExternalLink } from "react-icons/fi";
 import { AiOutlineExclamation } from "react-icons/ai";
 import {
   Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  Tab
+  Tab,
+  TextField
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
-import { useState } from "react";
+import React, { useState } from "react";
 import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
 import { Client, CaseType, Case, Document } from "/types";
 
@@ -288,127 +285,172 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
 };
 
 const ClientActionsBox = ({cases}) => {
-  const [clientActionsState, setClientActionsState] = useState(0);
-  const [approveState, setApproveState] = useState("");
-  const [rejectState, setRejectState] = useState("");
-  const [tabValue, setTabValue] = useState("approve");
+  const [clientActionsState, setClientActionsState] = useState("select");
   const [selectCaseValue, setSelectCaseValue] = useState("");
+  // TODO: implement referral link
+  // const [referralLink, setReferralLink] = useState('');
 
-  const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setApproveState(value);
-  };
-  const handleRejectState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setRejectState(value);
+  const handleReject = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    if (selectCaseValue) {
+      setClientActionsState("confirm reject");
+    }
   };
   // This function is triggered when the select changes
   const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectCaseValue(event.target.value);
   };
+  const handleAccept = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (selectCaseValue) {
+      setClientActionsState("confirm approve");
+    }
+  };
+  const caseSelectedComp = ():React.Component => {
+    if (selectCaseValue) {
+      return(<p>Case Selected: {selectCaseValue}</p>);
+    } else {
+      return(<p>Select a case from the dropdown above.</p>);
+    }
+  }
   switch (clientActionsState) {
-    case 1:
-      if (tabValue == "approve") {
-        if (approveState == "approve-consultation") {
-          return (
-            <div className={`${styles.outline} ${styles.padding}`}>
-              <h3>Client Actions</h3> 
-              <p>
-                Are you sure you want to approve this client for a consultation?
-              </p>
-              <div className={styles.buttons}>
-                <Button
-                  variant="outlined"
-                  className={styles.button}
-                  onClick={() => setClientActionsState(0)}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => setClientActionsState(2)}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </div>
-          );
-        } else if (approveState == "approve-documents") {
-          return (
-            <div className={`${styles.outline} ${styles.padding}`}>
-              <h3>Client Actions</h3> 
-              <p>
-                Are you sure you want to approve this client's documents?
-              </p>
-              <div className={styles.buttons}>
-                <Button
-                  variant="outlined"
-                  className={styles.button}
-                  onClick={() => setClientActionsState(0)}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => setClientActionsState(2)}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </div>
-          );
-        } else {
-          setClientActionsState(0);
-        }
-      } else {
-        if (rejectState == "send-referral-link") {
-          return (
-            <div className={`${styles.outline} ${styles.padding}`}>
-              <h3>Client Actions</h3> 
-              <p>
-                Are you sure you want to send a referral link to this client?
-              </p>
-              <div className={styles.buttons}>
-                <Button
-                  variant="outlined"
-                  className={styles.button}
-                  onClick={() => setClientActionsState(0)}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => setClientActionsState(2)}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </div>
-          );
-        } else {
-          setClientActionsState(0);
-        }
-      }
-      
-    case 2:
+    case "confirm approve":
+      return (
+        <div className={`${styles.outline} ${styles.padding}`}>
+          <h3>Client Actions</h3> 
+          {caseSelectedComp()}
+          <p>
+            Are you sure you want to approve this client's case for a consultation?
+          </p>
+          <div className={styles.buttons}>
+            <Button
+              variant="outlined"
+              className={styles.button}
+              onClick={() => setClientActionsState("select")}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setClientActionsState("approve")}
+            >
+              Confirm
+            </Button>
+          </div>
+        </div>
+      );
+    case "confirm reject":
+      return (
+        <div className={`${styles.outline} ${styles.padding}`}>
+          <h3>Client Actions</h3> 
+          {caseSelectedComp()}
+          <p>
+            Are you sure you want to reject this client's case?
+          </p>
+          <div className={styles.buttons}>
+            <Button
+              variant="outlined"
+              className={styles.button}
+              onClick={() => setClientActionsState("select")}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setClientActionsState("reject")}
+            >
+              Confirm
+            </Button>
+          </div>
+        </div>
+      );
+    case "approve":
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.center}>
             <div className={styles.successNotif}>
               <StatusIcon completed={true} /> Success!
+              {caseSelectedComp()}
             </div>
           </div>
           <p className={styles.center}>
             This client has been notified of their approval.
           </p>
-          <div className={styles.center}>
-            <Button
+          <div className={styles.buttons}>
+          <Button
               variant="contained"
-              onClick={() => setClientActionsState(0)}
+              onClick={() => setClientActionsState("select")}
             >
-              Go Back
+              Continue
             </Button>
-          </div>
+            </div>
         </div>
       );
+      case "reject":
+        return (
+          <div className={`${styles.outline} ${styles.padding}`}>
+            <div className={styles.center}>
+              <div className={styles.successNotif}>
+                <StatusIcon completed={true} /> Success!
+                {caseSelectedComp()}
+              </div>
+            </div>
+            <p className={styles.center}>
+              This client has been notified of their rejection.
+            </p>
+            {/* TODO: implement referral link
+            <p>
+              Would you like to send a referral link?
+            </p>
+            <Button
+                variant="outlined"
+                onClick={() => setClientActionsState("select")}
+                className={styles.button}
+              >
+                No
+              </Button>
+            <Button
+                variant="contained"
+                onClick={() => setClientActionsState("referral")}
+              >
+                Send Referral Link
+              </Button> */}
+              <div className={styles.buttons}>
+              <Button
+              variant="contained"
+              onClick={() => setClientActionsState("select")}
+              className={styles.buttons}
+              >
+              Continue
+            </Button>
+            </div>
+          </div>
+        );
+        // TODO: implement referral link
+      case "referral":
+        return (
+          <div className={`${styles.outline} ${styles.padding}`}>
+            {caseSelectedComp()}
+            <p className={styles.center}>
+              Enter referral link:
+            </p>
+            <TextField
+                label="Referral Link"
+                variant="outlined"
+                onChange={(e) => setReferralLink(e.target.value)}
+              />
+            <Button
+                variant="outlined"
+                onClick={() => setClientActionsState("select")}
+              >
+                Don't send Referral Link
+              </Button>
+            <Button
+                variant="contained"
+                onClick={() => setClientActionsState("sent referral")}
+              >
+                Send Referral Link
+              </Button>
+          </div>
+        );
     default:
       console.log(cases);
       return (
@@ -425,59 +467,21 @@ const ClientActionsBox = ({cases}) => {
                 )}
               </select> : null}
           </div>
-          <TabContext value={tabValue}>
-            <TabList onChange={(event, newValue) => setTabValue(newValue)}>
-              <Tab disableRipple label="approve" value="approve" />
-              <Tab disableRipple label="reject" value="reject" />
-            </TabList>
-            <br />
-            <div>
-              <TabPanel value="approve" className={styles["no-padding"]}>
-                {selectCaseValue ? <FormControl>
-                  <RadioGroup
-                    onChange={handleApproveState}
-                    value={approveState}
-                  >
-                    <FormControlLabel
-                      value="approve-consultation"
-                      control={<Radio size="small" />}
-                      label="Consultation"
-                    />
-                    <FormControlLabel
-                      value="approve-documents"
-                      control={<Radio size="small" />}
-                      label="Documents approved"
-                    />
-                  </RadioGroup>
-                </FormControl> :
-                <p>Select a case.</p>}
-              </TabPanel>
-              <TabPanel value="reject" className={styles["no-padding"]}>
-                {selectCaseValue ? <RadioGroup
-                  onChange={handleRejectState}
-                  value={rejectState}
-                >
-                  <FormControlLabel
-                    value="send-referral-link"
-                    control={<Radio size="small" />}
-                    label="Send referral link"
-                  />
-                </RadioGroup> :
-                <p>Select a case.</p>}
-              </TabPanel>
-            </div>
-          </TabContext>
-          <div className={styles.buttons}>
-            <Button variant="outlined" className={styles.button}>
-              Clear
+          {caseSelectedComp()}
+          {selectCaseValue ? <div className={styles.buttons}>
+            <Button 
+              variant="outlined" 
+              onClick={() => handleReject()} 
+              className={styles.button}>
+              Reject
             </Button>
             <Button
               variant="contained"
-              onClick={() => setClientActionsState(1)}
+              onClick={() => handleAccept()}
             >
-              Send
+              Accept for Consultation
             </Button>
-          </div>
+          </div> : null}
         </div>
       );
   }
