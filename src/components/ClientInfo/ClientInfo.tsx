@@ -63,7 +63,7 @@ export const ClientInfo = ({ query }) => {
         <OverviewBox client={client} />
         <div>
           <DocumentsBox cases={cases} clientDocsToCase={clientDocsToCase}/>
-          <ClientActionsBox />
+          <ClientActionsBox cases={cases}/>
         </div>
       </div>
     </>
@@ -287,29 +287,22 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
   );
 };
 
-const ClientActionsBox = () => {
+const ClientActionsBox = ({cases}) => {
   const [clientActionsState, setClientActionsState] = useState(0);
   const [approveState, setApproveState] = useState("");
   const [rejectState, setRejectState] = useState("");
   const [tabValue, setTabValue] = useState("approve");
   const [selectCaseValue, setSelectCaseValue] = useState("");
-  // TODO: edit this after Greg's branched is merged
-  //  - take all the cases of the client & turn them into array for answerTypeOptions
-  const [answerTypeOptions, setAnswerTypeOptions] = useState([]);
-  // test:
-  const answerTypeOptionsTest = [
-    { value: "dacaRenewal", label: "Daca Renewal" },
-    { value: "citizenship", label: "Citizenship" },
-  ];
+
   const handleApproveState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
     setApproveState(value);
   };
   const handleRejectState = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
     setRejectState(value);
   };
-  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setSelectCaseValue(value.props.value);
-    console.log(selectCaseValue);
+  // This function is triggered when the select changes
+  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectCaseValue(event.target.value);
   };
   switch (clientActionsState) {
     case 1:
@@ -417,23 +410,20 @@ const ClientActionsBox = () => {
         </div>
       );
     default:
+      console.log(cases);
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.alignHorizontal}>
             <h3>Client Actions</h3> 
-            {/*<FormControl fullWidth className={styles.selectCase}>
-              <InputLabel id="demo-simple-select-label">Select Case</InputLabel>
-              <Select 
-                onChange={handleSelectCaseValue}
-                value={selectCaseValue}
-              >
-                { map MenuItems here }
-                {answerTypeOptionsTest.map((key, value) => 
-                  <MenuItem value={key.value}>{key.label}</MenuItem>
+            {cases ? 
+              <select onChange={handleSelectCaseValue} className={styles.flex}>
+                <option selected disabled>
+                  Select Case
+                </option>
+                {cases.map((key, value) => 
+                  <option value={key.key}>{key.key}</option>
                 )}
-                { use Shannon's set and get functions from mobile }
-              </Select>
-            </FormControl>*/}
+              </select> : null}
           </div>
           <TabContext value={tabValue}>
             <TabList onChange={(event, newValue) => setTabValue(newValue)}>
@@ -443,7 +433,7 @@ const ClientActionsBox = () => {
             <br />
             <div>
               <TabPanel value="approve" className={styles["no-padding"]}>
-                <FormControl>
+                {selectCaseValue ? <FormControl>
                   <RadioGroup
                     onChange={handleApproveState}
                     value={approveState}
@@ -459,10 +449,11 @@ const ClientActionsBox = () => {
                       label="Documents approved"
                     />
                   </RadioGroup>
-                </FormControl>
+                </FormControl> :
+                <p>Select a case.</p>}
               </TabPanel>
               <TabPanel value="reject" className={styles["no-padding"]}>
-                <RadioGroup
+                {selectCaseValue ? <RadioGroup
                   onChange={handleRejectState}
                   value={rejectState}
                 >
@@ -471,7 +462,8 @@ const ClientActionsBox = () => {
                     control={<Radio size="small" />}
                     label="Send referral link"
                   />
-                </RadioGroup>
+                </RadioGroup> :
+                <p>Select a case.</p>}
               </TabPanel>
             </div>
           </TabContext>
