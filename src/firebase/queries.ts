@@ -2,19 +2,24 @@ import { valueToPercent } from "@mui/base";
 import { typography } from "@mui/system";
 import { EventEmitter } from "stream";
 import {
-  Appointment,
-  CalendlyLink,
-  Case,
-  Client,
-  Dictionary,
-  Document,
-  Question,
-} from "../../types";
-import firebase from "./clientApp";
-import { objectToMap, mapToObject } from "./helpers";
+    Appointment,
+    CalendlyLink,
+    Case,
+    CaseType,
+    Client,
+    Dictionary,
+    Document,
+    FirebaseQueryParams,
+    Question,
+    SirenUser
+  } from '../../types';
+import firebase from './clientApp';
+import { objectToAnswerOptionsMap, objectToMap } from './helpers';
 
-const database = firebase.firestore();
-const clientCollection = database.collection("clients");
+  const database = firebase.firestore();
+  const caseTypeCollection = database.collection('caseTypes');
+  const clientCollection = database.collection('clients');
+  const sirenUserCollection = database.collection('sirenUsers');
 
 export const getClient = async (clientId: string): Promise<Client> => {
   try {
@@ -38,6 +43,49 @@ export const getAllClients = async (): Promise<Client[]> => {
   }
 };
 
+export const getClientCases = async (clientId: string): Promise<Case[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').get();
+    return ref.docs.map((doc) => doc.data() as Case);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getClientCaseDocs = async (clientId: string, caseId: string): Promise<Document[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').doc(caseId).collection('documents').get();
+    return ref.docs.map((doc) => doc.data() as Document);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getCaseType = async (
+  caseType: string
+): Promise<CaseType> => {
+  try {
+    const doc = await caseTypeCollection.doc(caseType).get();
+    const cType = doc.data() as CaseType;
+    return cType;
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getAllCaseTypes = async (): Promise<CaseType[]> => {
+  try {
+    const ref = await caseTypeCollection.get();
+    return ref.docs.map((doc) => doc.data() as CaseType);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
 export const getAllQuestionsOfType = async (
   caseType: string
 ): Promise<Question[]> => {
@@ -46,7 +94,24 @@ export const getAllQuestionsOfType = async (
       .collection(`caseTypes/${caseType}/questions`)
       .orderBy("order")
       .get();
-    return ref.docs.map((doc) => doc.data() as Question);
+      const questions = ref.docs.map(doc => doc.data() as Question);
+      questions.map(
+        question => (question.displayText = objectToMap(question.displayText)),
+      );
+      questions.map(
+        question => (question.description = objectToMap(question.description)),
+      );
+      questions.map(
+        question => (question.example = objectToMap(question.example)),
+      );
+      questions.map(
+        question =>
+          (question.answerOptions = objectToAnswerOptionsMap(
+            question.answerOptions,
+          )),
+      );
+      console.log(questions);
+      return questions;
   } catch (e) {
     console.warn(e);
     throw e;
@@ -83,7 +148,52 @@ export const getIdentifiers = async (
     return caseIds;
   } catch (e) {
     console.warn(e);
+    throw(e);
+  } 
+}
+
+export const getSirenUser = async (uid: string ) => {
+  try {
+    const doc = await sirenUserCollection.doc(uid).get();
+    const sirenUser = doc.data() as SirenUser;
+    return sirenUser;
+  } catch (e) {
+    console.warn(e);
     throw e;
+  }
+}
+
+export const setSirenUser = async (sirenUser: SirenUser) => {
+  try {
+    await sirenUserCollection.doc(sirenUser.uid).set(sirenUser);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
+
+export const getSirenUsersWhere = async (params: FirebaseQueryParams[]): Promise<SirenUser[]> => {
+  /*
+  Takes in a list of FirebaseQueryParams. You can use this function to query collections with
+  certain conditions. See https://firebase.google.com/docs/firestore/query-data/queries.
+  An example usage is in in src/components/SirenUserTable/SirenUserTable.tsx.
+  */
+  if (params.length == 0) {
+    return null;
+  }
+  try {
+    var ref = sirenUserCollection;
+    for (let i = 0; i < params.length; i++) {
+      const { field, operator, value } = params[i];
+      ref = await ref.where(field, operator, value);
+    }
+    ref = await ref.get();
+    return ref.docs.map(doc => doc.data() as SirenUser);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling
   }
 };
 

@@ -71,7 +71,21 @@
   margin-right: 10px;
 }
 
-.category {
-  width: 150px;
-  padding-right: 20px;
+.alignHorizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.selectCase {
+  display: flex;
+}
+
+.docEntry {
+  height: 30px;
+}
+
+.docAlign {
+  display: flex;
+  padding-top: 17px;
+  height: 30px;
 }
