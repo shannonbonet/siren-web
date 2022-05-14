@@ -1,8 +1,11 @@
 export enum CaseStatus {
-    SubmitForm = 'submitForm',
-    SubmitDoc = 'submitDoc',
-    SchedApt = 'schedApt',
-  }
+  SubmitForm = 'submitForm',
+  SubmitDoc = 'submitDoc',
+  InReview = 'inReview',
+  SchedApt = 'schedApt',
+  AttenApt = 'attenApt',
+}
+
   export enum QuestionType {
     General = 'general',
     Daca = 'daca',
