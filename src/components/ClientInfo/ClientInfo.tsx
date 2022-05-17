@@ -50,12 +50,21 @@ export const ClientInfo = ({ query }) => {
 
 const OverviewBox = ({ client }) => {
   const [tabValue, setTabValue] = useState("overview");
+  const caseQuestionAnswers =
+    client && client.answers && client.answers.general ? client.answers : null;
   return (
     <div className={`${styles.outline} ${styles.overview}`}>
       <TabContext value={tabValue}>
         <TabList onChange={(event, newValue) => setTabValue(newValue)}>
           <Tab disableRipple label="overview" value="overview" />
           <Tab disableRipple label="immigration" value="immigration" />
+          {client && client.answers
+            ? Object.keys(client.answers).map((key) =>
+                key != "general" ? ( // right now, I am not including general (cuz there is an "overview" tab), but we could use this code for every answer set
+                  <Tab disableRipple label={key} value={key} />
+                ) : null
+              )
+            : null}
         </TabList>
         <br />
         <div>
@@ -176,6 +185,24 @@ const OverviewBox = ({ client }) => {
               </div>
             </div>
           </TabPanel>
+          {client && client.answers
+            ? Object.keys(client.answers).map((caseType) =>
+                caseType != "general" ? ( // right now, I am not including general (cuz there is an "overview" tab), but we could use this code for every answer set
+                  <TabPanel value={caseType} className={styles["no-padding"]}>
+                    <div className={styles.flex}>
+                      <h3 className={styles.category}>{caseType}</h3>
+                      <div>
+                        {client.answers.caseType
+                          ? Object.keys(client.answers.caseType).map((e) => (
+                              <p key={e}>{client.answers.caseType.get(e)}</p>
+                            ))
+                          : null}
+                      </div>
+                    </div>
+                  </TabPanel>
+                ) : null
+              )
+            : null}
         </div>
       </TabContext>
     </div>

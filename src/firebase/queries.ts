@@ -46,24 +46,24 @@ export const getAllQuestionsOfType = async (
       .collection(`caseTypes/${caseType}/questions`)
       .orderBy("order")
       .get();
-      const questions = ref.docs.map(doc => doc.data() as Question);
-      questions.map(
-        question => (question.displayText = objectToMap(question.displayText)),
-      );
-      questions.map(
-        question => (question.description = objectToMap(question.description)),
-      );
-      questions.map(
-        question => (question.example = objectToMap(question.example)),
-      );
-      questions.map(
-        question =>
-          (question.answerOptions = objectToAnswerOptionsMap(
-            question.answerOptions,
-          )),
-      );
-      console.log(questions);
-      return questions;
+    const questions = ref.docs.map((doc) => doc.data() as Question);
+    questions.map(
+      (question) => (question.displayText = objectToMap(question.displayText))
+    );
+    questions.map(
+      (question) => (question.description = objectToMap(question.description))
+    );
+    questions.map(
+      (question) => (question.example = objectToMap(question.example))
+    );
+    questions.map(
+      (question) =>
+        (question.answerOptions = objectToAnswerOptionsMap(
+          question.answerOptions
+        ))
+    );
+    console.log(questions);
+    return questions;
   } catch (e) {
     console.warn(e);
     throw e;
