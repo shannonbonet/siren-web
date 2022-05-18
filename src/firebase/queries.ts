@@ -5,6 +5,7 @@ import {
     Appointment,
     CalendlyLink,
     Case,
+    CaseType,
     Client,
     Dictionary,
     Document,
@@ -16,6 +17,7 @@ import firebase from './clientApp';
 import { objectToAnswerOptionsMap, objectToMap, mapToObject} from './helpers';
 
   const database = firebase.firestore();
+  const caseTypeCollection = database.collection('caseTypes');
   const clientCollection = database.collection('clients');
   const sirenUserCollection = database.collection('sirenUsers');
 
@@ -35,6 +37,49 @@ export const getAllClients = async (): Promise<Client[]> => {
   try {
     const ref = await clientCollection.get();
     return ref.docs.map((doc) => doc.data() as Client);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getClientCases = async (clientId: string): Promise<Case[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').get();
+    return ref.docs.map((doc) => doc.data() as Case);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getClientCaseDocs = async (clientId: string, caseId: string): Promise<Document[]> => {
+  try {
+    const ref = await clientCollection.doc(clientId).collection('cases').doc(caseId).collection('documents').get();
+    return ref.docs.map((doc) => doc.data() as Document);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getCaseType = async (
+  caseType: string
+): Promise<CaseType> => {
+  try {
+    const doc = await caseTypeCollection.doc(caseType).get();
+    const cType = doc.data() as CaseType;
+    return cType;
+  } catch (e) {
+    console.warn(e);
+    throw e;
+  }
+};
+
+export const getAllCaseTypes = async (): Promise<CaseType[]> => {
+  try {
+    const ref = await caseTypeCollection.get();
+    return ref.docs.map((doc) => doc.data() as CaseType);
   } catch (e) {
     console.warn(e);
     throw e;
