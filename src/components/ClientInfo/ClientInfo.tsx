@@ -1,12 +1,16 @@
 import styles from "./ClientInfo.module.css";
+import styled from 'styled-components';
 import { FiCheck, FiExternalLink } from "react-icons/fi";
-import { AiOutlineExclamation } from "react-icons/ai";
+import { AiOutlineExclamation, AiOutlineSave } from "react-icons/ai";
+import { GrClose } from "react-icons/gr";
+import { HiOutlinePencil } from 'react-icons/hi';
 import {
   Button,
   Tab,
   TextField
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
+import { IconButton } from '@material-ui/core';
 import React, { useState } from "react";
 import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
 import { Client, CaseType, Case, Document } from "../../../types";
@@ -76,8 +80,46 @@ const caseOptions = new Map<string, string>([
 
 // RENDER BOXES
 
+
 const OverviewBox = ({ client }) => {
   const [tabValue, setTabValue] = useState("overview");
+
+  const [editingForm, setEditingForm] = useState<boolean>(true);
+  const [edited, setEdited] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
+
+  const [editingName, setEditingName] = useState<boolean>(false);
+
+
+
+  const renderButtons = () => {  
+    if (editingForm){
+      return(
+        <div className={styles['saveCancelContainer']}>
+          <IconButton>
+            <GrClose/>
+            Cancel
+          </IconButton>
+          <IconButton className={styles['saveIcon']}>
+            <HiOutlinePencil/>
+            Save
+          </IconButton>
+        </div>
+      )
+    } else {
+      return(
+        <div className={styles['editContainer']}>
+          <IconButton onClick={() => setEditingForm(true)}>
+            <HiOutlinePencil/>
+            Edit
+          </IconButton>
+        </div>
+      )
+    }
+  };
+
+
+
   return (
     <div className={`${styles.outline} ${styles.overview}`}>
       <TabContext value={tabValue}>
@@ -88,8 +130,9 @@ const OverviewBox = ({ client }) => {
         <br />
         <div>
           <TabPanel value="overview" className={styles["no-padding"]}>
+            {renderButtons()}
             <div className={styles.flex}>
-              <h3 className={styles.category}>Basic Info</h3>
+              <h3 className={styles.category}>Basic Info</h3> {/* align buttons with this header*/}
               <div>
                 {client && client.answers && client.answers.general
                   ? Object.keys(client.answers.general).map((key) =>
@@ -120,7 +163,9 @@ const OverviewBox = ({ client }) => {
                               key.replace(/[A-Z]/g, " $&").trim().slice(1)}
                           </b>
                           <br />
-                          {client.answers.general[key]}
+                          {editingForm ? 
+                            <input type='text' defaultValue={client.answers.general[key]} className={styles['editableField']}/>
+                          :client.answers.general[key]}
                         </p>
                       )
                     )
@@ -174,7 +219,6 @@ const OverviewBox = ({ client }) => {
                               key.replace(/[A-Z]/g, " $&").trim().slice(1)}
                           </b>
                           <br />
-                          {client.answers.general[key]}
                         </p>
                       ) : null
                     )
