@@ -85,11 +85,10 @@ const OverviewBox = ({ client }) => {
       <TabContext value={tabValue}>
         <TabList onChange={(event, newValue) => setTabValue(newValue)}>
           <Tab disableRipple label="overview" value="overview" />
-          <Tab disableRipple label="immigration" value="immigration" />
           {client && client.answers
             ? Object.keys(client.answers).map((key) =>
                 key != "general" ? ( // right now, I am not including general (cuz there is an "overview" tab), but we could use this code for every answer set
-                  <Tab disableRipple label={key} value={key} />
+                  <Tab disableRipple label={key.replace(/[A-Z]/g, " $&").trim()} value={key} />
                 ) : null
               )
             : null}
@@ -101,113 +100,18 @@ const OverviewBox = ({ client }) => {
               <h3 className={styles.category}>Basic Info</h3>
               <div>
                 {client && client.answers && client.answers.general
-                  ? Object.keys(client.answers.general).map((key) =>
-                      key == "Name" ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Covid") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Law") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Court") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Arrival") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Alien") ? null : (
-                        <p>
-                          <b>
-                            {key.charAt(0).toUpperCase() +
-                              key.replace(/[A-Z]/g, " $&").trim().slice(1)}
-                          </b>
-                          <br />
-                          {client.answers.general[key]}
-                        </p>
+                  ? Object.keys(client.answers.general).map((key) =>(
+                        <div key={key}>
+                          <p>
+                            <b>
+                              {key.charAt(0).toUpperCase() +
+                                key.replace(/[A-Z]/g, " $&").trim().slice(1)}
+                            </b>
+                            <br />
+                            {client.answers.general[key]}
+                          </p>
+                        </div>
                       )
-                    )
-                  : null}
-              </div>
-            </div>
-            <div className={styles.flex}>
-              <h3 className={styles.category}>COVID-19</h3>
-              <div>
-                {client && client.answers && client.answers.general
-                  ? Object.keys(client.answers.general).map((key) =>
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Covid") ? (
-                        <p>
-                          <b>
-                            {key.charAt(0).toUpperCase() +
-                              key.replace(/[A-Z]/g, " $&").trim().slice(1)}
-                          </b>
-                          <br />
-                          {client.answers.general[key]}
-                        </p>
-                      ) : null
-                    )
-                  : null}
-              </div>
-            </div>
-          </TabPanel>
-          <TabPanel value="immigration" className={styles["no-padding"]}>
-            <div className={styles.flex}>
-              <h3 className={styles.category}>Background</h3>
-              <div>
-                {client && client.answers && client.answers.general
-                  ? Object.keys(client.answers.general).map((key) =>
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Alien") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Court") ||
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Arrival") ? (
-                        <p>
-                          <b>
-                            {key.charAt(0).toUpperCase() +
-                              key.replace(/[A-Z]/g, " $&").trim().slice(1)}
-                          </b>
-                          <br />
-                          {client.answers.general[key]}
-                        </p>
-                      ) : null
-                    )
-                  : null}
-              </div>
-            </div>
-            <div className={styles.flex}>
-              <h3 className={styles.category}>Criminal Record</h3>
-              <div>
-                {client && client.answers && client.answers.general
-                  ? Object.keys(client.answers.general).map((key) =>
-                      (
-                        key.charAt(0).toUpperCase() +
-                        key.replace(/[A-Z]/g, " $&").trim().slice(1)
-                      ).includes("Law") ? (
-                        <p>
-                          <b>
-                            {key.charAt(0).toUpperCase() +
-                              key.replace(/[A-Z]/g, " $&").trim().slice(1)}
-                          </b>
-                          <br />
-                          {client.answers.general[key]}
-                        </p>
-                      ) : null
                     )
                   : null}
               </div>
@@ -218,13 +122,23 @@ const OverviewBox = ({ client }) => {
                 caseType != "general" ? ( // right now, I am not including general (cuz there is an "overview" tab), but we could use this code for every answer set
                   <TabPanel value={caseType} className={styles["no-padding"]}>
                     <div className={styles.flex}>
-                      <h3 className={styles.category}>{caseType}</h3>
+                      <h3 className={styles.category}>{caseType.charAt(0).toUpperCase() +
+                                caseType.replace(/[A-Z]/g, " $&").trim().slice(1)}</h3>
                       <div>
-                        {client.answers.caseType
-                          ? Object.keys(client.answers.caseType).map((e) => (
-                              <p key={e}>{client.answers.caseType.get(e)}</p>
-                            ))
-                          : null}
+                      {client.answers[caseType]
+                           ? Object.keys(client.answers[caseType]).map((e) => (
+                            <div key={e}>
+                              <p>
+                                <b>
+                                  {e.charAt(0).toUpperCase() +
+                                    e.replace(/[A-Z]/g, " $&").trim().slice(1)}
+                                </b>
+                                <br />
+                                {client.answers[caseType][e]}
+                              </p>
+                            </div>
+                             ))
+                           : null}
                       </div>
                     </div>
                   </TabPanel>
@@ -479,7 +393,6 @@ const ClientActionsBox = ({cases}) => {
           </div>
         );
     default:
-      console.log(cases);
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.alignHorizontal}>

@@ -121,11 +121,9 @@ const IntakeTable = () => {
 
       //add all client answer objects to array, then select 'general' responses
       for (const i in clients) {
-        console.log(clients[i]);
         clientAns.push(clients[i].answers);
       }
       const clientGenAns: Array<Object> = clientAns.map((c) => c["general"]);
-      console.log(clientGenAns);
 
       //set identifiers
       const ids = clients.map((c) => getIdentifiers(c.id));
@@ -143,8 +141,6 @@ const IntakeTable = () => {
   }, []);
 
   //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
-  // console.log(identifiers);
-  // console.log(responses);
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 1000 }}>
