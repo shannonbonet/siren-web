@@ -9,7 +9,7 @@ import {
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import React, { useState } from "react";
 import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
-import { Client, CaseType, Case, Document } from "/types";
+import { Client, CaseType, Case, Document, CaseKey } from "/types";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
@@ -25,21 +25,22 @@ export const ClientInfo = ({ query }) => {
     );
     setClient(correctClient[0]);
 
-    ///// TEST DATA /////
-    const testCasesOpen = ["DACA renewal", "Citizenship"];
+    // get cases by client's answers
+    const caseNames = correctClient[0] && correctClient[0].answers 
+      ? (Object.keys(correctClient[0].answers).map((key) => {
+        return(CaseKey[key])
+      })).filter((k) => {
+        return(k)
+      })
+      : [];
     
     // get documents of each case
     const caseTypes = (await getAllCaseTypes()).filter(
-      (c) =>
-        testCasesOpen.includes(c.key)
+      (c) => caseNames.includes(c.key)
     );
     setCases(caseTypes);
     // get client cases
     const openClientCases = (correctClient && correctClient[0] ? (await getClientCases(correctClient[0].id)) : null);
-    // get case docs
-    const caseDocs = (openClientCases ? await openClientCases.map((c) => 
-      (getClientCaseDocs(correctClient[0].id, c.id))
-    ) : null );
     var docToCaseArr = new Array();
     for (const c in openClientCases) {
       const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);

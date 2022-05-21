@@ -19,6 +19,13 @@ export enum CaseStatus {
     Calendar = 'calendar',
     Radio = 'radio',
   }
+
+  export enum CaseKey {
+    I90 = 'I-90',
+    adjustmentOfStatus = 'Adjustment of status',
+    citizenship = 'Citizenship',
+    dacaRenewal = 'DACA renewal',
+  }
   
   export type Client = {
     id: string;
