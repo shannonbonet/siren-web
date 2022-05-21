@@ -1,17 +1,11 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { useAuth } from "../../firebase/auth/useFirebaseAuth";
-import styles from "./styles.module.css";
-import {
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  TextField,
-} from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useAuth } from '../../firebase/auth/useFirebaseAuth';
+import styles from './styles.module.css'; 
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { setSirenUser } from '../../firebase/queries';
+import { SirenUser } from '../../../types';
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -29,14 +23,23 @@ const SignUp = () => {
     // Upon success, will redirect to log in page.
     if (checkPassword(passwordOne, passwordTwo))
       createUserWithEmailAndPassword(email, passwordOne)
-        .then((authUser) => {
-          router.push("/login");
-        })
-        .catch((error) => {
-          // An error occurred. Set error message to be displayed to user
-          alert(error);
-          console.log(error);
-        });
+      .then(async authUser => {
+        console.log(authUser.user)
+        const newUser: SirenUser = {
+          uid: authUser.user.uid,
+          name: name,
+          email: email,
+          role: "Viewer",
+          status: "Pending",
+        }
+        await setSirenUser(newUser);
+        router.push("/login");
+      })
+      .catch(error => {
+        // An error occurred. Set error message to be displayed to user
+        alert(error)
+        console.log(error)
+      });
     event.preventDefault();
   };
 

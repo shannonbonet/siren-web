@@ -39,6 +39,9 @@ export const convertCamelToTitleCase = (str: string): string => {
 };
 
 export const camelize = (str: string): string => {
+  if (!str) {
+    return null;
+  }
   const word = str.toLowerCase();
   return word
     .replace(/(?:^\w|\b\w)/g, function (word, index) {
