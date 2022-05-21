@@ -32,12 +32,6 @@ interface Column {
   format?: (value: number) => string;
 }
 
-const caseTypes = {
-  dacaRenewal: 10,
-  adjustmentOfStatus: 11,
-  i90: 12,
-};
-
 const columns: readonly Column[] = [
   { id: "identifier", label: "Unique ID", minWidth: 170 },
   { id: "Name", label: "Name", minWidth: 100 },
@@ -169,19 +163,14 @@ const IntakeTable = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
                 return (
-                  //
-                  // Taking out this line below will introduce red squigglies
-                  // for reasons I am not sure why.
-                  //
-                  // eslint-disable-next-line react/jsx-key
-                  (clientsPass[i] ? <Link
+                  (clientsPass[page * rowsPerPage + i] ? <Link
                     href={{
                       pathname: "/clientview",
                       query: {
-                        fullName: clientsPass[i]["fullName"],
-                        email: clientsPass[i]["email"],
-                        id: clientsPass[i]["id"],
-                        answers: clientsPass[i]["answers"],
+                        fullName: clientsPass[page * rowsPerPage + i]["fullName"],
+                        email: clientsPass[page * rowsPerPage + i]["email"],
+                        id: clientsPass[page * rowsPerPage + i]["id"],
+                        answers: clientsPass[page * rowsPerPage + i]["answers"],
                       },
                     }}
                     passHref
