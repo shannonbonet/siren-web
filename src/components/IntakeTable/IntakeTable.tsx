@@ -209,7 +209,8 @@ const IntakeTable = () => {
                     </TableRow>
                   </Link> : null)
                 );
-              })}
+              })
+            }
           </TableBody>
         </Table>
       </TableContainer>
