@@ -11,20 +11,8 @@ import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
 import { setQuestion } from "../../firebase/queries";
 import { firestoreAutoId } from "../../firebase/helpers";
-import { QuestionType, AnswerType } from "../../../types";
-
-interface questionProps {
-  id?: string; 
-  displayText?: Map<string, string>;
-  description?: Map<string, string>; 
-  example?: Map<string, string>;
-  questionType?: QuestionType;
-  key?: string;
-  order?: number;
-  active?: boolean;
-  typeAnswer?: AnswerType;
-  optionAnswer?: Map<string, string[]>;
-}
+import { QuestionType, AnswerType, QuestionComponentProps } from "../../../types";
+import {updateMap as changeMap} from "../IntakeForm/IntakeForm";
 
 
 const Question = ({
@@ -33,14 +21,14 @@ const Question = ({
   description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   questionType = QuestionType.Daca,
-  key = "",
-  order = 1,
+  accessKey = firestoreAutoId(),
+  order = 0,
   active = false,
   typeAnswer = null,
   optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
-  :questionProps
+  :QuestionComponentProps
 ) => {
-  console.log("KEY!", displayText.get("EN"));
+  const updateMap = changeMap;
   const [questionText, setQuestionText] = useState(displayText.get('EN'));
   const [descriptionText, setDescriptionText] = useState(description.get('EN'));
   const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));
@@ -71,6 +59,7 @@ const Question = ({
               let options = [...answerOptions];
               options[i] = ev.target.value;
               setAnswerOptions(options);
+              updateMap(id, "answerOptions", answerOptions)
             }}
           />
           <button
@@ -88,6 +77,7 @@ const Question = ({
     }
     return components;
   };
+
 
   const unfilled = displayText.get('EN').length == 0;
 
@@ -153,6 +143,11 @@ const Question = ({
     }
   };
 
+  const updateQuestionText = (ev) => {
+    setQuestionText(ev.target.value);
+    updateMap(id, "displayText", ev.target.value);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.topcontainer}>
@@ -160,12 +155,12 @@ const Question = ({
           cacheMeasurements
           value={questionText}
           placeholder="Question"
-          onChange={(ev) => setQuestionText(ev.target.value)}
+          onChange={ev => updateQuestionText(ev)}
           className={styles.questionText}
         />
         <Select
           options={answerTypeOptions}
-          onChange={setAnswerType}
+          onChange={e => {setAnswerType; updateMap(id, "answerType", answerType)}}
           defaultValue={answerType}
           className={styles.answerType}
         />
@@ -175,7 +170,7 @@ const Question = ({
           cacheMeasurements
           value={descriptionText}
           placeholder="Description"
-          onChange={(ev) => setDescriptionText(ev.target.value)}
+          onChange={(ev) => {setDescriptionText(ev.target.value); updateMap(id, "description", ev.target.value)}}
           className={styles.longText}
         />
         <button

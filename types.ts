@@ -13,6 +13,7 @@ export enum CaseStatus {
   }
   
   export enum AnswerType {
+    Null = "null",
     LargeInput = 'largeInput',
     SmallInput = 'smallInput',
     Dropdown = 'dropdown',
@@ -69,9 +70,16 @@ export enum CaseStatus {
   };
   
   export type QuestionComponentProps = {
-    question: Question;
-    setAnswer: (question: Question, input: any) => void;
-    existingAnswer?: any;
+    id?: string; 
+    displayText?: Map<string, string>;
+    description?: Map<string, string>; 
+    example?: Map<string, string>;
+    questionType?: QuestionType;
+    accessKey?: string;
+    order?: number;
+    active?: boolean;
+    typeAnswer?: AnswerType;
+    optionAnswer?: Map<string, string[]>;
   };
   
   export type QuestionManagerProps = {

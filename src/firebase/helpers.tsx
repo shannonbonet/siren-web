@@ -7,10 +7,16 @@ export const objectToMap = (obj: Object): Map<any, any> => {
 };
 
 export const objectToAnswerOptionsMap = (obj: Object): Map<any, any> => {
+  console.log("TYPE???", typeof(obj));
+  console.log("ObjAnswerOptions", obj);
   return new Map(
     Array.from(Object.entries(obj), ([k, v]) => [k, v as Array<String>])
   );
 };
+
+// export const answerOptionsMapToString = (answerMap: Map<String, String>): string => {
+//   return Object.fromEntries()
+// }
 
 export const mapToObject = (map: Map<any, any>): Object => {
   return Object.fromEntries(

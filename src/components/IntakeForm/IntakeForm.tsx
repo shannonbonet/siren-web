@@ -14,9 +14,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
-import { setQuestion, getAllQuestionsOfType} from "../../firebase/queries";
+import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
 import { firestoreAutoId } from '../../firebase/helpers';
-import { Question as QuestionObj } from "../../../types";
+import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj,  } from "../../../types";
 
 
 
@@ -28,9 +28,17 @@ enum IntakeActionTypes {
   LOAD = "load"
 }
 
+const questionMap = new Map<string, QuestionObj>();
+
+export const updateMap = (id, field, value) => {
+  questionMap.get(id)[field] = value;
+  console.log("questionMap changed", questionMap);
+}
+
 const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
   const [required, setRequired] = useState(false);
+  const deletionList = [];
   var initialState = {
     ids: [],
     questions: [],
@@ -39,14 +47,50 @@ const IntakeForm = () => {
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
-    const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
-    dispatch({type: IntakeActionTypes.LOAD, payload: qs})
-    
+    let qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
+    console.log("qObjects", qs);
+    qs = qs.filter(q => !deletionList.includes(q.id));
+    qs.map(q => questionMap.set(q.id, q));
+    dispatch({type: IntakeActionTypes.LOAD, payload: qs})    
   };
 
   useEffect(() => {
     loadQuestions();
+    console.log("Questions", qState);
   }, []);
+
+  
+
+  const setQuestions = async() => {
+    console.log("button pressed", questionMap.values());
+    console.log("All map", questionMap);
+    Array.from(questionMap.values()).map(q => 
+      deletionList.includes(q.id) ?
+       deleteQuestion({
+         id: q.id,
+         displayText: Object.fromEntries(q.displayText).toString(),
+         description: Object.fromEntries(q.description).toString(),
+         example: Object.fromEntries(q.example).toString(),
+         questionType: q.questionType,
+         key: q.accessKey,
+         order: q.order,
+         active: q.active,
+         answerType: q.typeAnswer
+       }):
+       setQuestion({
+        id: q.id,
+        displayText: Object.fromEntries(q.displayText).toString(),
+        description: Object.fromEntries(q.description).toString(),
+        example: Object.fromEntries(q.example).toString(),
+        questionType: q.questionType,
+        key: q.accessKey,
+        order: q.order,
+        active: q.active,
+        answerType: q.typeAnswer
+       }));
+       console.log("set");
+  }
+
 
   const getDraggable = (question, index) => {
     return (
@@ -85,7 +129,9 @@ const IntakeForm = () => {
                   </button>
                   <button 
                     className={styles.trashbutton}
-                    onClick={() => dispatch({type: IntakeActionTypes.REMOVE, payload: qState.ids[index]})}>
+                    onClick={() => {
+                      dispatch({type: IntakeActionTypes.REMOVE, payload: qState.ids[index]});
+                      deletionList.push(qState.questions[index].id)}}>
                     <IoTrashOutline size="27px"/>
                   </button>
 			          </div>
@@ -105,10 +151,9 @@ const IntakeForm = () => {
     }
     switch (action.type) {
       case IntakeActionTypes.ADD:
-        const id: string = Math.random().toString(36).slice(2).valueOf();
         newState.past.push([newState.ids, newState.questions])
-        newState.ids.push(id);
-        newState.questions.push(<Question/>);
+        newState.ids.push(action.payload);
+        newState.questions.push(<Question order={newState.questions.length}/>);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -135,21 +180,20 @@ const IntakeForm = () => {
         }
         return newState;
       case IntakeActionTypes.LOAD:
-        console.log("payload", action.payload);
-        action.payload.map(q => newState.questions.push
+        action.payload.map(q => {
+          newState.ids.push(q.id);
+          newState.questions.push
           (<Question 
             id={q.id}
             displayText={q.displayText}
             description={q.description}
             example={q.example}
             questionType={q.questionType}
-            key={q.key}
+            accessKey={q.key}
             order={q.order}
             active={q.active}
             typeAnswer={q.answerType}
-            optionAnswer={q.answerOptions}/>))
-        action.payload.map(q => newState.ids.push(Math.random().toString(36).slice(2).valueOf()))
-        console.log("Q State", newState);
+            optionAnswer={q.answerOptions}/>)} )
         return newState;
 
 
@@ -181,6 +225,8 @@ const IntakeForm = () => {
     const newQuestionIds = reorder(qState.ids, source.index, destination.index);
     qState.questions = newQuestions;
     qState.ids = newQuestionIds;
+    questionMap.get(qState.ids[source.index]).order = source.index;
+    questionMap.get(qState.ids[destination.index]).order = destination.index;
   }
 
   function Overlay() {
@@ -211,7 +257,23 @@ const IntakeForm = () => {
             </button>
             <button
               className={styles["add-button"]}
-              onClick={() => dispatch({type: IntakeActionTypes.ADD})}>
+              onClick={() => {
+                let sharedID = firestoreAutoId()
+                questionMap.set(sharedID, {
+                  id: sharedID,
+                  displayText: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  description: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  example: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  questionType: QuestionType.Daca,
+                  accessKey: firestoreAutoId(),
+                  order: qState.questions.length,
+                  active: false,
+                  typeAnswer: AnswerType.Null,
+                  optionAnswer: new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
+                });
+                dispatch({type: IntakeActionTypes.ADD, payload: sharedID});
+
+                }}>
               <IoIosAddCircleOutline size={33}/>
             </button>
             <Button
@@ -224,7 +286,7 @@ const IntakeForm = () => {
               text='Publish Changes'
               buttonType='button-pruss'
               textType='button-text-white'
-              onPress={() => alert("PUBLISH!")}
+              onPress={() => setQuestions()}
             />
             <BsThreeDotsVertical size={30}/>
           </div>

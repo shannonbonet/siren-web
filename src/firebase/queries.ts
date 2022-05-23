@@ -11,6 +11,7 @@ import {
     Document,
     FirebaseQueryParams,
     Question,
+    QuestionComponentProps,
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
@@ -88,29 +89,23 @@ export const getAllCaseTypes = async (): Promise<CaseType[]> => {
 
 export const getAllQuestionsOfType = async (
   caseType: string
-): Promise<Question[]> => {
+): Promise<QuestionComponentProps[]> => {
   try {
-    const ref = await database
-      .collection(`caseTypes/${caseType}/questions`)
-      .orderBy("order")
-      .get();
-      const questions = ref.docs.map(doc => doc.data() as Question);
-      questions.map(
-        question => (question.displayText = objectToMap(question.displayText)),
-      );
-      questions.map(
-        question => (question.description = objectToMap(question.description)),
-      );
-      questions.map(
-        question => (question.example = objectToMap(question.example)),
-      );
-      questions.map(
-        question =>
-          (question.answerOptions = objectToAnswerOptionsMap(
-            question.answerOptions,
-          )),
-      );
-      console.log(questions);
+    const docs = await database.collection(`caseTypes/${caseType}/questions`);
+    const ref = await docs.orderBy("order").get();
+    ref.docs.map(doc => console.log("id", doc.id));
+      const questions = ref.docs.map(doc => doc.data() as QuestionComponentProps);
+      console.log("data Questions", questions);
+      let i = 0;
+      while(i < ref.docs.length) {
+        let target = questions[i];
+        target.id = ref.docs[i].id;
+        target.displayText = objectToMap(target.displayText);
+        target.description = objectToMap(target.description);
+        target.answerOptions = objectToAnswerOptionsMap(target.answerOptions,)
+        i++;
+      }
+      console.log("loaded questions", questions);
       return questions;
   } catch (e) {
     console.warn(e);
@@ -215,5 +210,32 @@ export const updateInfo = async(
   }
 };
 
+export const setQuestion = async (question: Question) => {
+  try {
+    console.log("WE're HERE!");
+    console.log(question);
+    await database
+      .collection(`caseTypes/${question.questionType}/questions`)
+      .doc(question.id)
+      .set(question);
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
+
+export const deleteQuestion = async (question: Question) => {
+  try {
+    await database
+      .collection(`caseTypes/${question.questionType}/questions`)
+      .doc(question.id)
+      .delete();
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
 
 
