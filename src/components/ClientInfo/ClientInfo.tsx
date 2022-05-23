@@ -89,7 +89,7 @@ const OverviewBox = ({ client }) => {
   return (
     <div className={`${styles.outline} ${styles.overview}`}>
       <TabContext value={tabValue}>
-        <TabList onChange={(event, newValue) => setTabValue(newValue)}>
+        <TabList variant="scrollable" onChange={(event, newValue) => setTabValue(newValue)}>
           <Tab disableRipple label="overview" value="overview" />
           {client && client.answers
             ? Object.keys(client.answers).map((key) =>
