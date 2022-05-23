@@ -14,7 +14,7 @@ import {
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import { objectToAnswerOptionsMap, objectToMap } from './helpers';
+import { mapToObject, objectToAnswerOptionsMap, objectToMap } from './helpers';
 
   const database = firebase.firestore();
   const caseTypeCollection = database.collection('caseTypes');
@@ -215,5 +215,20 @@ export const updateInfo = async(
   }
 };
 
-
+export const updateStatus = async(
+  clientId: string,
+  caseId: string,
+  status: string,
+  clientCase: Case,
+) => {
+  try{
+    const copy = {...clientCase} as Dictionary;
+    copy.status = status;
+    console.log(copy);
+    await clientCollection.doc(clientId).collection('cases').doc(caseId).set(copy);
+  } catch(e){
+    console.warn(e)
+    throw(e)
+  }
+};
 
