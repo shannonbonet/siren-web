@@ -1,5 +1,4 @@
 import styles from "./ClientInfo.module.css";
-import styled from 'styled-components';
 import { FiCheck, FiExternalLink } from "react-icons/fi";
 import { AiOutlineExclamation, AiOutlineSave } from "react-icons/ai";
 import { GrClose } from "react-icons/gr";
@@ -12,7 +11,7 @@ import {
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { IconButton } from '@material-ui/core';
 import React, { useState } from "react";
-import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateInfo, getClient} from "../../firebase/queries";
 import { Client, CaseType, Case, Document } from "../../../types";
 
 export const ClientInfo = ({ query }) => {
@@ -84,23 +83,32 @@ const caseOptions = new Map<string, string>([
 const OverviewBox = ({ client }) => {
   const [tabValue, setTabValue] = useState("overview");
 
-  const [editingForm, setEditingForm] = useState<boolean>(true);
-  const [edited, setEdited] = useState<boolean>(false);
+
+  const [editingForm, setEditingForm] = useState<boolean>(false);
+  const [edited, setEdited] = useState<Map<string, string>>(new Map());
   const [saving, setSaving] = useState<boolean>(false);
 
-  const [editingName, setEditingName] = useState<boolean>(false);
 
+  const resetForm = () => {
+    setEditingForm(false);
+    setEdited(new Map<string, string>());
+  }
 
+  const saveEdits = (): void => {
+    console.log(edited);
+    resetForm();
+  }
 
+  //TODO: add functionality to buttons
   const renderButtons = () => {  
     if (editingForm){
       return(
         <div className={styles['saveCancelContainer']}>
-          <IconButton>
+          <IconButton onClick={() => setEditingForm(false)}>
             <GrClose/>
             Cancel
           </IconButton>
-          <IconButton className={styles['saveIcon']}>
+          <IconButton className={styles['saveIcon']} onClick={() => saveEdits()}>
             <HiOutlinePencil/>
             Save
           </IconButton>
@@ -120,6 +128,7 @@ const OverviewBox = ({ client }) => {
 
 
 
+
   return (
     <div className={`${styles.outline} ${styles.overview}`}>
       <TabContext value={tabValue}>
@@ -130,7 +139,7 @@ const OverviewBox = ({ client }) => {
         <br />
         <div>
           <TabPanel value="overview" className={styles["no-padding"]}>
-            {renderButtons()}
+            {renderButtons(client)}
             <div className={styles.flex}>
               <h3 className={styles.category}>Basic Info</h3> {/* align buttons with this header*/}
               <div>
@@ -164,7 +173,9 @@ const OverviewBox = ({ client }) => {
                           </b>
                           <br />
                           {editingForm ? 
-                            <input type='text' defaultValue={client.answers.general[key]} className={styles['editableField']}/>
+                            <input type='text' defaultValue={client.answers.general[key]} className={styles['editableField']} onChange={(e) => {
+                                setEdited(edited.set(key, e.target.value));     
+                            }}/>
                           :client.answers.general[key]}
                         </p>
                       )
@@ -496,7 +507,7 @@ const ClientActionsBox = ({cases}) => {
           </div>
         );
     default:
-      console.log(cases);
+      // console.log(cases);
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.alignHorizontal}>
