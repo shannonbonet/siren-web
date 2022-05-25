@@ -11,7 +11,7 @@ import {
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import { IconButton } from '@material-ui/core';
 import React, { useState } from "react";
-import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateInfo, getClient} from "../../firebase/queries";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateInfo, objectToMap} from "../../firebase/queries";
 import { Client, CaseType, Case, Document } from "../../../types";
 
 export const ClientInfo = ({ query }) => {
@@ -94,10 +94,20 @@ const OverviewBox = ({ client }) => {
     setEdited(new Map<string, string>());
   }
 
-  const saveEdits = (): void => {
-    console.log(edited);
-    resetForm();
-  }
+  const saveEdits = async (): Promise<void> => {
+    try{
+      if (client && client.answers.general){
+        console.log(typeof client.answers);
+        edited.forEach(async (v, k) => {
+          updateInfo(client, 'general', k, v);
+        })
+        resetForm();
+      }
+    } catch (e) {
+      console.log(e)
+      throw (e)
+    }
+  } 
 
   //TODO: add functionality to buttons
   const renderButtons = () => {  

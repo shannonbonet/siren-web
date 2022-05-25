@@ -206,7 +206,8 @@ export const updateInfo = async(
 ) => {
   try{
     const copy = {...client} as Dictionary;
-    copy.answers = mapToObject(client.answers);
+    copy.answers = {...client.answers};
+    console.log(copy.answers); 
     copy.answers[caseType][field] = newInfo;
     await clientCollection.doc(copy.id).set(copy);
   } catch(e){
@@ -214,6 +215,12 @@ export const updateInfo = async(
     throw(e)
   }
 };
+
+// const testFn = async () => {
+//   const cli = await getClient('A7NF2odPatad6YHARhmjUjouij42')
+//   updateInfo(cli, 'general', 'county', 'updated the function');
+// }
+// testFn();
 
 
 
