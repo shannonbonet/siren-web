@@ -9,8 +9,9 @@ import {
   TextField
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
+import router from 'next/router';
 import { IconButton } from '@material-ui/core';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateInfo, objectToMap} from "../../firebase/queries";
 import { Client, CaseType, Case, Document } from "../../../types";
 
@@ -86,22 +87,30 @@ const OverviewBox = ({ client }) => {
 
   const [editingForm, setEditingForm] = useState<boolean>(false);
   const [edited, setEdited] = useState<Map<string, string>>(new Map());
-  const [saving, setSaving] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(false);
 
-
+  
+  // const refresh = () => {
+    //   router.replace(router.asPath);
+    // };
+    
+    
   const resetForm = () => {
     setEditingForm(false);
     setEdited(new Map<string, string>());
+    setSaved(false);
   }
+
 
   const saveEdits = async (): Promise<void> => {
     try{
       if (client && client.answers.general){
-        console.log(typeof client.answers);
+        console.log(edited);
         edited.forEach(async (v, k) => {
           updateInfo(client, 'general', k, v);
         })
         resetForm();
+        setSaved(true);
       }
     } catch (e) {
       console.log(e)
@@ -149,7 +158,7 @@ const OverviewBox = ({ client }) => {
         <br />
         <div>
           <TabPanel value="overview" className={styles["no-padding"]}>
-            {renderButtons(client)}
+            {renderButtons()}
             <div className={styles.flex}>
               <h3 className={styles.category}>Basic Info</h3> {/* align buttons with this header*/}
               <div>

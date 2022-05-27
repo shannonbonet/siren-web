@@ -207,7 +207,6 @@ export const updateInfo = async(
   try{
     const copy = {...client} as Dictionary;
     copy.answers = {...client.answers};
-    console.log(copy.answers); 
     copy.answers[caseType][field] = newInfo;
     await clientCollection.doc(copy.id).set(copy);
   } catch(e){
