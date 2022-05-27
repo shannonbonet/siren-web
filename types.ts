@@ -8,7 +8,7 @@ export enum CaseStatus {
 
   export enum QuestionType {
     General = 'general',
-    Daca = 'daca',
+    Daca = 'dacaRenewal',
     Citizenship = 'citizenship',
   }
   
@@ -57,16 +57,16 @@ export enum CaseStatus {
   };
   
   export type Question = {
-    id: string;
+    id: string; 
     displayText: string;
-    description: string;
+    description: string; 
     example: string;
     questionType: QuestionType;
     key: string;
     order: number;
     active: boolean;
     answerType: AnswerType;
-    answerOptions?: string[];
+    answerOptions: string;
   };
   
   export type QuestionComponentProps = {
@@ -75,11 +75,11 @@ export enum CaseStatus {
     description?: Map<string, string>; 
     example?: Map<string, string>;
     questionType?: QuestionType;
-    accessKey?: string;
+    key?: string;
     order?: number;
     active?: boolean;
-    typeAnswer?: AnswerType;
-    optionAnswer?: Map<string, string[]>;
+    answerType?: AnswerType;
+    answerOptions?: Map<string, string[]>;
   };
   
   export type QuestionManagerProps = {

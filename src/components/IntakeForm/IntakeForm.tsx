@@ -15,7 +15,7 @@ import Image from "next/image";
 import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
 import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
-import { firestoreAutoId } from '../../firebase/helpers';
+import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
 import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj,  } from "../../../types";
 
 
@@ -28,17 +28,16 @@ enum IntakeActionTypes {
   LOAD = "load"
 }
 
-const questionMap = new Map<string, QuestionObj>();
+var questionMap = new Map<string, QuestionObj>();
+const deletionList = [];
 
 export const updateMap = (id, field, value) => {
   questionMap.get(id)[field] = value;
-  console.log("questionMap changed", questionMap);
 }
 
 const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
   const [required, setRequired] = useState(false);
-  const deletionList = [];
   var initialState = {
     ids: [],
     questions: [],
@@ -48,47 +47,35 @@ const IntakeForm = () => {
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
     let qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
-    console.log("qObjects", qs);
-    qs = qs.filter(q => !deletionList.includes(q.id));
+    questionMap = new Map<string, QuestionObj>();
+    qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
     qs.map(q => questionMap.set(q.id, q));
     dispatch({type: IntakeActionTypes.LOAD, payload: qs})    
   };
 
   useEffect(() => {
     loadQuestions();
-    console.log("Questions", qState);
   }, []);
 
   
 
-  const setQuestions = async() => {
-    console.log("button pressed", questionMap.values());
-    console.log("All map", questionMap);
-    Array.from(questionMap.values()).map(q => 
+  async function setQuestions(){
+    Array.from(questionMap.values()).map(q => {
       deletionList.includes(q.id) ?
-       deleteQuestion({
-         id: q.id,
-         displayText: Object.fromEntries(q.displayText).toString(),
-         description: Object.fromEntries(q.description).toString(),
-         example: Object.fromEntries(q.example).toString(),
-         questionType: q.questionType,
-         key: q.accessKey,
-         order: q.order,
-         active: q.active,
-         answerType: q.typeAnswer
-       }):
+       deleteQuestion(q.id, q.questionType):
        setQuestion({
         id: q.id,
-        displayText: Object.fromEntries(q.displayText).toString(),
-        description: Object.fromEntries(q.description).toString(),
-        example: Object.fromEntries(q.example).toString(),
+        displayText: mapToJSON(q.displayText),
+        description: mapToJSON(q.description),
+        example: mapToJSON(q.example),
         questionType: q.questionType,
-        key: q.accessKey,
+        key: q.key,
         order: q.order,
         active: q.active,
-        answerType: q.typeAnswer
-       }));
-       console.log("set");
+        answerType: q.answerType,
+        answerOptions: mapToJSON(q.answerOptions)
+       }, q)});
+    console.log("uploaded");
   }
 
 
@@ -131,7 +118,8 @@ const IntakeForm = () => {
                     className={styles.trashbutton}
                     onClick={() => {
                       dispatch({type: IntakeActionTypes.REMOVE, payload: qState.ids[index]});
-                      deletionList.push(qState.questions[index].id)}}>
+                      deletionList.push(qState.ids[index]);
+                      }}>
                     <IoTrashOutline size="27px"/>
                   </button>
 			          </div>
@@ -153,7 +141,7 @@ const IntakeForm = () => {
       case IntakeActionTypes.ADD:
         newState.past.push([newState.ids, newState.questions])
         newState.ids.push(action.payload);
-        newState.questions.push(<Question order={newState.questions.length}/>);
+        newState.questions.push(<Question order={newState.questions.length} id={action.payload}/>);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -189,11 +177,11 @@ const IntakeForm = () => {
             description={q.description}
             example={q.example}
             questionType={q.questionType}
-            accessKey={q.key}
+            key={q.key}
             order={q.order}
             active={q.active}
-            typeAnswer={q.answerType}
-            optionAnswer={q.answerOptions}/>)} )
+            answerType={q.answerType}
+            answerOptions={q.answerOptions}/>)} )
         return newState;
 
 
@@ -258,18 +246,18 @@ const IntakeForm = () => {
             <button
               className={styles["add-button"]}
               onClick={() => {
-                let sharedID = firestoreAutoId()
+                let sharedID = firestoreAutoId();
                 questionMap.set(sharedID, {
                   id: sharedID,
                   displayText: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
                   description: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
                   example: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
                   questionType: QuestionType.Daca,
-                  accessKey: firestoreAutoId(),
+                  key: firestoreAutoId(),
                   order: qState.questions.length,
                   active: false,
-                  typeAnswer: AnswerType.Null,
-                  optionAnswer: new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
+                  answerType: AnswerType.Null,
+                  answerOptions: new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
                 });
                 dispatch({type: IntakeActionTypes.ADD, payload: sharedID});
 

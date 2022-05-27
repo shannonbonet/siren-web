@@ -7,8 +7,6 @@ export const objectToMap = (obj: Object): Map<any, any> => {
 };
 
 export const objectToAnswerOptionsMap = (obj: Object): Map<any, any> => {
-  console.log("TYPE???", typeof(obj));
-  console.log("ObjAnswerOptions", obj);
   return new Map(
     Array.from(Object.entries(obj), ([k, v]) => [k, v as Array<String>])
   );
@@ -25,6 +23,10 @@ export const mapToObject = (map: Map<any, any>): Object => {
     )
   );
 };
+
+export const mapToJSON = (map: Map<any, any>): string => {
+  return JSON.stringify(mapToObject(map));
+}
 
 export const firestoreAutoId = (): string => {
   const CHARS =
