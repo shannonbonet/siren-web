@@ -11,27 +11,29 @@ import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
 import { setQuestion } from "../../firebase/queries";
 import { firestoreAutoId } from "../../firebase/helpers";
-import { QuestionType, AnswerType, QuestionComponentProps } from "../../../types";
+import { QuestionType, AnswerType, QuestionComponentProps, Language } from "../../../types";
 import {updateMap as changeMap} from "../IntakeForm/IntakeForm";
 
 
 const Question = ({
-  id = firestoreAutoId(),
+  id,
   displayText = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   questionType = QuestionType.Daca,
   key = firestoreAutoId(),
-  order = 0,
+  order,
   active = false,
   answerType = null,
-  answerOptions = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
+  answerOptions = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
+  language = Language.English,
+}
   :QuestionComponentProps
 ) => {
   const updateMap = changeMap;
-  const [questionText, setQuestionText] = useState(displayText.get('EN'));
-  const [descriptionText, setDescriptionText] = useState(description.get('EN'));
-  const [answerOption, setAnswerOption] = useState(answerOptions.get('EN'));
+  const [questionText, setQuestionText] = useState(displayText.get(language));
+  const [descriptionText, setDescriptionText] = useState(description.get(language));
+  const [answerOption, setAnswerOption] = useState(answerOptions.get(language));
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
     { value: "calendar", label: "Date" },
@@ -43,7 +45,18 @@ const Question = ({
   const [typeOfAnswer, setAnswerType] =
    useState(answerType === null ? null : 
     answerTypeOptions[answerTypeOptions.findIndex(o => {return o.value === answerType})]);
-
+  const languageOptions = [
+    {value: "EN", label: "English"},
+    {value: "ES", label: "Spanish"},
+    {value: "VIET", label: "Vietnamese"},
+  ];
+  const [languageOption, setLanguage] = useState(
+    languageOptions[languageOptions.findIndex(o => {return o.value === language})]);
+  const changeLanguage = (lang) => {
+    setQuestionText(displayText.get(lang));
+    setDescriptionText(description.get(lang));
+    setAnswerOption(answerOptions.get(lang));
+  }
   const getAnswerOptions = (icon) => {
     let components = [];
     for (let i = 0; i < answerOption.length; i++) {
@@ -59,7 +72,7 @@ const Question = ({
               let options = [...answerOption];
               options[i] = ev.target.value;
               setAnswerOption(options);
-              answerOptions.set("EN", options);
+              answerOptions.set(languageOption.value, options);
               updateMap(id, "answerOptions", answerOptions);
             }}
           />
@@ -68,7 +81,7 @@ const Question = ({
               let options = [...answerOption];
               options.splice(i, 1);
               setAnswerOption(options);
-              answerOptions.set("EN", answerOption);
+              answerOptions.set(languageOption.value, answerOption);
               updateMap(id, "answerOptions", answerOptions);
             }}
             className={styles.removeOption}
@@ -135,7 +148,7 @@ const Question = ({
               let options = [...answerOption];
               options.push("Option");
               setAnswerOption(options);
-              answerOptions.set("EN", options);
+              answerOptions.set(languageOption.value, options);
               updateMap(id, "answerOptions", answerOptions);
             }}
           >
@@ -155,7 +168,7 @@ const Question = ({
           placeholder="Question"
           onChange={ev => {
             setQuestionText(ev.target.value);
-            displayText.set("EN", ev.target.value);
+            displayText.set(languageOption.value, ev.target.value);
             updateMap(id, "displayText", displayText);
           }}
           className={styles.questionText}
@@ -164,7 +177,16 @@ const Question = ({
           options={answerTypeOptions}
           onChange={e => {setAnswerType(e); updateMap(id, "answerType", e.value)}}
           defaultValue={typeOfAnswer}
-          className={styles.answerType}
+          className={styles.options}
+        />
+        <Select
+          options={languageOptions}
+          onChange={e => {
+            setLanguage(e);
+            changeLanguage(e.value);
+            updateMap(id, "language", e.value)}}
+          defaultValue={languageOption}
+          className={styles.options}
         />
       </div>
       <div className={styles.middlecontainer}>
@@ -174,7 +196,7 @@ const Question = ({
           placeholder="Description"
           onChange={(ev) => {
             setDescriptionText(ev.target.value);
-            description.set("EN", ev.target.value);
+            description.set(language, ev.target.value);
             updateMap(id, "description", description)}}
           className={styles.longText}
         />

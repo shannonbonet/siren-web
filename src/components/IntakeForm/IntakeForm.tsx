@@ -73,7 +73,8 @@ const IntakeForm = () => {
         order: q.order,
         active: q.active,
         answerType: q.answerType,
-        answerOptions: mapToJSON(q.answerOptions)
+        answerOptions: mapToJSON(q.answerOptions),
+        language: q.language
        }, q)});
     console.log("uploaded");
   }
@@ -181,7 +182,9 @@ const IntakeForm = () => {
             order={q.order}
             active={q.active}
             answerType={q.answerType}
-            answerOptions={q.answerOptions}/>)} )
+            answerOptions={q.answerOptions}
+            language={q.language}
+            />)} )
         return newState;
 
 

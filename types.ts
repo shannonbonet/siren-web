@@ -21,6 +21,12 @@ export enum CaseStatus {
     Radio = 'radio',
     Checkbox = 'checkbox',
   }
+
+  export enum Language {
+    English = 'EN',
+    Spanish = 'ES',
+    Vietnamese = 'VIET',
+  }
   
   export type Client = {
     id: string;
@@ -55,6 +61,7 @@ export enum CaseStatus {
     type: string;
     createdAt: Date;
   };
+
   
   export type Question = {
     id: string; 
@@ -67,19 +74,21 @@ export enum CaseStatus {
     active: boolean;
     answerType: AnswerType;
     answerOptions: string;
+    language: Language;
   };
   
   export type QuestionComponentProps = {
-    id?: string; 
+    id: string; 
     displayText?: Map<string, string>;
     description?: Map<string, string>; 
     example?: Map<string, string>;
     questionType?: QuestionType;
     key?: string;
-    order?: number;
+    order: number;
     active?: boolean;
     answerType?: AnswerType;
     answerOptions?: Map<string, string[]>;
+    language?: Language;
   };
   
   export type QuestionManagerProps = {

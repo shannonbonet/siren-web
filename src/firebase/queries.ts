@@ -16,7 +16,7 @@ import {
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import { objectToAnswerOptionsMap, objectToMap } from './helpers';
+import { objectToAnswerOptionsMap, objectToMap, mapToObject } from './helpers';
 
   const database = firebase.firestore();
   const caseTypeCollection = database.collection('caseTypes');
