@@ -2,9 +2,8 @@ import React, { useEffect, useState, useReducer } from 'react';
 import Link from 'next/dist/client/link';
 import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline,  } from "react-icons/io";
-import { IoEyeOutline, IoEyeOffOutline,  IoTrashOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
-import { MdContentCopy } from 'react-icons/md';
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
 import {LinkForm} from "../LinkForm/LinkForm";
@@ -12,11 +11,10 @@ import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
-import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
 import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
 import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
-import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj,  } from "../../../types";
+import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
 
 
 
@@ -37,7 +35,6 @@ export const updateMap = (id, field, value) => {
 
 const IntakeForm = () => {
   const [titleText, setTitleText] = useState("");
-  const [required, setRequired] = useState(false);
   var initialState = {
     ids: [],
     questions: [],
@@ -79,6 +76,11 @@ const IntakeForm = () => {
     console.log("uploaded");
   }
 
+  function removeComponent(id){
+    dispatch({type: IntakeActionTypes.REMOVE, payload: id});
+    deletionList.push(id);
+  }
+
 
   const getDraggable = (question, index) => {
     return (
@@ -105,25 +107,6 @@ const IntakeForm = () => {
                   alt="draghere"/>
                 </div>
                 {question}
-                <div className={styles.bottombuttons}>
-					        <span className={styles.requiredspan}>Required</span>
-                  <Toggle
-                    checked={required}
-                    icons={false}
-                    onChange={() => setRequired(!required)}
-                  />
-                  <button className={styles.copybutton}>
-                    <MdContentCopy size="27px"/>
-                  </button>
-                  <button 
-                    className={styles.trashbutton}
-                    onClick={() => {
-                      dispatch({type: IntakeActionTypes.REMOVE, payload: qState.ids[index]});
-                      deletionList.push(qState.ids[index]);
-                      }}>
-                    <IoTrashOutline size="27px"/>
-                  </button>
-			          </div>
               </div>
            );
        }}
@@ -142,7 +125,7 @@ const IntakeForm = () => {
       case IntakeActionTypes.ADD:
         newState.past.push([newState.ids, newState.questions])
         newState.ids.push(action.payload);
-        newState.questions.push(<Question order={newState.questions.length} id={action.payload}/>);
+        newState.questions.push(<Question order={newState.questions.length} id={action.payload} deleteFunc={removeComponent}/>);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -184,6 +167,7 @@ const IntakeForm = () => {
             answerType={q.answerType}
             answerOptions={q.answerOptions}
             language={q.language}
+            deleteFunc={removeComponent}
             />)} )
         return newState;
 
@@ -261,6 +245,8 @@ const IntakeForm = () => {
                   active: false,
                   answerType: AnswerType.Null,
                   answerOptions: new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
+                  language: Language.English,
+                  deleteFunc: removeComponent,
                 });
                 dispatch({type: IntakeActionTypes.ADD, payload: sharedID});
 

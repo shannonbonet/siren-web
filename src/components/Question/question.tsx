@@ -7,12 +7,15 @@ import {
   IoRadioButtonOffOutline,
   IoCalendarOutline,
 } from "react-icons/io5";
-import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import { MdOutlineCheckBoxOutlineBlank, MdContentCopy } from "react-icons/md";
+import { IoTrashOutline } from "react-icons/io5";
 import "react-toggle/style.css";
 import { setQuestion } from "../../firebase/queries";
 import { firestoreAutoId } from "../../firebase/helpers";
 import { QuestionType, AnswerType, QuestionComponentProps, Language } from "../../../types";
 import {updateMap as changeMap} from "../IntakeForm/IntakeForm";
+import Toggle from 'react-toggle';
+import "react-toggle/style.css";
 
 
 const Question = ({
@@ -27,13 +30,14 @@ const Question = ({
   answerType = null,
   answerOptions = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
   language = Language.English,
-}
-  :QuestionComponentProps
+  deleteFunc,
+}:QuestionComponentProps,
 ) => {
   const updateMap = changeMap;
   const [questionText, setQuestionText] = useState(displayText.get(language));
   const [descriptionText, setDescriptionText] = useState(description.get(language));
   const [answerOption, setAnswerOption] = useState(answerOptions.get(language));
+  const [required, setRequired] = useState(active);
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
     { value: "calendar", label: "Date" },
@@ -200,12 +204,30 @@ const Question = ({
             updateMap(id, "description", description)}}
           className={styles.longText}
         />
-        <button
-         className={styles.saveButton}
-        >Save
-        </button>
       </div>
       {typeOfAnswer ? getAnswerTypeComponent() : null}
+      <div className={styles.bottombuttons}>
+					        <span className={styles.requiredspan}>Required</span>
+                  <Toggle
+                    checked={required}
+                    icons={false}
+                    onChange={() => {
+                      active=!required;
+                      setRequired(active);
+                      updateMap(id, "active", active);
+                    }}
+                  />
+                  <button className={styles.copybutton}>
+                    <MdContentCopy size="27px"/>
+                  </button>
+                  <button 
+                    className={styles.trashbutton}
+                    onClick={() => {
+                      deleteFunc(id);
+                      }}>
+                    <IoTrashOutline size="27px"/>
+                  </button>
+			          </div>
     </div>
   );
 };

@@ -107,33 +107,6 @@
   width: 100%;
 }
 
-.bottombuttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  padding-right: 20px;
-  padding-bottom: 10px;
-  padding-top: 20px;
-}
-
-.copybutton {
-  padding-right: 2.6%;
-  padding-left: 2.6%;
-  outline: 0;
-  border: 0;
-  background-color: transparent;
-}
-
-.trashbutton {
-  outline: 0;
-  border: 0;
-  background-color: transparent;
-}
-
 .undo-redo {
   background: transparent;
   border: none;

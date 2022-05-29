@@ -89,6 +89,7 @@ export enum CaseStatus {
     answerType?: AnswerType;
     answerOptions?: Map<string, string[]>;
     language?: Language;
+    deleteFunc: Function;
   };
   
   export type QuestionManagerProps = {
