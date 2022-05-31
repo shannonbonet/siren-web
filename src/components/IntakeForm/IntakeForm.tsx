@@ -18,6 +18,7 @@ import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Langua
 
 
 
+
 enum IntakeActionTypes {
   ADD = "add",
   REMOVE = "remove",
@@ -33,8 +34,25 @@ export const updateMap = (id, field, value) => {
   questionMap.get(id)[field] = value;
 }
 
-const IntakeForm = () => {
-  const [titleText, setTitleText] = useState("");
+
+const IntakeForm = (caseType) => {
+  caseType = caseType.caseType;
+  console.log("Case Type", caseType);
+
+  function getTitle(caseType) {
+    switch(caseType) {
+      case QuestionType.General:
+        return "General";
+      case QuestionType.Daca: 
+        return "Daca Renewal";
+      case QuestionType.Adjustment:
+        return "Adjustment Of Status";
+      default:
+        return "I90";
+    }
+  }
+  const titleText = getTitle(caseType);
+  // const [titleText, setTitleText] = useState(caseType);
   var initialState = {
     ids: [],
     questions: [],
@@ -43,7 +61,7 @@ const IntakeForm = () => {
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
-    let qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
+    let qs: QuestionObj[] = await getAllQuestionsOfType(caseType);
     questionMap = new Map<string, QuestionObj>();
     qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
     qs.map(q => questionMap.set(q.id, q));
@@ -125,7 +143,13 @@ const IntakeForm = () => {
       case IntakeActionTypes.ADD:
         newState.past.push([newState.ids, newState.questions])
         newState.ids.push(action.payload);
-        newState.questions.push(<Question order={newState.questions.length} id={action.payload} deleteFunc={removeComponent}/>);
+        newState.questions.push
+        (<Question
+          id={action.payload} 
+          questionType={caseType}
+          order={newState.questions.length} 
+          deleteFunc={removeComponent}
+          />);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -214,8 +238,8 @@ const IntakeForm = () => {
             <TextareaAutosize
               cacheMeasurements
               value={titleText}
-              placeholder="Untitled"
-              onChange={ev => setTitleText(ev.target.value)}
+              // placeholder="Untitled"
+              // onChange={ev => setTitleText(ev.target.value)}
               className={styles["title"]}/>
           </div>
           <div className={styles["changebar"]}>
@@ -239,7 +263,7 @@ const IntakeForm = () => {
                   displayText: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
                   description: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
                   example: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-                  questionType: QuestionType.Daca,
+                  questionType: caseType,
                   key: firestoreAutoId(),
                   order: qState.questions.length,
                   active: false,
@@ -267,7 +291,6 @@ const IntakeForm = () => {
             />
             <BsThreeDotsVertical size={30}/>
           </div>
-          <LinkForm/>
         </div>
     )
   }

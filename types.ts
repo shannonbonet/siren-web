@@ -10,6 +10,8 @@ export enum CaseStatus {
     General = 'general',
     Daca = 'dacaRenewal',
     Citizenship = 'citizenship',
+    Adjustment = "adjustmentOfStatus",
+    I90 = "I90",
   }
   
   export enum AnswerType {
@@ -82,7 +84,7 @@ export enum CaseStatus {
     displayText?: Map<string, string>;
     description?: Map<string, string>; 
     example?: Map<string, string>;
-    questionType?: QuestionType;
+    questionType: QuestionType;
     key?: string;
     order: number;
     active?: boolean;

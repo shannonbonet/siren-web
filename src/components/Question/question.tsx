@@ -23,7 +23,7 @@ const Question = ({
   displayText = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
   example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  questionType = QuestionType.Daca,
+  questionType,
   key = firestoreAutoId(),
   order,
   active = false,
