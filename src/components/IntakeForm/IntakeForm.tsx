@@ -37,8 +37,6 @@ export const updateMap = (id, field, value) => {
 
 const IntakeForm = (caseType) => {
   caseType = caseType.caseType;
-  console.log("Case Type", caseType);
-
   function getTitle(caseType) {
     switch(caseType) {
       case QuestionType.General:
@@ -52,7 +50,6 @@ const IntakeForm = (caseType) => {
     }
   }
   const titleText = getTitle(caseType);
-  // const [titleText, setTitleText] = useState(caseType);
   var initialState = {
     ids: [],
     questions: [],

@@ -10,7 +10,7 @@ export default function GenQuestion() {
   return (
     <div>
       <Layout>
-        <IntakeForm caseType={QuestionType.I90}/>
+        <IntakeForm caseType={QuestionType.Daca}/>
       </Layout>
     </div>
   );
