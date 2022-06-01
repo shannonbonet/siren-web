@@ -2,10 +2,10 @@ export enum CaseStatus {
   SubmitForm = 'submitForm',
   SubmitDoc = 'submitDoc',
   InReview = 'inReview',
-  SchedApt = 'schedApt', // if accepted
+  SchedApt = 'schedApt',
   AttenApt = 'attenApt',
-  Resubmit = 'resubmit', // new status: puts Progress Tracker back to 'submitForm' but will give rejection message
-}
+  Resubmit = "Resubmit"
+} // new status: puts Progress Tracker back to 'submitForm' but will give rejection message
 
   export enum QuestionType {
     General = 'general',

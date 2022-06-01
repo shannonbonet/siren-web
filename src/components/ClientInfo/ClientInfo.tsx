@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import React, { useState } from "react";
-import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateStatus } from "../../firebase/queries";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs} from "../../firebase/queries";
 import { Client, CaseType, Case, Document, CaseKey } from "../../../types";
 import { CaseStatus } from "../../../types";
 
-export const ClientInfo = ({ query }) => {
+const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
   const [cases, setCases] = useState<Array<CaseType>>(null);
   const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null);
@@ -263,7 +263,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
     setUpdatingStatus(true);
     const caseId = selectedCaseInfo.id;
     console.log(selectedCaseInfo);
-    await updateStatus(client.id, caseId, status, selectedCaseInfo);
+    await updateStatus(client.id, caseId, status, selectedCaseInfo); // this function doesn't exist...? 
     setSelectCaseValue(null);
     setUpdatingStatus(false);
   };
@@ -525,3 +525,5 @@ const StatusIcon = ({ completed }) => {
     </span>
   );
 };
+
+export default ClientInfo;
