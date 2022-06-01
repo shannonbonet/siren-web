@@ -89,3 +89,54 @@
   padding-top: 17px;
   height: 30px;
 }
+
+.saveCancelContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  float: right;
+  width: 10%;
+}
+
+.saveIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 38px;
+  max-width: 28px;
+  font-size: 12px;
+}
+
+.cancelIcon {
+  display: flex;
+  flex-direction: column;
+  max-height: 38px;
+  max-width: 39px;
+  font-size: 12px;
+}
+
+.editContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  max-height: 38px;
+  float: right;
+}
+
+.editableField{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: medium;
+  border: 1px solid #C8C8C8;
+  background-color: white;
+  border-radius: 5px;
+  color: grey;
+  text-align: start;
+  padding: 8px;
+  width: 436px;
+  height: 32px;
+}
+
+
+
+

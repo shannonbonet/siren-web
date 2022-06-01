@@ -1,15 +1,19 @@
 import styles from "./ClientInfo.module.css";
 import { FiCheck, FiExternalLink } from "react-icons/fi";
-import { AiOutlineExclamation } from "react-icons/ai";
+import { AiOutlineExclamation, AiOutlineSave } from "react-icons/ai";
+import { GrClose } from "react-icons/gr";
+import { HiOutlinePencil } from 'react-icons/hi';
 import {
   Button,
   Tab,
   TextField
 } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
-import React, { useState } from "react";
-import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs } from "../../firebase/queries";
-import { Client, CaseType, Case, Document } from "/types";
+import router from 'next/router';
+import { IconButton } from '@material-ui/core';
+import React, { useEffect, useState } from "react";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateInfo, objectToMap} from "../../firebase/queries";
+import { Client, CaseType, Case, Document } from "../../../types";
 
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
@@ -76,8 +80,74 @@ const caseOptions = new Map<string, string>([
 
 // RENDER BOXES
 
+
 const OverviewBox = ({ client }) => {
   const [tabValue, setTabValue] = useState("overview");
+
+
+  const [editingForm, setEditingForm] = useState<boolean>(false);
+  const [edited, setEdited] = useState<Map<string, string>>(new Map());
+  const [saved, setSaved] = useState<boolean>(false);
+
+  
+  // const refresh = () => {
+    //   router.replace(router.asPath);
+    // };
+    
+    
+  const resetForm = () => {
+    setEditingForm(false);
+    setEdited(new Map<string, string>());
+    setSaved(false);
+  }
+
+
+  const saveEdits = async (): Promise<void> => {
+    try{
+      if (client && client.answers.general){
+        console.log(edited);
+        edited.forEach(async (v, k) => {
+          updateInfo(client, 'general', k, v);
+        })
+        resetForm();
+        setSaved(true);
+      }
+    } catch (e) {
+      console.log(e)
+      throw (e)
+    }
+  } 
+
+  //TODO: add functionality to buttons
+  const renderButtons = () => {  
+    if (editingForm){
+      return(
+        <div className={styles['saveCancelContainer']}>
+          <IconButton onClick={() => setEditingForm(false)}>
+            <GrClose/>
+            Cancel
+          </IconButton>
+          <IconButton className={styles['saveIcon']} onClick={() => saveEdits()}>
+            <HiOutlinePencil/>
+            Save
+          </IconButton>
+        </div>
+      )
+    } else {
+      return(
+        <div className={styles['editContainer']}>
+          <IconButton onClick={() => setEditingForm(true)}>
+            <HiOutlinePencil/>
+            Edit
+          </IconButton>
+        </div>
+      )
+    }
+  };
+
+
+
+
   return (
     <div className={`${styles.outline} ${styles.overview}`}>
       <TabContext value={tabValue}>
@@ -88,8 +158,9 @@ const OverviewBox = ({ client }) => {
         <br />
         <div>
           <TabPanel value="overview" className={styles["no-padding"]}>
+            {renderButtons()}
             <div className={styles.flex}>
-              <h3 className={styles.category}>Basic Info</h3>
+              <h3 className={styles.category}>Basic Info</h3> {/* align buttons with this header*/}
               <div>
                 {client && client.answers && client.answers.general
                   ? Object.keys(client.answers.general).map((key) =>
@@ -120,7 +191,11 @@ const OverviewBox = ({ client }) => {
                               key.replace(/[A-Z]/g, " $&").trim().slice(1)}
                           </b>
                           <br />
-                          {client.answers.general[key]}
+                          {editingForm ? 
+                            <input type='text' defaultValue={client.answers.general[key]} className={styles['editableField']} onChange={(e) => {
+                                setEdited(edited.set(key, e.target.value));     
+                            }}/>
+                          :client.answers.general[key]}
                         </p>
                       )
                     )
@@ -174,7 +249,6 @@ const OverviewBox = ({ client }) => {
                               key.replace(/[A-Z]/g, " $&").trim().slice(1)}
                           </b>
                           <br />
-                          {client.answers.general[key]}
                         </p>
                       ) : null
                     )
@@ -452,7 +526,7 @@ const ClientActionsBox = ({cases}) => {
           </div>
         );
     default:
-      console.log(cases);
+      // console.log(cases);
       return (
         <div className={`${styles.outline} ${styles.padding}`}>
           <div className={styles.alignHorizontal}>
