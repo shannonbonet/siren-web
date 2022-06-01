@@ -54,7 +54,7 @@ export default function Settings() {
     }, [authUser]);
 
     return (
-        <Layout>
+        <div>
             <h1>Settings</h1>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -86,6 +86,6 @@ export default function Settings() {
                     ]
                 : null}
             </Box>
-        </Layout>
+        </div>
     )
 }

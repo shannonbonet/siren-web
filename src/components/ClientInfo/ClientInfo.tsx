@@ -59,7 +59,7 @@ export const ClientInfo = ({ query }) => {
     <>
       <h2>
         {client && client.answers && client.answers.general
-          ? client.answers.general.Name
+          ? client?.answers?.general?.Name
           : query["fullName"]}
       </h2>
       <div className={styles.grid}>
