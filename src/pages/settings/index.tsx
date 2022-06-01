@@ -1,13 +1,11 @@
 import Layout from '../../components/Layout'
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import { Button, Tab, Tabs, Box, Typography } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import ClientsTable from '../../components/SirenUserTable/ClientsTable';
 import SirenUserTable from '../../components/SirenUserTable/SirenUserTable';
 import SirenApprovalTable from '../../components/SirenUserTable/SirenApprovalTable';
 import { getSirenUser } from '../../firebase/queries';
-
-
 
 function a11yProps(index) {
     return {
@@ -80,7 +78,7 @@ export default function Settings() {
                         <TabPanel value={value} index={2} key={2}>
                             <SirenApprovalTable/>
                         </TabPanel>,
-                        <TabPanel value={value} index={3}>
+                        <TabPanel value={value} index={3} key={3}>
                             <SirenUserTable currentUser={currentUser} key={3}/>
                         </TabPanel>
                     ]
@@ -89,3 +87,11 @@ export default function Settings() {
         </div>
     )
 }
+
+Settings.getLayout = function getLayout(page: ReactElement) {
+    return (
+      <Layout>
+        {page} 
+      </Layout>
+    )
+  }
