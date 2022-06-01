@@ -19,6 +19,7 @@ export enum CaseStatus {
     Dropdown = 'dropdown',
     Calendar = 'calendar',
     Radio = 'radio',
+    Checkbox = 'checkbox',
   }
 
   export enum CaseKey {
