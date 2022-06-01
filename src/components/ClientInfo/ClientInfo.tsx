@@ -101,6 +101,7 @@ const OverviewBox = ({ client }) => {
         </TabList>
         <br />
         <div>
+          {/* render basic info (client.general)*/}
           <TabPanel value="overview" className={styles["no-padding"]}>
             <div className={styles.flex}>
               <h3 className={styles.category}>Basic Info</h3>
@@ -123,6 +124,7 @@ const OverviewBox = ({ client }) => {
               </div>
             </div>
           </TabPanel>
+          {/* rest of cases' answers get mapped to respective headers*/}
           {client && client.answers
             ? Object.keys(client.answers).map((caseType) =>
                 caseType != "general" ? ( // right now, I am not including general (cuz there is an "overview" tab), but we could use this code for every answer set
