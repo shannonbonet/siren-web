@@ -1,0 +1,23 @@
+.root {
+    display: flex; 
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 2px solid var(--back-drop);;
+    border-radius: 10px;
+    justify-content: space-between;
+    align-items: baseline;
+    outline: none;
+}
+
+.root:hover {
+    background-color: var(--back-drop);
+}
+
+.title {
+    align-items: baseline;
+    padding-left: 20px;
+}
+
+.icons {
+    padding-right: 20px;
+}
