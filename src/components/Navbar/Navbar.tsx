@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { FiExternalLink } from "react-icons/fi";
 import Avatar from "@mui/material/Avatar";
 
-export const Navbar = () => {
+const Navbar = () => {
   const router = useRouter();
   return (
     <nav className={styles.bar}>
@@ -31,3 +31,5 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+export default Navbar;
