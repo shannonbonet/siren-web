@@ -1,8 +1,11 @@
 export enum CaseStatus {
-    SubmitForm = 'submitForm',
-    SubmitDoc = 'submitDoc',
-    SchedApt = 'schedApt',
-  }
+  SubmitForm = 'submitForm',
+  SubmitDoc = 'submitDoc',
+  InReview = 'inReview',
+  SchedApt = 'schedApt',
+  AttenApt = 'attenApt',
+}
+
   export enum QuestionType {
     General = 'general',
     Daca = 'daca',
@@ -15,7 +18,6 @@ export enum CaseStatus {
     Dropdown = 'dropdown',
     Calendar = 'calendar',
     Radio = 'radio',
-    Checkbox = 'checkbox',
   }
   
   export type Client = {
@@ -24,12 +26,20 @@ export enum CaseStatus {
     fullName: string;
     createdAt: Date;
     answers: Map<string, Map<string, any>>;
+    cases: Array<Case>;
   };
   
   export type Case = {
     id: string;
+    identifier: string;
     status: CaseStatus;
     type: string;
+  };
+
+  export type CaseType = {
+    documentList: Array<string>;
+    identifier: number;
+    key: string;
   };
   
   export type CalendlyLink = {

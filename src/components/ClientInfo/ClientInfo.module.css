@@ -71,11 +71,21 @@
   margin-right: 10px;
 }
 
-.clientActionsHeader {
+.alignHorizontal {
   display: flex;
+  flex-direction: row;
 }
 
 .selectCase {
-  min-width: 150px;
-  max-width: 200px;
+  display: flex;
+}
+
+.docEntry {
+  height: 30px;
+}
+
+.docAlign {
+  display: flex;
+  padding-top: 17px;
+  height: 30px;
 }

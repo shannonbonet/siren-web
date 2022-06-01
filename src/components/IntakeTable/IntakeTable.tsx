@@ -104,6 +104,8 @@ const IntakeTable = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [identifiers, setIdentifiers] = useState<Array<Object[]>>([]);
   const [clientsPass, setClientsPass] = useState<Array<Object>>([]);
+  // structure looks like this: [ [ClientObject, CaseObject] ]
+  const [clientCases, setClientCases] = useState<Array<Array<Object>>>([]);
 
   useEffect(() => {
     let clientAns: Array<Object> = new Array();
@@ -112,15 +114,18 @@ const IntakeTable = () => {
     async function loadClientResponses() {
       //filter out clients w no answers
       const clients = (await getAllClients()).filter(
-        (c) => c.answers !== undefined && Object.keys(c.answers).length >= 1
+        (c) => c.answers !== undefined && Object.keys(c.answers).length > 1
+          && c.answers["general"] && Object.keys(c.answers['general']).length > 0
       );
       setClientsPass(clients);
 
       //add all client answer objects to array, then select 'general' responses
       for (const i in clients) {
+        console.log(clients[i]);
         clientAns.push(clients[i].answers);
       }
       const clientGenAns: Array<Object> = clientAns.map((c) => c["general"]);
+      console.log(clientGenAns);
 
       //set identifiers
       const ids = clients.map((c) => getIdentifiers(c.id));
@@ -173,7 +178,7 @@ const IntakeTable = () => {
                   // for reasons I am not sure why.
                   //
                   // eslint-disable-next-line react/jsx-key
-                  <Link
+                  (clientsPass[i] ? <Link
                     href={{
                       pathname: "/clientview",
                       query: {
@@ -208,7 +213,6 @@ const IntakeTable = () => {
                         } else {
                           value = row[column.id];
                         }
-                        console.log(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"
@@ -218,7 +222,7 @@ const IntakeTable = () => {
                         );
                       })}
                     </TableRow>
-                  </Link>
+                  </Link> : null)
                 );
               })}
           </TableBody>

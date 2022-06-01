@@ -17,10 +17,11 @@ export default function Home() {
   });
 
   return (
-      <Dashboard/>
+    <Dashboard/>
   );
 }
 
+//wraps Intake Dashboard
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
