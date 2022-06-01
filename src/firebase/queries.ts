@@ -14,7 +14,7 @@ import {
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import { objectToAnswerOptionsMap, objectToMap } from './helpers';
+import { mapToObject, objectToAnswerOptionsMap, objectToMap } from './helpers';
 
   const database = firebase.firestore();
   const caseTypeCollection = database.collection('caseTypes');
@@ -94,24 +94,24 @@ export const getAllQuestionsOfType = async (
       .collection(`caseTypes/${caseType}/questions`)
       .orderBy("order")
       .get();
-      const questions = ref.docs.map(doc => doc.data() as Question);
-      questions.map(
-        question => (question.displayText = objectToMap(question.displayText)),
-      );
-      questions.map(
-        question => (question.description = objectToMap(question.description)),
-      );
-      questions.map(
-        question => (question.example = objectToMap(question.example)),
-      );
-      questions.map(
-        question =>
-          (question.answerOptions = objectToAnswerOptionsMap(
-            question.answerOptions,
-          )),
-      );
-      console.log(questions);
-      return questions;
+    const questions = ref.docs.map((doc) => doc.data() as Question);
+    questions.map(
+      (question) => (question.displayText = objectToMap(question.displayText))
+    );
+    questions.map(
+      (question) => (question.description = objectToMap(question.description))
+    );
+    questions.map(
+      (question) => (question.example = objectToMap(question.example))
+    );
+    questions.map(
+      (question) =>
+        (question.answerOptions = objectToAnswerOptionsMap(
+          question.answerOptions
+        ))
+    );
+    console.log(questions);
+    return questions;
   } catch (e) {
     console.warn(e);
     throw e;
@@ -215,5 +215,20 @@ export const updateInfo = async(
   }
 };
 
-
+export const updateStatus = async(
+  clientId: string,
+  caseId: string,
+  status: string,
+  clientCase: Case,
+) => {
+  try{
+    const copy = {...clientCase} as Dictionary;
+    copy.status = status;
+    console.log(copy);
+    await clientCollection.doc(clientId).collection('cases').doc(caseId).set(copy);
+  } catch(e){
+    console.warn(e)
+    throw(e)
+  }
+};
 

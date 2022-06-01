@@ -32,12 +32,6 @@ interface Column {
   format?: (value: number) => string;
 }
 
-const caseTypes = {
-  dacaRenewal: 10,
-  adjustmentOfStatus: 11,
-  i90: 12,
-};
-
 const columns: readonly Column[] = [
   { id: "identifier", label: "Unique ID", minWidth: 170 },
   { id: "Name", label: "Name", minWidth: 100 },
@@ -121,11 +115,9 @@ const IntakeTable = () => {
 
       //add all client answer objects to array, then select 'general' responses
       for (const i in clients) {
-        console.log(clients[i]);
         clientAns.push(clients[i].answers);
       }
       const clientGenAns: Array<Object> = clientAns.map((c) => c["general"]);
-      console.log(clientGenAns);
 
       //set identifiers
       const ids = clients.map((c) => getIdentifiers(c.id));
@@ -143,8 +135,6 @@ const IntakeTable = () => {
   }, []);
 
   //BUG: useState doesnt always set identifiers -- actually just takes a minute to set identifiers
-  // console.log(identifiers);
-  // console.log(responses);
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 1000 }}>
@@ -173,19 +163,14 @@ const IntakeTable = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => {
                 return (
-                  //
-                  // Taking out this line below will introduce red squigglies
-                  // for reasons I am not sure why.
-                  //
-                  // eslint-disable-next-line react/jsx-key
-                  (clientsPass[i] ? <Link
+                  (clientsPass[page * rowsPerPage + i] ? <Link
                     href={{
                       pathname: "/clientview",
                       query: {
-                        fullName: clientsPass[i]["fullName"],
-                        email: clientsPass[i]["email"],
-                        id: clientsPass[i]["id"],
-                        answers: clientsPass[i]["answers"],
+                        fullName: clientsPass[page * rowsPerPage + i]["fullName"],
+                        email: clientsPass[page * rowsPerPage + i]["email"],
+                        id: clientsPass[page * rowsPerPage + i]["id"],
+                        answers: clientsPass[page * rowsPerPage + i]["answers"],
                       },
                     }}
                     passHref
@@ -224,7 +209,8 @@ const IntakeTable = () => {
                     </TableRow>
                   </Link> : null)
                 );
-              })}
+              })
+            }
           </TableBody>
         </Table>
       </TableContainer>

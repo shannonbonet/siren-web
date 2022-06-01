@@ -4,7 +4,8 @@ export enum CaseStatus {
   InReview = 'inReview',
   SchedApt = 'schedApt',
   AttenApt = 'attenApt',
-}
+  Resubmit = "Resubmit"
+} // new status: puts Progress Tracker back to 'submitForm' but will give rejection message
 
   export enum QuestionType {
     General = 'general',
@@ -18,6 +19,13 @@ export enum CaseStatus {
     Dropdown = 'dropdown',
     Calendar = 'calendar',
     Radio = 'radio',
+  }
+
+  export enum CaseKey {
+    I90 = 'I-90',
+    adjustmentOfStatus = 'Adjustment of status',
+    citizenship = 'Citizenship',
+    dacaRenewal = 'DACA renewal',
   }
   
   export type Client = {
