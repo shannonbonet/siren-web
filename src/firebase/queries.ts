@@ -113,6 +113,7 @@ export const getAllQuestionsOfType = async (
   }
 };
 
+
 export const getClientResponsesOfType = async (
   client: Client,
   caseType: string

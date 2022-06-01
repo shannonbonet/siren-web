@@ -1,16 +1,14 @@
 import IntakeForm from "../../components/IntakeForm/IntakeForm";
 import Layout from "../../components/Layout";
 import { QuestionType } from "../../../types";
+import IntakeHome from "../../components/IntakeHome/IntakeHome";
  
 
-export default function GenQuestion() {
-  const myProps = {
-    caseType: QuestionType.General
-  }
+export default function IntakeHomeScreen() {
   return (
     <div>
       <Layout>
-        <IntakeForm caseType={QuestionType.Daca}/>
+        <IntakeHome/>
       </Layout>
     </div>
   );
