@@ -1,16 +1,19 @@
-import { Button } from "@mui/material";
-import FormHolder from "../../components/FormHolder/FormHolder";
-import styles from "./styles.module.css";
+import { ReactElement } from "react";
+import IntakeForm from "../../components/IntakeForm/IntakeForm";
+import Layout from "../../components/Layout";
 
-export default function GenQuestion() {
+export default function IntakeForms() {
   return (
     <div>
-        <h1>Intake Forms</h1>
-        <div className={styles.buttondiv}>
-          <Button variant="contained"> Add New Form </Button>
-        </div>
-        <FormHolder formTitle="General"></FormHolder>
-        {/* <IntakeForm /> */}
+        <IntakeForm />
     </div>
   );
+}
+
+IntakeForms.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      {page} 
+    </Layout>
+  )
 }

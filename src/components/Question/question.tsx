@@ -10,9 +10,8 @@ import {
 import { MdOutlineCheckBoxOutlineBlank, MdContentCopy } from "react-icons/md";
 import { IoTrashOutline } from "react-icons/io5";
 import "react-toggle/style.css";
-import { setQuestion } from "../../firebase/queries";
 import { firestoreAutoId } from "../../firebase/helpers";
-import { QuestionType, AnswerType, QuestionComponentProps, Language } from "../../../types";
+import { QuestionComponentProps, Language } from "../../../types";
 import {updateMap as changeMap} from "../IntakeForm/IntakeForm";
 import Toggle from 'react-toggle';
 import "react-toggle/style.css";
@@ -41,7 +40,7 @@ const Question = ({
   const [required, setRequired] = useState(active);
   const answerTypeOptions = [ //Value is used for firebase, label for frontend.
     { value: "smallInput", label: "Short answer" },
-    { value: "calendar", label: "Date" },
+    { value: "date", label: "Date" },
     { value: "radio", label: "Multiple Choice" },
     { value: "largeInput", label: "Long answer" },
     { value: "dropdown", label: "Dropdown" },
@@ -99,7 +98,6 @@ const Question = ({
     return components;
   };
 
-
   const getAnswerTypeComponent = () => {
     if (typeOfAnswer.value === "smallInput") {
       return (
@@ -107,7 +105,7 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value= {'Short answer text'}
+            value="Short answer text"
             className={styles.shortText}
           />
         </div>
@@ -118,12 +116,12 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value={'Long answer text'}
+            value="Long answer text"
             className={styles.longText}
           />
         </div>
       );
-    } else if (typeOfAnswer.value === "calendar") {
+    } else if (typeOfAnswer.value === "date") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize

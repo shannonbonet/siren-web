@@ -6,12 +6,11 @@
 .overlay {
   width: 100%;
   min-width: 1440px;
-  top: 3%;
   height: 217px;
   display: flex;
   position: fixed;
   background-color: white;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .container {

@@ -19,9 +19,8 @@ export enum CaseStatus {
     LargeInput = 'largeInput',
     SmallInput = 'smallInput',
     Dropdown = 'dropdown',
-    Calendar = 'calendar',
+    Date = 'date',
     Radio = 'radio',
-    Checkbox = 'checkbox',
   }
 
   export enum Language {

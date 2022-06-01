@@ -7,7 +7,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { setSirenUser } from '../../firebase/queries';
 import { SirenUser } from '../../../types';
 
-const SignUp = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [passwordOne, setPasswordOne] = useState("");
@@ -152,4 +152,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Register;
