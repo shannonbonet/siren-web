@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import styles from './styles.module.css'; 
@@ -153,11 +153,3 @@ const Register = () => {
 };
 
 export default Register;
-
-Register.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <div>
-      {page} 
-    </div>
-  )
-}
