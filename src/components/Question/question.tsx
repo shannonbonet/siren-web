@@ -9,52 +9,20 @@ import {
 } from "react-icons/io5";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import "react-toggle/style.css";
-import { setQuestion } from "../../firebase/queries";
-import { firestoreAutoId } from "../../firebase/helpers";
-import { QuestionType, AnswerType } from "../../../types";
 
-interface questionProps {
-  id?: string; 
-  displayText?: Map<string, string>;
-  description?: Map<string, string>; 
-  example?: Map<string, string>;
-  questionType?: QuestionType;
-  key?: string;
-  order?: number;
-  active?: boolean;
-  typeAnswer?: AnswerType;
-  optionAnswer?: Map<string, string[]>;
-}
-
-
-const Question = ({
-  id = firestoreAutoId(),
-  displayText = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  questionType = QuestionType.Daca,
-  key = "",
-  order = 1,
-  active = false,
-  typeAnswer = null,
-  optionAnswer = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
-  :questionProps
-) => {
-  console.log("KEY!", displayText.get("EN"));
-  const [questionText, setQuestionText] = useState(displayText.get('EN'));
-  const [descriptionText, setDescriptionText] = useState(description.get('EN'));
-  const [answerOptions, setAnswerOptions] = useState(optionAnswer.get('EN'));
+const Question = () => {
+  const [questionText, setQuestionText] = useState("");
+  const [descriptionText, setDescriptionText] = useState("");
+  const [answerType, setAnswerType] = useState(null);
+  const [answerOptions, setAnswerOptions] = useState(["Option"]);
   const answerTypeOptions = [
     { value: "smallInput", label: "Short answer" },
-    { value: "calendar", label: "Date" },
+    { value: "date", label: "Date" },
     { value: "radio", label: "Multiple Choice" },
     { value: "largeInput", label: "Long answer" },
     { value: "checkbox", label: "Checkbox" },
     { value: "dropdown", label: "Dropdown" },
   ];
-  const [answerType, setAnswerType] =
-   useState(typeAnswer === null ? null : 
-    answerTypeOptions[answerTypeOptions.findIndex(o => {return o.value === typeAnswer})]);
 
   const getAnswerOptions = (icon) => {
     let components = [];
@@ -89,8 +57,6 @@ const Question = ({
     return components;
   };
 
-  const unfilled = displayText.get('EN').length == 0;
-
   const getAnswerTypeComponent = () => {
     if (answerType.value === "smallInput") {
       return (
@@ -98,7 +64,7 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value= {unfilled ? 'Short answer text' : displayText.get('EN')}
+            value="Short answer text"
             className={styles.shortText}
           />
         </div>
@@ -109,12 +75,12 @@ const Question = ({
           <TextareaAutosize
             cacheMeasurements
             readOnly
-            value={unfilled ? 'Long answer text' : displayText.get('EN')}
+            value="Long answer text"
             className={styles.longText}
           />
         </div>
       );
-    } else if (answerType.value === "calendar") {
+    } else if (answerType.value === "date") {
       return (
         <div className={styles.bottomcontainerrow}>
           <TextareaAutosize
@@ -178,10 +144,6 @@ const Question = ({
           onChange={(ev) => setDescriptionText(ev.target.value)}
           className={styles.longText}
         />
-        <button
-         className={styles.saveButton}
-        >Save
-        </button>
       </div>
       {answerType ? getAnswerTypeComponent() : null}
     </div>
