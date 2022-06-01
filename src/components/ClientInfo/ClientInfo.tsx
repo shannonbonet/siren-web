@@ -10,7 +10,7 @@ import {
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import React, { useState } from "react";
 import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, updateStatus } from "../../firebase/queries";
-import { Client, CaseType, Case, Document, CaseKey } from "/types";
+import { Client, CaseType, Case, Document, CaseKey } from "../../../types";
 import { CaseStatus } from "../../../types";
 
 export const ClientInfo = ({ query }) => {
@@ -160,11 +160,11 @@ const OverviewBox = ({ client }) => {
 const DocumentsBox = ({ cases, clientDocsToCase }) => {
   const [selectCaseValue, setSelectCaseValue] = useState('');
   // This function is triggered when the select changes
-  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectCaseValue = (event) => {
     setSelectCaseValue(event.target.value);
   };
   // function to render document list
-  const displayDocList = (): React.Component => {
+  const displayDocList = () => {
     const cas = cases.filter((element) => {
       return element.key == selectCaseValue
     });
@@ -183,7 +183,7 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
     } 
   };
   // returns document link component to render
-  const displayDoc = (docs, doc): React.Component => {
+  const displayDoc = (docs, doc) => {
     let url = '';
     const docExists = (docs ? ((docs.filter((element) => {
       const found = element.type == doc;
@@ -222,7 +222,7 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
             Select Case
           </option>
           {cases.map((key, value) => 
-            <option value={key.key}>{key.key}</option>
+            <option key={key} value={key.key}>{key.key}</option>
           )}
         </select> : null}
       </div>
@@ -239,19 +239,19 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
   // TODO: implement referral link
   // const [referralLink, setReferralLink] = useState('');
 
-  const handleReject = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+  const handleReject = () => {
     if (selectCaseValue) {
       setClientActionsState("confirm reject");
     }
   };
   // This function is triggered when the select changes
-  const handleSelectCaseValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectCaseValue = (event) => {
     setSelectCaseValue(event.target.value);
     const caseFromType = getCaseFromType(event.target.value);
     setSelectedCaseInfo(caseFromType);
     console.log(caseFromType);
   };
-  const handleAccept = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAccept = (event) => {
     if (selectCaseValue) {
       setClientActionsState("confirm approve");
     }
@@ -272,7 +272,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
     return filteredCase[0];
   };
   // renders correct message for selected case
-  const caseSelectedComp = ():React.Component => {
+  const caseSelectedComp = () => {
     if (updatingStatus) {
       return(
         <div>
@@ -297,7 +297,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
           <h3>Client Actions</h3> 
           {caseSelectedComp()}
           <p>
-            Are you sure you want to approve this client's case for a consultation?
+            Are you sure you want to approve this client`&rsquo;`s case for a consultation?
           </p>
           <div className={styles.buttons}>
             <Button
@@ -325,7 +325,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
           <h3>Client Actions</h3> 
           {caseSelectedComp()}
           <p>
-            Are you sure you want to reject this client's case?
+            Are you sure you want to reject this client`&rsquo;`s case?
           </p>
           <div className={styles.buttons}>
             <Button
@@ -449,7 +449,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
                 variant="outlined"
                 onClick={() => setClientActionsState("select")}
               >
-                Don't send Referral Link
+                Don`&rsquo;`.t send Referral Link
               </Button>
             <Button
                 variant="contained"
@@ -470,7 +470,7 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
                   Select Case
                 </option>
                 {cases.map((key, value) => 
-                  <option value={key.key}>{key.key}</option>
+                  <option key={key} value={key.key}>{key.key}</option> //what is key.key?
                 )}
               </select> : null}
           </div>
@@ -492,13 +492,13 @@ const ClientActionsBox = ({client, cases, caseInfo}) => {
               <div className={styles.buttons}>
                 <Button 
                   variant="outlined" 
-                  onClick={() => handleReject()} 
+                  onClick={handleReject} 
                   className={styles.button}>
                   Reject
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => handleAccept()}
+                  onClick={handleAccept}
                 >
                   Accept for Consultation
                 </Button>
