@@ -1,11 +1,12 @@
 import { ReactElement } from "react";
+import { QuestionType } from "../../../types";
 import IntakeForm from "../../components/IntakeForm/IntakeForm";
 import Layout from "../../components/Layout";
 
 export default function IntakeForms() {
   return (
     <div>
-        <IntakeForm />
+        <IntakeForm caseType={QuestionType.Daca}/>
     </div>
   );
 }
