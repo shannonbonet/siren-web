@@ -20,16 +20,17 @@ import "react-toggle/style.css";
 
 const Question = ({
   id,
-  displayText = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  description = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
-  example = new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+  //Referred to within component because this is a map.  Same as QuestionText.  New Map created in Intake Form.  (Applies to all map-based fields)
+  displayText, 
+  description,
+  example,
   questionType,
   key = firestoreAutoId(),
   order,
   active = false,
   answerType = null,
-  answerOptions = new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
-  language = Language.English,
+  answerOptions,
+  language = Language.English, //Isn't changed after being passed in, languageOption handles all language changes.
   deleteFunc,
 }:QuestionComponentProps,
 ) => {
@@ -38,12 +39,11 @@ const Question = ({
   const [descriptionText, setDescriptionText] = useState(description.get(language));
   const [answerOption, setAnswerOption] = useState(answerOptions.get(language));
   const [required, setRequired] = useState(active);
-  const answerTypeOptions = [
+  const answerTypeOptions = [ //Value is used for firebase, label for frontend.
     { value: "smallInput", label: "Short answer" },
     { value: "calendar", label: "Date" },
     { value: "radio", label: "Multiple Choice" },
     { value: "largeInput", label: "Long answer" },
-    { value: "checkbox", label: "Checkbox" },
     { value: "dropdown", label: "Dropdown" },
   ];
   const [typeOfAnswer, setAnswerType] =
@@ -53,10 +53,11 @@ const Question = ({
     {value: "EN", label: "English"},
     {value: "ES", label: "Spanish"},
     {value: "VIET", label: "Vietnamese"},
-  ];
+  ]; 
   const [languageOption, setLanguage] = useState(
-    languageOptions[languageOptions.findIndex(o => {return o.value === language})]);
-  const changeLanguage = (lang) => {
+    languageOptions[languageOptions.findIndex(o => {return o.value === language})]); //  Matches initial label toggle to given backend (backend values to frontend labels).  
+  const reloadLanguage = (lang) => {
+    console.log("text fields", displayText, description, answerOptions);
     setQuestionText(displayText.get(lang));
     setDescriptionText(description.get(lang));
     setAnswerOption(answerOptions.get(lang));
@@ -174,6 +175,7 @@ const Question = ({
             setQuestionText(ev.target.value);
             displayText.set(languageOption.value, ev.target.value);
             updateMap(id, "displayText", displayText);
+            console.log("display Text", displayText);
           }}
           className={styles.questionText}
         />
@@ -186,10 +188,11 @@ const Question = ({
         <Select
           options={languageOptions}
           onChange={e => {
-            setLanguage(e);
-            changeLanguage(e.value);
-            updateMap(id, "language", e.value)}}
-          defaultValue={languageOption}
+            reloadLanguage(e.value); // Reload front-end fields to new lang.
+            console.log("Disp text", displayText);
+            setLanguage(e); // change current language (handled languageOption)
+            updateMap(id, "language", e.value)}} // Updates backend obj map in intakeForm.
+          defaultValue={languageOption} 
           className={styles.options}
         />
       </div>
@@ -200,7 +203,7 @@ const Question = ({
           placeholder="Description"
           onChange={(ev) => {
             setDescriptionText(ev.target.value);
-            description.set(language, ev.target.value);
+            description.set(languageOption.value, ev.target.value);
             updateMap(id, "description", description)}}
           className={styles.longText}
         />
