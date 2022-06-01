@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import TextField from '@mui/material/TextField';
@@ -143,3 +143,11 @@ const LogIn = () => {
 };
 
 export default LogIn;
+
+LogIn.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <div>
+      {page} 
+    </div>
+  )
+}

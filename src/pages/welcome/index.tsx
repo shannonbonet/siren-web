@@ -3,6 +3,7 @@ import sirenLogo from "../../../assets/images/siren_logo.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
+import { ReactElement } from "react";
 
 const Welcome = () => {
   const router = useRouter();
@@ -34,3 +35,11 @@ const Welcome = () => {
 };
 
 export default Welcome;
+
+Welcome.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <div>
+      {page} 
+    </div>
+  )
+}

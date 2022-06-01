@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../firebase/auth/useFirebaseAuth';
 import styles from './styles.module.css'; 
@@ -7,7 +7,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { setSirenUser } from '../../firebase/queries';
 import { SirenUser } from '../../../types';
 
-const SignUp = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [passwordOne, setPasswordOne] = useState("");
@@ -152,4 +152,12 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Register;
+
+Register.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <div>
+      {page} 
+    </div>
+  )
+}
