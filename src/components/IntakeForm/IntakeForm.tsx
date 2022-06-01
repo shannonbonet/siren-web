@@ -6,7 +6,6 @@ import { IoEyeOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
-import {LinkForm} from "../LinkForm/LinkForm";
 import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
