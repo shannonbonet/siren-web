@@ -16,6 +16,10 @@ a {
   color: var(--jet);
 }
 
+h3 {
+  align-items: baseline;
+}
+
 :root {
   --cultured: #f4fbfb;
   --blue-sapphire: #1a6a8d;

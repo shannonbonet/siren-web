@@ -14,6 +14,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
+import { setQuestion, getAllQuestionsOfType} from "../../firebase/queries";
+import { firestoreAutoId } from '../../firebase/helpers';
+import { Question as QuestionObj } from "../../../types";
 
 
 
@@ -21,7 +24,8 @@ enum IntakeActionTypes {
   ADD = "add",
   REMOVE = "remove",
   UNDO = "undo",
-  REDO = "redo"
+  REDO = "redo",
+  LOAD = "load"
 }
 
 const IntakeForm = () => {
@@ -34,6 +38,15 @@ const IntakeForm = () => {
     future: []
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
+  const loadQuestions = async (): Promise<void> => {
+    const qs: QuestionObj[] = await getAllQuestionsOfType('dacaRenewal');
+    dispatch({type: IntakeActionTypes.LOAD, payload: qs})
+    
+  };
+
+  useEffect(() => {
+    loadQuestions();
+  }, []);
 
   const getDraggable = (question, index) => {
     return (
@@ -121,6 +134,25 @@ const IntakeForm = () => {
           newState.questions = futureState[1];
         }
         return newState;
+      case IntakeActionTypes.LOAD:
+        console.log("payload", action.payload);
+        action.payload.map(q => newState.questions.push
+          (<Question 
+            id={q.id}
+            displayText={q.displayText}
+            description={q.description}
+            example={q.example}
+            questionType={q.questionType}
+            key={q.key}
+            order={q.order}
+            active={q.active}
+            typeAnswer={q.answerType}
+            optionAnswer={q.answerOptions}/>))
+        action.payload.map(q => newState.ids.push(Math.random().toString(36).slice(2).valueOf()))
+        console.log("Q State", newState);
+        return newState;
+
+
       default:
         return state;
     }
