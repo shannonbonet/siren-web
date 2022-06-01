@@ -7,7 +7,6 @@
   height: 50px;
   background-color: var(--prussian-blue);
   z-index: 1000;
-  position: fixed;
 }
 
 .bar > a {

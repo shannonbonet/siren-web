@@ -20,4 +20,4 @@ const FormHolder = (props: FormHolderProps) => {
     )
 }
 
-export default FormHolder
+export default FormHolder 
