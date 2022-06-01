@@ -31,6 +31,7 @@ const deletionList = [];
 
 export const updateMap = (id, field, value) => {
   questionMap.get(id)[field] = value;
+  console.log("language change", questionMap.get(id));
 }
 
 
@@ -87,7 +88,9 @@ const IntakeForm = (caseType) => {
         answerOptions: mapToJSON(q.answerOptions),
         language: q.language
        }, q)});
-    console.log("uploaded");
+    
+    window.alert("Questions Uploaded :D")
+
   }
 
   function removeComponent(id){
@@ -141,9 +144,13 @@ const IntakeForm = (caseType) => {
         newState.ids.push(action.payload);
         newState.questions.push
         (<Question
-          id={action.payload} 
+          id={action.payload}
+          displayText={new Map([['EN', ''], ['ES', ''], ['VIET', '']])}
+          description={new Map([['EN', ''], ['ES', ''], ['VIET', '']])}
+          example={new Map([['EN', ''], ['ES', ''], ['VIET', '']])} 
           questionType={caseType}
           order={newState.questions.length} 
+          answerOptions={new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
           deleteFunc={removeComponent}
           />);
         newState.future=[];

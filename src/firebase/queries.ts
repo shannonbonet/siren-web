@@ -213,6 +213,8 @@ export const updateInfo = async(
 
 export const setQuestion = async (question: Question, maps: QuestionComponentProps) => {
   try {
+    //Go through keys of map (all languages) and manually update each of Maps for each question. 
+    //Flaw in design: can take a bit longer to load and if its interrupted, the Map based fields will be strings, but question components expect them to be Maps
     const firebaseQuestion = database
     .collection(`caseTypes/${question.questionType}/questions`)
     .doc(question.id);

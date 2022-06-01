@@ -81,15 +81,15 @@ export enum CaseStatus {
   
   export type QuestionComponentProps = {
     id: string; 
-    displayText?: Map<string, string>;
-    description?: Map<string, string>; 
-    example?: Map<string, string>;
+    displayText: Map<string, string>;
+    description: Map<string, string>; 
+    example: Map<string, string>;
     questionType: QuestionType;
     key?: string;
     order: number;
     active?: boolean;
     answerType?: AnswerType;
-    answerOptions?: Map<string, string[]>;
+    answerOptions: Map<string, string[]>;
     language?: Language;
     deleteFunc: Function;
   };
