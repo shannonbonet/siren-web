@@ -14,6 +14,7 @@ import dragDots from "../../../assets/images/dragDots.png";
 import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
 import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
 import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
+import { useRouter } from 'next/router';
 
 
 
@@ -31,12 +32,12 @@ const deletionList = [];
 
 export const updateMap = (id, field, value) => {
   questionMap.get(id)[field] = value;
-  console.log("language change", questionMap.get(id));
 }
 
 
-const IntakeForm = (caseType) => {
-  caseType = caseType.caseType;
+const IntakeForm = () => {
+  const router = useRouter();
+  const [caseType, setCaseType] = useState(QuestionType[router.query.key.toString()]);
   function getTitle(caseType) {
     switch(caseType) {
       case QuestionType.General:
