@@ -16,7 +16,7 @@ import {
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import { objectToAnswerOptionsMap, objectToMap, mapToObject } from './helpers';
+import { objectToAnswerOptionsMap, objectToMap, mapToObject, firestoreAutoId, camelize } from './helpers';
 
   const database = firebase.firestore();
   const caseTypeCollection = database.collection('caseTypes');
@@ -92,6 +92,7 @@ export const getAllQuestionsOfType = async (
   caseType: string
 ): Promise<QuestionComponentProps[]> => {
   try {
+    console.log("caseTypeeee", caseType);
     const docs = await database.collection(`caseTypes/${caseType}/questions`);
     const ref = await docs.orderBy("order").get();
       const questions = ref.docs.map(doc => doc.data() as QuestionComponentProps);
@@ -237,6 +238,22 @@ export const setQuestion = async (question: Question, maps: QuestionComponentPro
     console.warn(e);
     throw e;
     // TODO: Add error handling.
+  }
+};
+
+export const setCaseType = async (
+  caseType: string
+) => {
+  try {
+    console.log("Uploading", caseType);
+    const doc = await caseTypeCollection.doc(camelize(caseType)).set({
+      documentList: [],
+      identifier: firestoreAutoId(),
+      key: caseType,
+    });
+  } catch (e) {
+    console.warn(e);
+    throw e;
   }
 };
 

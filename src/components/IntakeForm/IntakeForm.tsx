@@ -12,8 +12,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
 import dragDots from "../../../assets/images/dragDots.png";
 import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
-import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
-import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
+import { camelize, firestoreAutoId, mapToJSON } from '../../firebase/helpers';
+import { AnswerType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
 import { useRouter } from 'next/router';
 
 
@@ -37,20 +37,9 @@ export const updateMap = (id, field, value) => {
 
 const IntakeForm = () => {
   const router = useRouter();
-  const [caseType, setCaseType] = useState(QuestionType[router.query.key.toString()]);
-  function getTitle(caseType) {
-    switch(caseType) {
-      case QuestionType.General:
-        return "General";
-      case QuestionType.Daca: 
-        return "Daca Renewal";
-      case QuestionType.Adjustment:
-        return "Adjustment Of Status";
-      default:
-        return "I90";
-    }
-  }
-  const titleText = getTitle(caseType);
+  const [titleText, setTitleText]= useState(router.query.key);
+  const [caseType, setCaseType] = useState(camelize((titleText + "").toString()));
+  console.log("caseType", caseType);
   var initialState = {
     ids: [],
     questions: [],
@@ -59,6 +48,7 @@ const IntakeForm = () => {
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
+    setCaseType(camelize((titleText + "").toString()));
     let qs: QuestionObj[] = await getAllQuestionsOfType(caseType);
     questionMap = new Map<string, QuestionObj>();
     qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
