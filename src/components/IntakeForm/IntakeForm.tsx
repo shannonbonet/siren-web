@@ -39,6 +39,7 @@ const IntakeForm = () => {
   const router = useRouter();
   const [titleText, setTitleText]= useState(router.query.key);
   const [caseType, setCaseType] = useState(camelize((titleText + "").toString()));
+  //Need to find a faster way to refresh page.
   console.log("caseType", caseType);
   var initialState = {
     ids: [],
