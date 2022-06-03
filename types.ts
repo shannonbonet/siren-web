@@ -8,16 +8,25 @@ export enum CaseStatus {
 
   export enum QuestionType {
     General = 'general',
-    Daca = 'daca',
+    Daca = 'dacaRenewal',
     Citizenship = 'citizenship',
+    Adjustment = "adjustmentOfStatus",
+    I90 = "I90",
   }
   
   export enum AnswerType {
+    Null = "null",
     LargeInput = 'largeInput',
     SmallInput = 'smallInput',
     Dropdown = 'dropdown',
-    Calendar = 'calendar',
+    Date = 'date',
     Radio = 'radio',
+  }
+
+  export enum Language {
+    English = 'EN',
+    Spanish = 'ES',
+    Vietnamese = 'VIET',
   }
   
   export type Client = {
@@ -53,24 +62,35 @@ export enum CaseStatus {
     type: string;
     createdAt: Date;
   };
+
   
   export type Question = {
-    id: string;
+    id: string; 
     displayText: string;
-    description: string;
+    description: string; 
     example: string;
     questionType: QuestionType;
     key: string;
     order: number;
     active: boolean;
     answerType: AnswerType;
-    answerOptions?: string[];
+    answerOptions: string;
+    language: Language;
   };
   
   export type QuestionComponentProps = {
-    question: Question;
-    setAnswer: (question: Question, input: any) => void;
-    existingAnswer?: any;
+    id: string; 
+    displayText: Map<string, string>;
+    description: Map<string, string>; 
+    example: Map<string, string>;
+    questionType: QuestionType;
+    key?: string;
+    order: number;
+    active?: boolean;
+    answerType?: AnswerType;
+    answerOptions: Map<string, string[]>;
+    language?: Language;
+    deleteFunc: Function;
   };
   
   export type QuestionManagerProps = {

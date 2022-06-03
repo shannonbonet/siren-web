@@ -11,10 +11,12 @@ import {
     Document,
     FirebaseQueryParams,
     Question,
+    AnswerType,
+    QuestionComponentProps,
     SirenUser
   } from '../../types';
 import firebase from './clientApp';
-import { objectToAnswerOptionsMap, objectToMap } from './helpers';
+import { objectToAnswerOptionsMap, objectToMap, mapToObject } from './helpers';
 
   const database = firebase.firestore();
   const caseTypeCollection = database.collection('caseTypes');
@@ -88,29 +90,22 @@ export const getAllCaseTypes = async (): Promise<CaseType[]> => {
 
 export const getAllQuestionsOfType = async (
   caseType: string
-): Promise<Question[]> => {
+): Promise<QuestionComponentProps[]> => {
   try {
-    const ref = await database
-      .collection(`caseTypes/${caseType}/questions`)
-      .orderBy("order")
-      .get();
-      const questions = ref.docs.map(doc => doc.data() as Question);
-      questions.map(
-        question => (question.displayText = objectToMap(question.displayText)),
-      );
-      questions.map(
-        question => (question.description = objectToMap(question.description)),
-      );
-      questions.map(
-        question => (question.example = objectToMap(question.example)),
-      );
-      questions.map(
-        question =>
-          (question.answerOptions = objectToAnswerOptionsMap(
-            question.answerOptions,
-          )),
-      );
-      console.log(questions);
+    const docs = await database.collection(`caseTypes/${caseType}/questions`);
+    const ref = await docs.orderBy("order").get();
+      const questions = ref.docs.map(doc => doc.data() as QuestionComponentProps);
+      let i = 0;
+      while(i < ref.docs.length) {
+        let target = questions[i];
+        target.id = ref.docs[i].id;
+        target.displayText = objectToMap(target.displayText);
+        target.description = objectToMap(target.description);
+        target.example = objectToMap(target.example);
+        target.answerOptions = objectToAnswerOptionsMap(target.answerOptions);
+        i++;
+      }
+      console.log("questions", questions);
       return questions;
   } catch (e) {
     console.warn(e);
@@ -215,5 +210,46 @@ export const updateInfo = async(
   }
 };
 
+export const setQuestion = async (question: Question, maps: QuestionComponentProps) => {
+  try {
+    //Go through keys of map (all languages) and manually update each of Maps for each question. 
+    //Flaw in design: can take a bit longer to load and if its interrupted, the Map based fields will be strings, but question components expect them to be Maps
+    const firebaseQuestion = database
+    .collection(`caseTypes/${question.questionType}/questions`)
+    .doc(question.id);
+    firebaseQuestion.set(question).then(() => {
+      try {
+        Array.from(maps.displayText.keys()).map(async k => {
+          var mapUpdate = {};
+          mapUpdate[`displayText.${k}`] = maps.displayText.get(k);
+          mapUpdate[`description.${k}`] = maps.description.get(k);
+          mapUpdate[`example.${k}`] = maps.example.get(k);
+          mapUpdate[`answerOptions.${k}`] = maps.answerOptions.get(k);
+          firebaseQuestion.update(mapUpdate);
+        })
+      } catch (e) {
+        console.warn(e);
+        throw e;
+      }
+    })
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
+
+export const deleteQuestion = async (id:string, questionType: string) => {
+  try {
+    await database
+      .collection(`caseTypes/${questionType}/questions`)
+      .doc(id)
+      .delete();
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
+  }
+};
 
 

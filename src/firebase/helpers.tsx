@@ -12,6 +12,10 @@ export const objectToAnswerOptionsMap = (obj: Object): Map<any, any> => {
   );
 };
 
+// export const answerOptionsMapToString = (answerMap: Map<String, String>): string => {
+//   return Object.fromEntries()
+// }
+
 export const mapToObject = (map: Map<any, any>): Object => {
   return Object.fromEntries(
     Array.from(map.entries(), ([k, v]) =>
@@ -19,6 +23,10 @@ export const mapToObject = (map: Map<any, any>): Object => {
     )
   );
 };
+
+export const mapToJSON = (map: Map<any, any>): string => {
+  return JSON.stringify(mapToObject(map));
+}
 
 export const firestoreAutoId = (): string => {
   const CHARS =

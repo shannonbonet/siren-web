@@ -1,32 +1,53 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Link from 'next/dist/client/link';
 import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline,  } from "react-icons/io";
-import { IoEyeOutline, IoEyeOffOutline,  IoTrashOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { BiUndo, BiRedo } from "react-icons/bi";
-import { MdContentCopy } from 'react-icons/md';
 import {BsThreeDotsVertical} from "react-icons/bs";
 import Button from "../Button/Button";
-import {LinkForm} from "../LinkForm/LinkForm";
 import TextareaAutosize from 'react-textarea-autosize';
 import  Question from "../Question/question";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Image from "next/image";
-import Toggle from 'react-toggle';
 import dragDots from "../../../assets/images/dragDots.png";
-
+import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
+import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
+import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
 
 
 enum IntakeActionTypes {
   ADD = "add",
   REMOVE = "remove",
   UNDO = "undo",
-  REDO = "redo"
+  REDO = "redo",
+  LOAD = "load"
 }
 
-const IntakeForm = () => {
-  const [titleText, setTitleText] = useState("");
-  const [required, setRequired] = useState(false);
+var questionMap = new Map<string, QuestionObj>();
+const deletionList = [];
+
+export const updateMap = (id, field, value) => {
+  questionMap.get(id)[field] = value;
+  console.log("language change", questionMap.get(id));
+}
+
+
+const IntakeForm = (caseType) => {
+  caseType = caseType.caseType;
+  function getTitle(caseType) {
+    switch(caseType) {
+      case QuestionType.General:
+        return "General";
+      case QuestionType.Daca: 
+        return "Daca Renewal";
+      case QuestionType.Adjustment:
+        return "Adjustment Of Status";
+      default:
+        return "I90";
+    }
+  }
+  const titleText = getTitle(caseType);
   var initialState = {
     ids: [],
     questions: [],
@@ -34,6 +55,47 @@ const IntakeForm = () => {
     future: []
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
+  const loadQuestions = async (): Promise<void> => {
+    let qs: QuestionObj[] = await getAllQuestionsOfType(caseType);
+    questionMap = new Map<string, QuestionObj>();
+    qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
+    qs.map(q => questionMap.set(q.id, q));
+    dispatch({type: IntakeActionTypes.LOAD, payload: qs})    
+  };
+
+  useEffect(() => {
+    loadQuestions();
+  }, []);
+
+  
+
+  async function setQuestions(){
+    Array.from(questionMap.values()).map(q => {
+      deletionList.includes(q.id) ?
+       deleteQuestion(q.id, q.questionType):
+       setQuestion({
+        id: q.id,
+        displayText: mapToJSON(q.displayText),
+        description: mapToJSON(q.description),
+        example: mapToJSON(q.example),
+        questionType: q.questionType,
+        key: q.key,
+        order: q.order,
+        active: q.active,
+        answerType: q.answerType,
+        answerOptions: mapToJSON(q.answerOptions),
+        language: q.language
+       }, q)});
+    
+    window.alert("Questions Uploaded :D")
+
+  }
+
+  function removeComponent(id){
+    dispatch({type: IntakeActionTypes.REMOVE, payload: id});
+    deletionList.push(id);
+  }
+
 
   const getDraggable = (question, index) => {
     return (
@@ -60,22 +122,6 @@ const IntakeForm = () => {
                   alt="draghere"/>
                 </div>
                 {question}
-                <div className={styles.bottombuttons}>
-					        <span className={styles.requiredspan}>Required</span>
-                  <Toggle
-                    checked={required}
-                    icons={false}
-                    onChange={() => setRequired(!required)}
-                  />
-                  <button className={styles.copybutton}>
-                    <MdContentCopy size="27px"/>
-                  </button>
-                  <button 
-                    className={styles.trashbutton}
-                    onClick={() => dispatch({type: IntakeActionTypes.REMOVE, payload: qState.ids[index]})}>
-                    <IoTrashOutline size="27px"/>
-                  </button>
-			          </div>
               </div>
            );
        }}
@@ -92,10 +138,19 @@ const IntakeForm = () => {
     }
     switch (action.type) {
       case IntakeActionTypes.ADD:
-        const id: string = Math.random().toString(36).slice(2).valueOf();
         newState.past.push([newState.ids, newState.questions])
-        newState.ids.push(id);
-        newState.questions.push(<Question/>);
+        newState.ids.push(action.payload);
+        newState.questions.push
+        (<Question
+          id={action.payload}
+          displayText={new Map([['EN', ''], ['ES', ''], ['VIET', '']])}
+          description={new Map([['EN', ''], ['ES', ''], ['VIET', '']])}
+          example={new Map([['EN', ''], ['ES', ''], ['VIET', '']])} 
+          questionType={caseType}
+          order={newState.questions.length} 
+          answerOptions={new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]])}
+          deleteFunc={removeComponent}
+          />);
         newState.future=[];
         return newState;
       case IntakeActionTypes.REMOVE:
@@ -121,6 +176,27 @@ const IntakeForm = () => {
           newState.questions = futureState[1];
         }
         return newState;
+      case IntakeActionTypes.LOAD:
+        action.payload.map(q => {
+          newState.ids.push(q.id);
+          newState.questions.push
+          (<Question 
+            id={q.id}
+            displayText={q.displayText}
+            description={q.description}
+            example={q.example}
+            questionType={q.questionType}
+            key={q.key}
+            order={q.order}
+            active={q.active}
+            answerType={q.answerType}
+            answerOptions={q.answerOptions}
+            language={q.language}
+            deleteFunc={removeComponent}
+            />)} )
+        return newState;
+
+
       default:
         return state;
     }
@@ -149,6 +225,8 @@ const IntakeForm = () => {
     const newQuestionIds = reorder(qState.ids, source.index, destination.index);
     qState.questions = newQuestions;
     qState.ids = newQuestionIds;
+    questionMap.get(qState.ids[source.index]).order = source.index;
+    questionMap.get(qState.ids[destination.index]).order = destination.index;
   }
 
   function Overlay() {
@@ -161,8 +239,8 @@ const IntakeForm = () => {
             <TextareaAutosize
               cacheMeasurements
               value={titleText}
-              placeholder="Untitled"
-              onChange={ev => setTitleText(ev.target.value)}
+              // placeholder="Untitled"
+              // onChange={ev => setTitleText(ev.target.value)}
               className={styles["title"]}/>
           </div>
           <div className={styles["changebar"]}>
@@ -179,7 +257,25 @@ const IntakeForm = () => {
             </button>
             <button
               className={styles["add-button"]}
-              onClick={() => dispatch({type: IntakeActionTypes.ADD})}>
+              onClick={() => {
+                let sharedID = firestoreAutoId();
+                questionMap.set(sharedID, {
+                  id: sharedID,
+                  displayText: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  description: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  example: new Map([['EN', ''], ['ES', ''], ['VIET', '']]),
+                  questionType: caseType,
+                  key: firestoreAutoId(),
+                  order: qState.questions.length,
+                  active: false,
+                  answerType: AnswerType.Null,
+                  answerOptions: new Map([['EN', ['Option']], ['ES', ['Option']], ['VIET', ['Option']]]),
+                  language: Language.English,
+                  deleteFunc: removeComponent,
+                });
+                dispatch({type: IntakeActionTypes.ADD, payload: sharedID});
+
+                }}>
               <IoIosAddCircleOutline size={33}/>
             </button>
             <Button
@@ -192,11 +288,10 @@ const IntakeForm = () => {
               text='Publish Changes'
               buttonType='button-pruss'
               textType='button-text-white'
-              onPress={() => alert("PUBLISH!")}
+              onPress={() => setQuestions()}
             />
             <BsThreeDotsVertical size={30}/>
           </div>
-          <LinkForm/>
         </div>
     )
   }
