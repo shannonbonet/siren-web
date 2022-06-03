@@ -37,10 +37,8 @@ export const updateMap = (id, field, value) => {
 
 const IntakeForm = () => {
   const router = useRouter();
-  const [titleText, setTitleText]= useState(router.query.key);
-  const [caseType, setCaseType] = useState(camelize((titleText + "").toString()));
-  //Need to find a faster way to refresh page.
-  console.log("caseType", caseType);
+  const [titleText, setTitleText]= useState(undefined);
+  const caseType = camelize((titleText + "").toString());
   var initialState = {
     ids: [],
     questions: [],
@@ -49,17 +47,20 @@ const IntakeForm = () => {
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
-    setCaseType(camelize((titleText + "").toString()));
-    let qs: QuestionObj[] = await getAllQuestionsOfType(caseType);
+    setTitleText(router.query.key);
+    //caseType has to be loaded this way.  There is a delay in useStates where caseType variable will show up as undefined in this function.
+    let quickCaseType = camelize((router.query.key + "").toString());
+    let qs: QuestionObj[] = await getAllQuestionsOfType(quickCaseType);
     questionMap = new Map<string, QuestionObj>();
     qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
     qs.map(q => questionMap.set(q.id, q));
     dispatch({type: IntakeActionTypes.LOAD, payload: qs})    
   };
 
+  //useEffect is called twice.  At first reader & when router is ready with its query.
   useEffect(() => {
     loadQuestions();
-  }, []);
+  }, [router.isReady]);
 
   
 

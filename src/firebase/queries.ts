@@ -92,7 +92,7 @@ export const getAllQuestionsOfType = async (
   caseType: string
 ): Promise<QuestionComponentProps[]> => {
   try {
-    console.log("caseTypeeee", caseType);
+    console.log("caseType Query", caseType);
     const docs = await database.collection(`caseTypes/${caseType}/questions`);
     const ref = await docs.orderBy("order").get();
       const questions = ref.docs.map(doc => doc.data() as QuestionComponentProps);
