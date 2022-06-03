@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Link from 'next/dist/client/link';
 import styles from "./IntakeForm.module.css";
 import { IoIosArrowBack, IoIosAddCircleOutline,  } from "react-icons/io";
@@ -14,8 +14,6 @@ import dragDots from "../../../assets/images/dragDots.png";
 import { setQuestion, getAllQuestionsOfType, deleteQuestion} from "../../firebase/queries";
 import { firestoreAutoId, mapToJSON } from '../../firebase/helpers';
 import { AnswerType, QuestionType, QuestionComponentProps as QuestionObj, Language,  } from "../../../types";
-
-
 
 
 enum IntakeActionTypes {
