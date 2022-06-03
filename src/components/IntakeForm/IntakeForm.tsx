@@ -43,6 +43,7 @@ const IntakeForm = () => {
   }
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
+    console.log("Intake Form Key", router.query.key);
     setTitleText(router.query.key);
     //caseType has to be loaded this way.  There is a delay in useStates where caseType variable will show up as undefined in this function.
     let quickCaseType = camelize((router.query.key + "").toString());
