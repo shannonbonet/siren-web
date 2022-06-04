@@ -13,6 +13,8 @@ interface FormHolderProps {
     formTitle?: string,
 }
 
+//Need to be able to rename collections and to delete collections accurately.
+
 const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
     const [titleText, setTitleText] = useState(formTitle);
     const router = useRouter();
@@ -39,10 +41,8 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
                      query: {key: titleText}
                      }}>
                     <a onClick={() => {
-                        console.log("new Title", titleText);
                         router.query.key = titleText;
-                        console.log("new Query", router.query.key);
-                        setCaseType(router.query.key);
+                        setCaseType(formTitle, router.query.key);
                     }}>
                         <EditIcon />
                     </a>

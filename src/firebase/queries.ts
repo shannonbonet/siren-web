@@ -241,16 +241,44 @@ export const setQuestion = async (question: Question, maps: QuestionComponentPro
   }
 };
 
+//if initial Case type and the case query key do not match, then the name of the document was changed.
+//Query checks if a case exists under the deprecated initial case, copies contents to the new case given by query.
+//Else, a
+// query key is dynamic so it will be most recent always.  Initial case name is static.
 export const setCaseType = async (
-  caseType: string
+  initialCaseType: string,
+  caseQueryKey: string
 ) => {
   try {
-    console.log("Uploading", caseType);
-    const doc = await caseTypeCollection.doc(camelize(caseType)).set({
-      documentList: [],
-      identifier: firestoreAutoId(),
-      key: caseType,
-    });
+    console.log('initial', initialCaseType);
+    let initialDoc = caseTypeCollection.doc(camelize(initialCaseType));
+    let recentDoc = caseTypeCollection.doc(camelize(caseQueryKey));
+    console.log("Uploading", caseQueryKey);
+    initialDoc.get().then((doc) => {
+      recentDoc.get().then(() => {
+        console.log("DOC DATA!!!!!", doc.data());
+        recentDoc.set({
+          key: caseQueryKey,
+          documentList: [],
+          identifier: firestoreAutoId()
+        });
+        if (doc && doc.exists && !(initialCaseType === caseQueryKey)) {
+          initialDoc.collection('questions').get().then(c => {
+            if (!c.empty) {
+              c.forEach(d => {
+                recentDoc.collection('questions').add(d.data());
+              })
+            }
+          }).then(() => {
+            var data = doc.data();
+            console.log("Data info", data);
+            recentDoc.set(data, {mergeFields: ['documentList', 'identifier']}).then(() => {
+              initialDoc.delete();
+            })
+          });
+        }
+      });
+    })
   } catch (e) {
     console.warn(e);
     throw e;
