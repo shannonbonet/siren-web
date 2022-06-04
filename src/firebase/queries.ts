@@ -1,5 +1,6 @@
 import { valueToPercent } from "@mui/base";
 import { typography } from "@mui/system";
+import { useRouter } from "next/router";
 import { EventEmitter } from "stream";
 import {
     Appointment,
@@ -245,18 +246,16 @@ export const setQuestion = async (question: Question, maps: QuestionComponentPro
 //Query checks if a case exists under the deprecated initial case, copies contents to the new case given by query.
 //Else, a
 // query key is dynamic so it will be most recent always.  Initial case name is static.
+// Return statement ensures that IntakeForm component is remounted on completion of query.
 export const setCaseType = async (
   initialCaseType: string,
   caseQueryKey: string
-) => {
+): Promise<string> => {
   try {
-    console.log('initial', initialCaseType);
     let initialDoc = caseTypeCollection.doc(camelize(initialCaseType));
     let recentDoc = caseTypeCollection.doc(camelize(caseQueryKey));
-    console.log("Uploading", caseQueryKey);
     initialDoc.get().then((doc) => {
       recentDoc.get().then(() => {
-        console.log("DOC DATA!!!!!", doc.data());
         recentDoc.set({
           key: caseQueryKey,
           documentList: [],
@@ -265,8 +264,9 @@ export const setCaseType = async (
         if (doc && doc.exists && !(initialCaseType === caseQueryKey)) {
           initialDoc.collection('questions').get().then(c => {
             if (!c.empty) {
-              c.forEach(d => {
-                recentDoc.collection('questions').add(d.data());
+              c.forEach(docSnapshot => {
+                recentDoc.collection('questions').add(docSnapshot.data());
+                docSnapshot.ref.delete();
               })
             }
           }).then(() => {
@@ -279,9 +279,20 @@ export const setCaseType = async (
         }
       });
     })
+    return caseQueryKey;
   } catch (e) {
     console.warn(e);
     throw e;
+  }
+};
+
+export const deleteCase = async (key: string) => {
+  try {
+    await caseTypeCollection.doc(camelize(key)).delete();
+  } catch (e) {
+    console.warn(e);
+    throw e;
+    // TODO: Add error handling.
   }
 };
 

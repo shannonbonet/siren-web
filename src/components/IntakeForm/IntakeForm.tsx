@@ -44,10 +44,12 @@ const IntakeForm = () => {
   const [qState, dispatch] = useReducer(intakeReducer, initialState);
   const loadQuestions = async (): Promise<void> => {
     console.log("Intake Form Key", router.query.key);
+    console.log("Router ready?", router.isReady);
     setTitleText(router.query.key);
     //caseType has to be loaded this way.  There is a delay in useStates where caseType variable will show up as undefined in this function.
     let quickCaseType = camelize((router.query.key + "").toString());
     let qs: QuestionObj[] = await getAllQuestionsOfType(quickCaseType);
+    console.log("retrieved questions", qs);
     questionMap = new Map<string, QuestionObj>();
     qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
     qs.map(q => questionMap.set(q.id, q));
@@ -57,7 +59,7 @@ const IntakeForm = () => {
   //useEffect is called twice.  At first reader & when router is ready with its query.
   useEffect(() => {
     loadQuestions();
-  }, [router.isReady]);
+  }, [router.isReady, router.query.key]);
 
   
 

@@ -6,14 +6,12 @@ import styles from "./FormHolder.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { camelize } from '../../firebase/helpers';
-import { setCaseType } from '../../firebase/queries';
+import { deleteCase, setCaseType } from '../../firebase/queries';
 import { TextareaAutosize } from '@mui/material';
 
 interface FormHolderProps {
     formTitle?: string,
 }
-
-//Need to be able to rename collections and to delete collections accurately.
 
 const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
     const [titleText, setTitleText] = useState(formTitle);
@@ -41,13 +39,19 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
                      query: {key: titleText}
                      }}>
                     <a onClick={() => {
-                        router.query.key = titleText;
-                        setCaseType(formTitle, router.query.key);
+                        console.log("Before", router.query.key);
+                        setCaseType(formTitle, titleText).then((res) => {
+                            console.log("result", res);
+                            router.query.key = res;
+                            console.log("After", router.query.key);
+                        });
                     }}>
                         <EditIcon />
                     </a>
                 </Link>
-                <DeleteIcon />
+                <button onClick={() =>{deleteCase((router.query.key).toString())}}>
+                    <DeleteIcon />
+                </button>
             </div>
         </div>
     )
