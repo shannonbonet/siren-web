@@ -6,7 +6,7 @@ import styles from "./FormHolder.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { camelize } from '../../firebase/helpers';
-import { deleteCase, setCaseType } from '../../firebase/queries';
+import { deleteCase, renameCase, setCaseType } from '../../firebase/queries';
 import { TextareaAutosize } from '@mui/material';
 
 interface FormHolderProps {
@@ -36,14 +36,14 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
             <div className={styles.icons}>                
                 <Link href={{
                      pathname: "/IntakeForms/IntakeForm",
-                     query: {key: titleText}
+                     query: {key: titleText, uploaded: 'false'}
                      }}>
                     <a onClick={() => {
-                        console.log("Before", router.query.key);
-                        setCaseType(formTitle, titleText).then((res) => {
-                            console.log("result", res);
-                            router.query.key = res;
-                            console.log("After", router.query.key);
+                        setCaseType(titleText).then(() => {
+                            if (!(formTitle === titleText)) {
+                                renameCase(formTitle, titleText);
+                            }
+                            router.query.key = titleText;
                         });
                     }}>
                         <EditIcon />
