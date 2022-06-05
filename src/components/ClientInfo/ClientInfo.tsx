@@ -19,16 +19,16 @@ import ClientActionsBox from './ClientActionsBox';
 //    - for each client case, match to caseTypes and grab the documentList
 
 export const ClientInfo = ({ query }) => {
-  const [client, setClient] = useState<Client>(null);
-  const [cases, setCases] = useState<Array<CaseType>>(null);
-  const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null);
+  const [client, setClient] = useState<Client>(null); // grab this w getClient query
+  const [cases, setCases] = useState<Array<CaseType>>(null); // grab this w getClientCases
+  const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null); //key: caseName value: array of documents for case
   const [caseInfo, setCaseInfo] = useState<Array<Case>>(null);
 
   useEffect(() => {
     async function loadClientResponses() {
-      // get the correct client 
-      //REFACTOR
-      //rewrite as a useeffect function -- only call once
+      // REFACTOR: (WHY: efficiency, we already have the client info avai)
+      // rewrite as a useeffect function -- only call once? 
+      // grab current client from id that query gives us
       const correctClient = (await getAllClients()).filter(
         (c) =>
           c.answers !== undefined &&
@@ -36,36 +36,41 @@ export const ClientInfo = ({ query }) => {
           c.id == query["id"]
       );
       setClient(correctClient[0]);
-  
-      // get cases by client's answers
+      console.log('client', correctClient); 
+
+      // REFACTOR: (WHY: readable code, robust (avoid hard coded case type dictionary))
+      // for client, grab cases (there a query for this)
+      // for each case, grab their case type
+      // add these types to caseType array
       const caseNames = correctClient[0] && correctClient[0].answers 
         ? (Object.keys(correctClient[0].answers).map((key) => { //getting question from client answers and returning case id
-          return(CaseKey[key])
-        })).filter((k) => {
-          return(k)
-        })
+          return(CaseKey[key]) 
+        }))
         : [];
-      console.log(caseNames);
+      console.log('caseNames', caseNames);
       
       // get documents of each case
       const caseTypes = (await getAllCaseTypes()).filter(
         (c) => caseNames.includes(c.key)
       );
       setCases(caseTypes);
+
+      console.log('cases', cases); 
       // get client cases
       const openClientCases = (correctClient && correctClient[0] ? (await getClientCases(correctClient[0].id)) : null);
       await setCaseInfo(openClientCases);
       var docToCaseArr = new Array();
       for (const c in openClientCases) {
         const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);
-        docToCaseArr.push([openClientCases[c], d]);
+        docToCaseArr.push([openClientCases[c], d]); 
       }
-      await setClientDocsToCase(docToCaseArr);
+      await setClientDocsToCase(docToCaseArr); //groups documents by case in dictionary 
+      
       console.log('client docs to case', clientDocsToCase); 
     }
     loadClientResponses();
 
-  },[]);
+  }, []);
 
   return (
     <>
