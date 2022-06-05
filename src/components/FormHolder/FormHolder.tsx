@@ -32,7 +32,6 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
                     }}
                     />
             </div>
-            <h3 className={styles.title}> <FeedOutlinedIcon /> {formTitle} </h3>
             <div className={styles.icons}>                
                 <Link href={{
                      pathname: "/IntakeForms/IntakeForm",
@@ -41,7 +40,9 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
                     <a onClick={() => {
                         setCaseType(titleText).then(() => {
                             if (!(formTitle === titleText)) {
-                                renameCase(formTitle, titleText);
+                                renameCase(formTitle, titleText).then(() => {
+                                    router.query.key = titleText;
+                                });
                             }
                             router.query.key = titleText;
                         });

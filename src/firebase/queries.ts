@@ -244,13 +244,21 @@ export const setCaseType = async (
   caseType: string
 ) => {
   try {
-    caseTypeCollection.doc(camelize(caseType)).set({
-      key: caseType,
-      documentList: [],
-      identifier: firestoreAutoId()
+    let doc = caseTypeCollection.doc(camelize(caseType));
+    doc.get().then((d) => {
+      console.log("does it exist?", !d.exists, d.data());
+      if (!d.exists) {
+        console.log('only call sometimes');
+        doc.set({
+          key: caseType,
+          documentList: [],
+          identifier: firestoreAutoId()
+        })
+      } 
     });
   } catch (error) {
-    
+    console.warn(error);
+    throw error;
   }
 }
 
@@ -273,8 +281,10 @@ export const renameCase = async (
         }
       }).then(() => {
         var data = doc.data();
+        console.log("see that data", data);
         recentDoc.set(data, {mergeFields: ['documentList', 'identifier']}).then(() => {
           initialDoc.delete();
+          window.location.reload();
         })
       })
     })

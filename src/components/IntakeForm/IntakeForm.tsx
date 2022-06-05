@@ -47,25 +47,17 @@ const IntakeForm = () => {
     //caseType has to be loaded this way.  There is a delay in useStates where caseType variable will show up as undefined in this function.
     let quickCaseType = camelize((router.query.key + "").toString());
     // let qs: QuestionObj[] = await getAllQuestionsOfType(quickCaseType);
-    let qs: QuestionObj[];
-    getAllQuestionsOfType(quickCaseType).then((res) => {
-      qs = res;
-      questionMap = new Map<string, QuestionObj>();
-      qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
-      qs.map(q => questionMap.set(q.id, q));
-      dispatch({type: IntakeActionTypes.LOAD, payload: qs})
-    })
-    // questionMap = new Map<string, QuestionObj>();
-    // qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
-    // qs.map(q => questionMap.set(q.id, q));
-    // console.log("qs & questionMap", qs, questionMap);
-    // dispatch({type: IntakeActionTypes.LOAD, payload: qs})
+    let qs: QuestionObj[] = await getAllQuestionsOfType(quickCaseType);
+    questionMap = new Map<string, QuestionObj>();
+    qs = qs.filter(q => (!deletionList.includes(q.id) && !qState.ids.includes(q.id)));
+    qs.map(q => questionMap.set(q.id, q));
+    dispatch({type: IntakeActionTypes.LOAD, payload: qs})
   };
 
   //useEffect is called twice.  At first reader & when router is ready with its query.
   useEffect(() => {
     loadQuestions();
-  }, [router.query.key]);
+  }, [router.isReady]);
 
   
 
