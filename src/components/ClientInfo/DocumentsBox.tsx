@@ -99,7 +99,7 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
                 onChange={handleSelectCaseValue}
                 >
                 {cases.map((key, value) => 
-                <MenuItem key={key} value={key.key}>{key.key}</MenuItem>)}
+                    <MenuItem key={key} value={key.key}>{key.key}</MenuItem>)}
                 </Select>
             </FormControl>
         //   <select onChange={handleSelectCaseValue} value={selectCaseValue} className={styles.flex}>
