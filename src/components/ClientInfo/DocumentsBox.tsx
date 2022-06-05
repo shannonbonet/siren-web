@@ -9,9 +9,9 @@ import FormControl from '@mui/material/FormControl';
 
 const caseOptions = new Map<string, string>([
     ["I90", "I-90"],
-    ["adjustmentOfStatus", "Adjustment of status"],
+    ["adjustmentOfStatus", "Adjustment Of Status"],
     ["citizenship", "Citizenship"],
-    ["dacaRenewal", "DACA renewal"],
+    ["dacaRenewal", "DACA Renewal"],
 ]);     
 
 
@@ -41,6 +41,7 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
       const cas = cases.filter((element) => {
         return element.key == selectCaseValue
       });
+      console.log('case', cas)
       const docsToCase = (clientDocsToCase ? clientDocsToCase.filter((element) => {
         return caseOptions.get(element[0].type) == selectCaseValue
       }) : null);

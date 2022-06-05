@@ -7,6 +7,17 @@ import { Client, CaseType, Case, Document, CaseKey } from "../../../types";
 import DocumentsBox from './DocumentsBox';
 import ClientActionsBox from './ClientActionsBox';
 
+// Rewriting Client Responses 
+
+// 1. grab correct client by query client id (we get this from Intake Table) 
+// 2. grab current client cases 
+//    - for each case, grab the case type and save these in a list (there is a query for this) 
+// 3. Overview 
+//    - for each current client case, create an overview button
+//    - map answers here 
+// 4. Documents 
+//    - for each client case, match to caseTypes and grab the documentList
+
 export const ClientInfo = ({ query }) => {
   const [client, setClient] = useState<Client>(null);
   const [cases, setCases] = useState<Array<CaseType>>(null);
@@ -28,12 +39,13 @@ export const ClientInfo = ({ query }) => {
   
       // get cases by client's answers
       const caseNames = correctClient[0] && correctClient[0].answers 
-        ? (Object.keys(correctClient[0].answers).map((key) => {
+        ? (Object.keys(correctClient[0].answers).map((key) => { //getting question from client answers and returning case id
           return(CaseKey[key])
         })).filter((k) => {
           return(k)
         })
         : [];
+      console.log(caseNames);
       
       // get documents of each case
       const caseTypes = (await getAllCaseTypes()).filter(
@@ -49,9 +61,11 @@ export const ClientInfo = ({ query }) => {
         docToCaseArr.push([openClientCases[c], d]);
       }
       await setClientDocsToCase(docToCaseArr);
+      console.log('client docs to case', clientDocsToCase); 
     }
     loadClientResponses();
-  });
+
+  },[]);
 
   return (
     <>
