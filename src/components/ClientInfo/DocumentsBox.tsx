@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import styles from './ClientInfo.module.css';
 import { FiCheck , FiExternalLink } from 'react-icons/fi';
 import { AiOutlineExclamation } from 'react-icons/ai';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 const caseOptions = new Map<string, string>([
     ["I90", "I-90"],
     ["adjustmentOfStatus", "Adjustment of status"],
     ["citizenship", "Citizenship"],
     ["dacaRenewal", "DACA renewal"],
-]);
+]);     
 
 
 export const StatusIcon = ({ completed }) => {
@@ -86,14 +90,26 @@ const DocumentsBox = ({ cases, clientDocsToCase }) => {
         <div className={styles.alignHorizontal}>
           <h3 className={styles.flex}>Documents</h3>
           {cases ? 
-          <select onChange={handleSelectCaseValue} className={styles.flex}>
-            <option selected disabled>
-              Select Case
-            </option>
-            {cases.map((key, value) => 
-              <option key={key} value={key.key}>{key.key}</option>
-            )}
-          </select> : null}
+        //   USE MUI COMPONENT
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <Select
+                value={selectCaseValue}
+                label="Case"
+                onChange={handleSelectCaseValue}
+                >
+                {cases.map((key, value) => 
+                <MenuItem key={key} value={key.key}>{key.key}</MenuItem>)}
+                </Select>
+            </FormControl>
+        //   <select onChange={handleSelectCaseValue} value={selectCaseValue} className={styles.flex}>
+        //     <option selected disabled>
+        //       Select Case
+        //     </option>
+        //     {cases.map((key, value) => 
+        //       <option key={key} value={key.key}>{key.key}</option>
+        //     )}
+           : null}
         </div>
           { selectCaseValue ? displayDocList() : null }
       </div>

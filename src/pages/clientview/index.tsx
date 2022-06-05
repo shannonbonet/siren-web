@@ -1,4 +1,4 @@
-import ClientInfo from "../../components/DocumentsBox.tsx/ClientInfo";
+import { ClientInfo } from "../../components/ClientInfo/ClientInfo";
 import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import Layout from "../../components/Layout";
