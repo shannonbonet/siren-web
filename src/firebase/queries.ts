@@ -63,9 +63,13 @@ export const getClientCaseDocs = async (clientId: string, caseId: string): Promi
   }
 };
 
+// takes in client/cases/type field and returning corresponding castType collection
+// good for 2 things: 
+// 1. grab the caseType key (non-camelcase, readable label)
+// 2. grabbing documentList
 export const getCaseType = async (
   caseType: string
-): Promise<CaseType> => {
+): Promise<CaseType> => { // returns caseType object (Firebase document)
   try {
     const doc = await caseTypeCollection.doc(caseType).get();
     const cType = doc.data() as CaseType;
@@ -75,6 +79,11 @@ export const getCaseType = async (
     throw e;
   }
 };
+
+// TO DO: grab caseType key name 
+
+// TO DO: grab caseType docList 
+
 
 export const getAllCaseTypes = async (): Promise<CaseType[]> => {
   try {
