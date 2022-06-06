@@ -169,7 +169,6 @@ const IntakeForm = () => {
         }
         return newState;
       case IntakeActionTypes.LOAD:
-        console.log("Load called", action.payload);
         action.payload.map(q => {
           newState.ids.push(q.id);
           newState.questions.push

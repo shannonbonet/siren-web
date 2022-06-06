@@ -246,9 +246,7 @@ export const setCaseType = async (
   try {
     let doc = caseTypeCollection.doc(camelize(caseType));
     doc.get().then((d) => {
-      console.log("does it exist?", !d.exists, d.data());
       if (!d.exists) {
-        console.log('only call sometimes');
         doc.set({
           key: caseType,
           documentList: [],
@@ -281,7 +279,6 @@ export const renameCase = async (
         }
       }).then(() => {
         var data = doc.data();
-        console.log("see that data", data);
         recentDoc.set(data, {mergeFields: ['documentList', 'identifier']}).then(() => {
           initialDoc.delete();
           window.location.reload();
@@ -292,49 +289,6 @@ export const renameCase = async (
     console.warn(error);
     throw error;
   }}
-//if initial Case type and the case query key do not match, then the name of the document was changed.
-//Query checks if a case exists under the deprecated initial case, copies contents to the new case given by query.
-//Else, a
-// query key is dynamic so it will be most recent always.  Initial case name is static.
-// Return statement ensures that IntakeForm component is remounted on completion of query.
-
-// export const setCaseType = async (
-//   initialCaseType: string,
-//   caseQueryKey: string
-// ): Promise<any> => {
-//   try {
-//     let initialDoc = caseTypeCollection.doc(camelize(initialCaseType));
-//     let recentDoc = caseTypeCollection.doc(camelize(caseQueryKey));
-//     initialDoc.get().then((doc) => {
-//       recentDoc.get().then(() => {
-//         recentDoc.set({
-//           key: caseQueryKey,
-//           documentList: [],
-//           identifier: firestoreAutoId()
-//         });
-//         if (doc && doc.exists && !(initialCaseType === caseQueryKey)) {
-//           initialDoc.collection('questions').get().then(c => {
-//             if (!c.empty) {
-//               c.forEach(docSnapshot => {
-//                 recentDoc.collection('questions').add(docSnapshot.data());
-//                 docSnapshot.ref.delete();
-//               })
-//             }
-//           }).then(() => {
-//             console.log("recent collection", recentDoc.collection('questions').get());
-//             var data = doc.data();
-//             recentDoc.set(data, {mergeFields: ['documentList', 'identifier']}).then(() => {
-//               initialDoc.delete();
-//             })
-//           });
-//         }
-//       });
-//     })
-//   } catch (e) {
-//     console.warn(e);
-//     throw e;
-//   }
-// };
 
 export const deleteCase = async (key: string) => {
   try {

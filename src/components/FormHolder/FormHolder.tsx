@@ -5,22 +5,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styles from "./FormHolder.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { camelize } from '../../firebase/helpers';
 import { deleteCase, renameCase, setCaseType } from '../../firebase/queries';
 import { TextareaAutosize } from '@mui/material';
 
 interface FormHolderProps {
     formTitle?: string,
+    id: string
+    deleteFunc: Function,
 }
 
-const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
+const FormHolder = ({formTitle="New Case Type", id, deleteFunc}: FormHolderProps) => {
     const [titleText, setTitleText] = useState(formTitle);
     const router = useRouter();
     router.query.key = formTitle;
     return (
         <div className={styles.root}>
             <div className={styles.title}>
-                <FeedOutlinedIcon />
+                <div className={styles.form}>
+                    <FeedOutlinedIcon fontSize='large'/>
+                </div>
                 <TextareaAutosize
                     value={titleText}
                     className={styles.titleText}
@@ -47,11 +50,17 @@ const FormHolder = ({formTitle="New Case Type"}: FormHolderProps) => {
                             router.query.key = titleText;
                         });
                     }}>
-                        <EditIcon />
+                        <EditIcon fontSize='large'/>
                     </a>
                 </Link>
-                <button onClick={() =>{deleteCase((router.query.key).toString())}}>
-                    <DeleteIcon />
+                <button className={styles.deleteButton}
+                onClick={() =>{
+                    if (confirm('Are you sure you want to delete this case type?') == true) {
+                        deleteCase((router.query.key).toString());
+                        deleteFunc(id);
+                    }
+                    }}>
+                    <DeleteIcon fontSize='large'/>
                 </button>
             </div>
         </div>

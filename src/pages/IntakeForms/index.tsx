@@ -6,19 +6,32 @@ import styles from "./styles.module.css"
 import Layout from "../../components/Layout";
 import { firestoreAutoId } from "../../firebase/helpers";
 import { getAllCaseTypes } from "../../firebase/queries";
+import { stringify } from "querystring";
 
 export default function IntakeHomeScreen() {
-  const [caseForms, setCaseForms] = useState([]);
-  let keyList=[];
+  const [caseForms, setCaseForms] = useState(new Map<string, any>());
+
+
+  function removeForm(id) {
+    let cloneMap = new Map<string, any>(caseForms);
+    cloneMap.delete(id);
+    setCaseForms(cloneMap);
+  }
+
   const loadCases = async (): Promise<void> => {
     let cL: CaseType[] = await getAllCaseTypes();
-    let copyArray=[];
+    let copyMap= new Map<string, any>();
     cL.map(c => {
-      if (!keyList.includes(c.key)) {
-        copyArray.push(<FormHolder formTitle={c.key} key={caseForms.length}/>);
-      }
+      let id = firestoreAutoId();
+      copyMap.set(id, 
+        <FormHolder
+          formTitle={c.key}
+          key={caseForms.size}
+          id={id}
+          deleteFunc={removeForm}/>
+      );
     });
-    setCaseForms(copyArray);
+    setCaseForms(copyMap);
   };
 
   useEffect(() => {
@@ -30,14 +43,15 @@ export default function IntakeHomeScreen() {
         <h1>Intake Forms</h1>
         <div className={styles.buttondiv}>
           <Button variant="contained" onClick={() => {
-            let copy = [...caseForms];
-            copy.push(<FormHolder key={caseForms.length}/>);
+            let copy = new Map(caseForms);
+            let id = firestoreAutoId();
+            copy.set(id, <FormHolder key={caseForms.size} deleteFunc={removeForm} id={id}/>);
             setCaseForms(copy);
           }}>
              Add New Form
           </Button>
         </div>
-        {caseForms.length ? caseForms : <span>Loading...</span>}
+        {caseForms.size ? Array.from(caseForms.values()) : <span>Loading...</span>}
     </div>
   );
 }
