@@ -1,6 +1,6 @@
 import { ClientInfo } from "../../components/ClientInfo/ClientInfo";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import Layout from "../../components/Layout";
 
 export default function ClientView() {

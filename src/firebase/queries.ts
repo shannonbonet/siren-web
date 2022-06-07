@@ -24,8 +24,8 @@ import { mapToObject, objectToAnswerOptionsMap, objectToMap } from './helpers';
 export const getClient = async (clientId: string): Promise<Client> => {
   try {
     const doc = await clientCollection.doc(clientId).get();
-    const client = doc.data() as Client;
-    client.answers = objectToMap(client.answers);
+    const client = await doc.data() as Client;
+    console.log(clientId);
     return client;
   } catch (e) {
     console.warn(e);
@@ -68,10 +68,10 @@ export const getClientCaseDocs = async (clientId: string, caseId: string): Promi
 // 1. grab the caseType key (non-camelcase, readable label)
 // 2. grabbing documentList
 export const getCaseType = async (
-  caseType: string
+  caseKey: string
 ): Promise<CaseType> => { // returns caseType object (Firebase document)
   try {
-    const doc = await caseTypeCollection.doc(caseType).get();
+    const doc = await caseTypeCollection.doc(caseKey).get();
     const cType = doc.data() as CaseType;
     return cType;
   } catch (e) {

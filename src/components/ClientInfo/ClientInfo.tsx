@@ -2,7 +2,7 @@ import styles from "./ClientInfo.module.css";
 import { Tab } from "@mui/material";
 import { TabPanel, TabList, TabContext } from "@mui/lab";
 import React, { useState, useEffect } from "react";
-import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, getClient } from "../../firebase/queries";
+import { getAllClients, getAllCaseTypes, getClientCases, getClientCaseDocs, getClient, getCaseType } from "../../firebase/queries";
 import { Client, CaseType, Case, Document, CaseKey } from "../../../types";
 import DocumentsBox from './DocumentsBox';
 import ClientActionsBox from './ClientActionsBox';
@@ -24,53 +24,60 @@ export const ClientInfo = ({ query }) => {
   const [clientDocsToCase, setClientDocsToCase] = useState<Array<[Case, Document[]]>>(null); //key: caseName value: array of documents for case
   const [caseInfo, setCaseInfo] = useState<Array<Case>>(null);
 
-  useEffect(() => {
-    async function loadClientResponses() {
-      // REFACTOR: (WHY: efficiency, we already have the client info avai)
-      // rewrite as a useeffect function -- only call once? 
-      // grab current client from id that query gives us
-      const correctClient = (await getAllClients()).filter(
-        (c) =>
-          c.answers !== undefined &&
-          Object.keys(c.answers).length >= 1 &&
-          c.id == query["id"]
-      );
-      setClient(correctClient[0]);
-      console.log('client', correctClient); 
+    useEffect(() => {
+      if (Object.keys(query).length !== 0){
+        const loadClientResponses = async () => {
+          // REFACTOR: (WHY: efficiency, we already have the client info avai)
+          // rewrite as a useeffect function -- only call once? 
+          // grab current client from id that query gives us
+          // const correctClient = (await getAllClients()).filter(
+          //   (c) =>
+          //     c.answers !== undefined &&
+          //     Object.keys(c.answers).length >= 1 &&
+          //     c.id == query["id"]
+          // );
+          const correctClient = await getClient(query['id']) as Client;
+          setClient(correctClient);
+          
+    
+          // REFACTOR: (WHY: readable code, robust (avoid hard coded case type dictionary))
+          // for client, grab cases (there a query for this)
+          // for each case, grab their case type
+          // add these types to caseType array
+          //CLIENT CASES
+          // const caseNames = client && client.answers 
+          //   ? (Object.keys(client.answers).map((key) => { //getting question from client answers and returning case id
+          //     return(CaseKey[key]) 
+          //   }))
+          //   : [];
+          let clientCaseKeys = new Array();
+          const caseNames = await getClientCases(correctClient.id);
+          caseNames.map((c) => {
+            clientCaseKeys.push(c['type']);
+          });
+          
+          
+          // get all client caseTypes
+          const caseTypes = clientCaseKeys.map((key) => getCaseType(key));
+          Promise.all(caseTypes).then((caseTypes) => setCases(caseTypes));
+          console.log(cases);
+    
+          console.log('cases', cases); 
+          // get client cases
+          const openClientCases = (client ? (await getClientCases(client.id)) : null);
+          setCaseInfo(openClientCases);
 
-      // REFACTOR: (WHY: readable code, robust (avoid hard coded case type dictionary))
-      // for client, grab cases (there a query for this)
-      // for each case, grab their case type
-      // add these types to caseType array
-      const caseNames = correctClient[0] && correctClient[0].answers 
-        ? (Object.keys(correctClient[0].answers).map((key) => { //getting question from client answers and returning case id
-          return(CaseKey[key]) 
-        }))
-        : [];
-      console.log('caseNames', caseNames);
-      
-      // get documents of each case
-      const caseTypes = (await getAllCaseTypes()).filter(
-        (c) => caseNames.includes(c.key)
-      );
-      setCases(caseTypes);
-
-      console.log('cases', cases); 
-      // get client cases
-      const openClientCases = (correctClient && correctClient[0] ? (await getClientCases(correctClient[0].id)) : null);
-      await setCaseInfo(openClientCases);
-      var docToCaseArr = new Array();
-      for (const c in openClientCases) {
-        const d = await getClientCaseDocs(correctClient[0].id, openClientCases[c].id);
-        docToCaseArr.push([openClientCases[c], d]); 
-      }
-      await setClientDocsToCase(docToCaseArr); //groups documents by case in dictionary 
-      
-      console.log('client docs to case', clientDocsToCase); 
-    }
-    loadClientResponses();
-
-  }, []);
+          //get docs submitted by client (for each case)
+          var docToCaseArr = new Array();
+          for (const c in openClientCases) {
+            const d = await getClientCaseDocs(client.id, openClientCases[c].id);
+            docToCaseArr.push([openClientCases[c], d]); 
+          }
+          setClientDocsToCase(docToCaseArr); //groups documents by case in dictionary 
+        }
+        loadClientResponses();
+      } 
+    }, [query]);
 
   return (
     <>
