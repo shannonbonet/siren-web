@@ -9,15 +9,20 @@ import { deleteCase, renameCase, setCaseType } from '../../firebase/queries';
 import { TextareaAutosize } from '@mui/material';
 
 interface FormHolderProps {
-    formTitle?: string,
-    id: string
-    deleteFunc: Function,
+    staticTitle: string,
+    id: string,
+    connecterFunctions: {
+        deleteForm: Function;
+        dupesExist: Function;
+        updateNameList: Function;
+    }
 }
 
-const FormHolder = ({formTitle="New Case Type", id, deleteFunc}: FormHolderProps) => {
-    const [titleText, setTitleText] = useState(formTitle);
+const FormHolder = ({staticTitle, id, connecterFunctions}: FormHolderProps) => {
+    const [dynamicTitle, setDynamicTitle] = useState(staticTitle);
     const router = useRouter();
-    router.query.key = formTitle;
+    const {deleteForm, dupesExist, updateNameList} = connecterFunctions;
+    router.query.key = staticTitle;
     return (
         <div className={styles.root}>
             <div className={styles.title}>
@@ -25,39 +30,39 @@ const FormHolder = ({formTitle="New Case Type", id, deleteFunc}: FormHolderProps
                     <FeedOutlinedIcon fontSize='large'/>
                 </div>
                 <TextareaAutosize
-                    value={titleText}
+                    value={dynamicTitle}
                     className={styles.titleText}
                     placeholder="New Case Type"
                     onChange={(e) => {
-                        setTitleText(e.target.value);
-                        formTitle=e.target.value;
-                        router.query.key = e.target.value;
+                        let newName = e.target.value
+                        updateNameList(id, newName);
+                        setDynamicTitle(newName);
+                        router.query.key = newName;
                     }}
                     />
             </div>
             <div className={styles.icons}>                
-                <Link href={{
-                     pathname: "/IntakeForms/IntakeForm",
-                     query: {key: titleText, uploaded: 'false'}
-                     }}>
-                    <a onClick={() => {
-                        setCaseType(titleText).then(() => {
-                            if (!(formTitle === titleText)) {
-                                renameCase(formTitle, titleText).then(() => {
-                                    router.query.key = titleText;
-                                });
+                <button type="button" onClick={() => {
+                    if (!dupesExist()) {
+                        setCaseType(dynamicTitle).then(() => {
+                            if (!(staticTitle === dynamicTitle)) {
+                                renameCase(staticTitle, dynamicTitle)
                             }
-                            router.query.key = titleText;
-                        });
-                    }}>
-                        <EditIcon fontSize='large'/>
-                    </a>
-                </Link>
+                            router.push({
+                                pathname: '/IntakeForms/IntakeForm',
+                                query: {key: dynamicTitle, uploaded: 'false'}
+                            })
+                        })
+                    } else {
+                        window.alert("Duplicate Names Exist!");
+                    }
+                }}>
+                    <EditIcon fontSize='large'/>
+                </button>
                 <button className={styles.deleteButton}
                 onClick={() =>{
                     if (confirm('Are you sure you want to delete this case type?') == true) {
-                        deleteCase((router.query.key).toString());
-                        deleteFunc(id);
+                        deleteForm(id, dynamicTitle);
                     }
                     }}>
                     <DeleteIcon fontSize='large'/>

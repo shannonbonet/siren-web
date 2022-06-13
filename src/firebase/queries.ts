@@ -292,7 +292,16 @@ export const renameCase = async (
 
 export const deleteCase = async (key: string) => {
   try {
-    await caseTypeCollection.doc(camelize(key)).delete();
+    let caseType = caseTypeCollection.doc(camelize(key));
+    let caseTypeQuestions = caseType.collection('questions');
+    caseTypeQuestions.get().then((questions) => {
+      if (questions.exists) {
+        questions.forEach(q => {
+          q.ref.delete();
+        })
+      }
+    })
+    await caseType.delete();
   } catch (e) {
     console.warn(e);
     throw e;
