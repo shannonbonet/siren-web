@@ -56,9 +56,14 @@
     cursor: wait;
 }
 
-
-.icons {
-    padding-right: 20px;
+.editButton {
     border: none;
     background-color: transparent;
-} 
+    cursor: pointer;
+}
+
+.editButton:active {
+    cursor: wait;
+}
+
+

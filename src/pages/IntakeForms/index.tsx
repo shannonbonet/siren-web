@@ -6,6 +6,8 @@ import styles from "./styles.module.css"
 import Layout from "../../components/Layout";
 import { firestoreAutoId } from "../../firebase/helpers";
 import { deleteCase, getAllCaseTypes } from "../../firebase/queries";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+
 
 export default function IntakeHomeScreen() {
   const [caseForms, setCaseForms] = useState(new Map<string, any>());
@@ -54,24 +56,27 @@ export default function IntakeHomeScreen() {
   
   return (
     <div>
-        <h1>Intake Forms</h1>
-        <div className={styles.buttondiv}>
-          <Button variant="contained" onClick={() => {
-            let newForms = new Map(caseForms);
-            let newNames = new Map(caseNames);
-            let defaultName = "New Case Type";
-            let id = firestoreAutoId();
-            newForms.set(id, <FormHolder staticTitle={defaultName} id={id} connecterFunctions={{
-              deleteForm: deleteForm,
-              dupesExist: dupesExist,
-              updateNameList: updateNameList
-            }}/>);
-            newNames.set(id, defaultName);
-            setCaseForms(newForms);//You need to have 2 maps that both rely on ids, for objects and for maps.
-            setCaseNames(newNames);
-          }}>
-             Add New Form
-          </Button>
+        <div className={styles.overlay}>
+          <h1>Intake Forms</h1>
+          <div className={styles.buttondiv}>
+            <Button variant="contained" style={{backgroundColor: '#0f2536'}} onClick={() => {
+              let newForms = new Map(caseForms);
+              let newNames = new Map(caseNames);
+              let defaultName = "New Case Type";
+              let id = firestoreAutoId();
+              newForms.set(id, <FormHolder staticTitle={defaultName} id={id} connecterFunctions={{
+                deleteForm: deleteForm,
+                dupesExist: dupesExist,
+                updateNameList: updateNameList
+              }}/>);
+              newNames.set(id, defaultName);
+              setCaseForms(newForms);//You need to have 2 maps that both rely on ids, for objects and for maps.
+              setCaseNames(newNames);
+            }}>
+              <AddCircleOutlineOutlinedIcon style={{ fill: '#f4fbfb'}}/>
+               Add New Form
+            </Button>
+          </div>
         </div>
         {caseForms.size ? Array.from(caseForms.values()) : <span>Loading...</span>}
     </div>

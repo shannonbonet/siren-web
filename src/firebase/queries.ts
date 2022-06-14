@@ -300,8 +300,9 @@ export const deleteCase = async (key: string) => {
           q.ref.delete();
         })
       }
+    }).then(() => {
+      caseType.delete();
     })
-    await caseType.delete();
   } catch (e) {
     console.warn(e);
     throw e;

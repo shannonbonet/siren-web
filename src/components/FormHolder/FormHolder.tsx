@@ -42,7 +42,7 @@ const FormHolder = ({staticTitle, id, connecterFunctions}: FormHolderProps) => {
                     />
             </div>
             <div className={styles.icons}>                
-                <button type="button" onClick={() => {
+                <button className={styles.editButton} onClick={() => {
                     if (!dupesExist()) {
                         setCaseType(dynamicTitle).then(() => {
                             if (!(staticTitle === dynamicTitle)) {
