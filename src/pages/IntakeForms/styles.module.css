@@ -1,0 +1,14 @@
+.buttondiv {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 20px 0px;
+    margin-right: 5%;
+    left: 500px;
+    color: var(--prussian-blue);
+    justify-content: space-evenly;
+} 
+
+.overlay {
+    display: flex;
+    justify-content:space-between
+}
